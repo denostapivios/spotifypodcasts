@@ -15,10 +15,11 @@ struct SpotifyPodcastApp: App {
     var body: some Scene {
         WindowGroup {
             TabView {
+                #warning("don'tforget spaces - concerns all project: NavigationStack {")
                 NavigationStack{
-                MainView()
+                    MainView()
                         .navigationDestination(for: PodcastViewModel.PodcastRow.self) { podcast in
-                            //                            let infoViewModel = InfoPdcastViewModel(selectedPodcast: podcast)
+                            //                            let infoViewModel = InfoPdcastViewModel(selectedPodcast: podcast) - TODO: swill necessary?
                             InfoPodcastView(podcast: podcast)
                         }
                 }
@@ -54,7 +55,7 @@ struct SpotifyPodcastApp: App {
             .preferredColorScheme(isDarkMode ? .dark : .light)
         }
     }
-    
+    #warning("don't leave empty lines whe not required - concerns all project")
     
 }
 

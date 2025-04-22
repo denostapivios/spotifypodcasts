@@ -28,6 +28,7 @@ struct AccountView: View {
                     AccountBar()
                 }
                 
+                // TODO: for this section, create an enum with each case representing a row, make foreach, iterating the cases, with simple text as navigation destination. Have row titles as raw values for your enum cases
                 Section {
                     NavigationLink(destination: Label("Downloaded podcasts", systemImage: "square.and.arrow.down.fill")) {
                         Text("Downloaded")
@@ -42,6 +43,7 @@ struct AccountView: View {
                         Text("Info")
                     }
                 }
+                
                 Text("Version 0.0.1")
                     .foregroundStyle(.gray)
             }

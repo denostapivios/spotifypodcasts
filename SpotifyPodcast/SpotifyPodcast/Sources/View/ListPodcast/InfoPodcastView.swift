@@ -10,7 +10,7 @@ import Kingfisher
 import AVKit
 
 
-
+//TODO: - refactor the view, move elements into var properties
 struct InfoPodcastView: View {
 //    @ObservedObject var viewModel = InfoPdcastViewModel()
     @ObservedObject var viewModel = PodcastViewModel()
@@ -38,7 +38,8 @@ struct InfoPodcastView: View {
                     }
                 }
                 .padding(.bottom, 16)
-                VStack {
+                
+                VStack { //TODO: - Vstack not required, there is only one element
                     Text(podcast.title)
                         .font(.system(size: 24))
                         .fontWeight(.bold)
@@ -46,16 +47,19 @@ struct InfoPodcastView: View {
                 }
                 .padding(.bottom, 10)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                VStack (spacing:10) {
-                    HStack {
-                        Text("\(podcast.duration) хв")
+                
+                VStack (spacing:10) { //TODO: - Vstack not required, there is only one element
+                    HStack { // TODO: move .font(.system(size: 14)) to HStack, the modifier works for all views inside it
+                        Text("\(podcast.duration) хв") //TODO: хв -> m
                             .font(.system(size: 14))
                         Spacer()
                         Text(podcast.releaseDate)
                             .font(.system(size: 14))
                     }
+                    
                 }
                 .padding(.bottom, 10)
+                
                 VStack {
                     HStack(spacing:12){
                         Image(systemName: "star")
@@ -96,6 +100,7 @@ struct InfoPodcastView: View {
                     }
                 }
                 .padding(.bottom, 10)
+                
                 VStack {
                     Text(podcast.description)
                         .multilineTextAlignment(.leading)

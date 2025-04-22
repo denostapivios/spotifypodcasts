@@ -9,6 +9,8 @@ import Foundation
 
 class CacheManager {
     static let shared = CacheManager()
+    
+#warning("is still necessary?")
     //test commit
     
     private let cacheKey = "cachedPodcasts"

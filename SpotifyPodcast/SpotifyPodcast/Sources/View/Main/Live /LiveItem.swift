@@ -21,6 +21,7 @@ struct LiveItem: View {
                         .frame(width: 80, height: 80)
                         .cornerRadius(4)
                         .padding(.bottom, 4)
+                    #warning("remote - spelling")
                 case .remoute(let url):
                     KFImage(url)
                         .resizable()

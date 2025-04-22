@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct AccountBar: View {
-
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
+    
     var body: some View {
         HStack{
             Text("Dark mode")
@@ -26,7 +26,8 @@ struct AccountBar: View {
 //        }
        
     }
-    
+    #warning("no commented out code must be in dev, can only be in working branches, which are not yet opened for code review - concerns all project")
+    // TODO: why commened out?
 //    private func updateAppearance() {
 //        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
 //           let window = windowScene.windows.first {
@@ -35,7 +36,7 @@ struct AccountBar: View {
     }
 //}
 
-
+#warning("unnecessary empty lines")
 
 #Preview {
     AccountBar()
