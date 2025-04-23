@@ -10,10 +10,10 @@ import Kingfisher
 
 struct LiveItem: View {
     var podcast: PodcastViewModel.PodcastRow
+    
     var body: some View {
-        
         HStack {
-            VStack(alignment: .leading){
+            VStack(alignment: .leading) {
                 switch podcast.image {
                 case .local(let imageName):
                     Image(imageName)
@@ -21,6 +21,7 @@ struct LiveItem: View {
                         .frame(width: 80, height: 80)
                         .cornerRadius(4)
                         .padding(.bottom, 4)
+                    
                 case .remoute(let url):
                     KFImage(url)
                         .resizable()
@@ -30,8 +31,8 @@ struct LiveItem: View {
                         .frame(width: 80, height: 80)
                         .cornerRadius(4)
                         .padding(.bottom, 4)
-                    
                 }
+                
                 Text (podcast.title)
                     .font(.footnote)
                     .lineLimit(2)

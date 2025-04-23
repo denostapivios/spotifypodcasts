@@ -9,25 +9,21 @@ import Foundation
 
 class CacheManager {
     static let shared = CacheManager()
-    //test commit
-    
     private let cacheKey = "cachedPodcasts"
-
     private init() {}
     
-    /// Завантаження кешованих даних
-    
+    // Loading cached data
     func loadCachedData() async throws -> PodcastResponse? {
         guard let cachedData = UserDefaults.standard.data(forKey: cacheKey) else { return nil }
         return try JSONDecoder().decode(PodcastResponse.self, from: cachedData)
     }
     
-    /// Збереження даних у кеш
+    // Caching data
     func saveToCache(data: PodcastResponse) async throws {
         let encodedData = try JSONEncoder().encode(data)
-               UserDefaults.standard.set(encodedData, forKey: cacheKey)
-        }
+        UserDefaults.standard.set(encodedData, forKey: cacheKey)
     }
-    
+}
+
 
 

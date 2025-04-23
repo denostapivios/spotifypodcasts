@@ -9,19 +9,20 @@ import SwiftUI
 
 struct AppBar: View {
     @ObservedObject var viewModel = PodcastViewModel()
+    
     var body: some View {
-        HStack{
+        HStack {
             Image("logo")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 100, height: 32)
             
             Spacer()
+            
             Button(action: {
                 Task{
                     await viewModel.fetchPodcastsFromAPI()
                 }
-               
             }) {
                 Text("Update")
             }
@@ -29,8 +30,6 @@ struct AppBar: View {
         .padding(.trailing, 2)
     }
 }
-
-
 
 #Preview {
     AppBar()

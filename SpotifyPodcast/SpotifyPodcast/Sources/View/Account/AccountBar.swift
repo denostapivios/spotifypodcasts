@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct AccountBar: View {
-
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
+    
     var body: some View {
-        HStack{
+        HStack {
             Text("Dark mode")
                 .font(.body)
             
@@ -21,21 +21,8 @@ struct AccountBar: View {
                 .labelsHidden()
         }
         .padding(.trailing, 2)
-//        .onChange(of: isDarkMode) {
-//            updateAppearance()
-//        }
-       
     }
-    
-//    private func updateAppearance() {
-//        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-//           let window = windowScene.windows.first {
-//            window.overrideUserInterfaceStyle = isDarkMode ? .dark : .light
-//        }
-    }
-//}
-
-
+}
 
 #Preview {
     AccountBar()

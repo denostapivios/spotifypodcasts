@@ -15,21 +15,18 @@ struct SpotifyPodcastApp: App {
     var body: some Scene {
         WindowGroup {
             TabView {
-                NavigationStack{
-                MainView()
+                NavigationStack {
+                    MainView()
                         .navigationDestination(for: PodcastViewModel.PodcastRow.self) { podcast in
-                            //                            let infoViewModel = InfoPdcastViewModel(selectedPodcast: podcast)
                             InfoPodcastView(podcast: podcast)
                         }
                 }
-                
                 .tabItem {
                     Image(systemName: "house")
                     Text("Home")
                 }
                 
-                
-                NavigationStack{
+                NavigationStack {
                     ListPodcast()
                         .navigationDestination(for: PodcastViewModel.PodcastRow.self) { podcast in
                             InfoPodcastView(podcast: podcast)
@@ -45,6 +42,7 @@ struct SpotifyPodcastApp: App {
                         Image(systemName: "magnifyingglass")
                         Text("Search")
                     }
+                
                 AccountView()
                     .tabItem {
                         Image(systemName: "person.crop.circle")
@@ -54,8 +52,6 @@ struct SpotifyPodcastApp: App {
             .preferredColorScheme(isDarkMode ? .dark : .light)
         }
     }
-    
-    
 }
 
 

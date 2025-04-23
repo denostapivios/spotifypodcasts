@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct SearchView: View {
-    
     @State private var searchText = ""
     
     var body: some View {
@@ -32,9 +31,9 @@ struct SearchView: View {
                             }
                         }
                     )
+                
                 Spacer()
                 
-    
             }
             .navigationTitle("Search")
         }

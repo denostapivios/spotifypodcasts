@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AccountView: View {
+    
     var body: some View {
         NavigationView {
             List {
@@ -42,6 +43,7 @@ struct AccountView: View {
                         Text("Info")
                     }
                 }
+                
                 Text("Version 0.0.1")
                     .foregroundStyle(.gray)
             }

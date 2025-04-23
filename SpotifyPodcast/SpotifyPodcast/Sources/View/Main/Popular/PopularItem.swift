@@ -10,9 +10,9 @@ import Kingfisher
 
 struct PopularItem: View {
     var podcast: PodcastViewModel.PodcastRow
+    
     var body: some View {
-        
-        VStack(alignment: .leading){
+        VStack(alignment: .leading) {
             switch podcast.image {
             case .local(let imageName):
                 Image(imageName)
@@ -20,6 +20,7 @@ struct PopularItem: View {
                     .frame(width: 155, height: 155)
                     .cornerRadius(4)
                     .padding(.bottom, 4)
+                
             case .remoute(let url):
                 KFImage(url)
                     .resizable()
@@ -29,9 +30,7 @@ struct PopularItem: View {
                     .frame(width: 155, height: 155)
                     .cornerRadius(4)
                     .padding(.bottom, 4)
-                
             }
-            
             
             Text (podcast.title)
                 .font(.callout)

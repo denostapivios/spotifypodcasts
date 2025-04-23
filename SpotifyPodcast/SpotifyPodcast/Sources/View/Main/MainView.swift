@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     var body: some View {
-        ScrollView{
+        ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 AppBar()
                 PopulatPodcastRow()

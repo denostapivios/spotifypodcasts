@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PopulatPodcastRow: View {
     @ObservedObject var viewModel = PodcastViewModel()
+    
     var body: some View {
         VStack(alignment: .leading) {
             if viewModel.rows.count > 0 {
@@ -16,10 +17,10 @@ struct PopulatPodcastRow: View {
                     .font(.title2)
                     .fontWeight(.bold)
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack{
+                    HStack {
                         ForEach(viewModel.rows) { podcast in
-                            NavigationLink(value: podcast){
-                                PopularItem(podcast: podcast)  // Передаємо кожен подкаст в PopularItem
+                            NavigationLink(value: podcast) {
+                                PopularItem(podcast: podcast)
                             }
                             .buttonStyle(.plain)
                         }
@@ -34,7 +35,6 @@ struct PopulatPodcastRow: View {
         .onAppear {
             viewModel.queryChange()  // Запускаємо завантаження даних
         }
-        
     }
 }
 

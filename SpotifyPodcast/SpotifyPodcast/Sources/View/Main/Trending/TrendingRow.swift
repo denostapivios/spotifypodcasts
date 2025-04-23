@@ -9,16 +9,17 @@ import SwiftUI
 
 struct TrendingRow: View {
     @ObservedObject var viewModel = PodcastViewModel()
+    
     var body: some View {
-        VStack(alignment: .leading){
+        VStack(alignment: .leading) {
             if viewModel.rows.count > 0 {
                 Text("Trending")
                     .font(.title2)
                     .fontWeight(.bold)
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack{
+                    HStack {
                         ForEach(viewModel.rows) { podcast in
-                            NavigationLink(value: podcast){
+                            NavigationLink(value: podcast) {
                                 PopularItem(podcast: podcast)
                             }
                             .buttonStyle(.plain)

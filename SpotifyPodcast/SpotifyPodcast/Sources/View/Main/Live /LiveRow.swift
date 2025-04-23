@@ -10,9 +10,10 @@ import SwiftUI
 struct LiveRow: View {
     @ObservedObject var viewModel = PodcastViewModel()
     let rows = [
-           GridItem(.flexible()),
-           GridItem(.flexible()),
-       ]
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+    ]
+    
     var body: some View {
         VStack(alignment: .leading) {
             if viewModel.rows.count > 0 {
@@ -35,7 +36,7 @@ struct LiveRow: View {
             }
         }
         .onAppear {
-            viewModel.queryChange()  // Запускаємо завантаження даних
+            viewModel.queryChange()
         }
     }
 }
