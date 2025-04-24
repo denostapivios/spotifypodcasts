@@ -31,7 +31,7 @@ struct TrendingRow: View {
             }
         }
         .onAppear {
-            viewModel.queryChange()  // Запускаємо завантаження даних
+            viewModel.queryChange()  
         }
     }
 }

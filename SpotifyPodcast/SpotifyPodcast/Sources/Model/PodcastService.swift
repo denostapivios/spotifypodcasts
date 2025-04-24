@@ -13,13 +13,13 @@ class PodcastService: ObservableObject, PodcastServiceProtocol {
         let reason: String
     }
     
-    let requestPath = "https://spotify23.p.rapidapi.com/podcast_episodes/?id=0ofXAdFIQQRsCYj9754UFx&offset=0&limit=50"
-    private let apiKey = "1578655d4emsh8eeb7f79d494a91p187668jsn99278f89eb29"
-    private let apiHost = "spotify23.p.rapidapi.com"
+    private let apiKey = Bundle.main.infoDictionary?["PODCAST_API_KEY"] as? String ?? ""
+    private let apiHost = Bundle.main.infoDictionary?["PODCAST_API_HOST"] as? String ?? ""
+    private let requestPath = "https://spotify23.p.rapidapi.com/podcast_episodes/?id=0ofXAdFIQQRsCYj9754UFx&offset=0&limit=50"
     
     func fetchData() async throws -> PodcastResponse {
         guard let url = URL(string: requestPath) else {
-            throw PodcastServiceError(reason: "Не можу зробити URL від \(requestPath)")
+            throw PodcastServiceError(reason: "Can't make a URL from \(requestPath)")
         }
         
         var request = URLRequest(url: url)
