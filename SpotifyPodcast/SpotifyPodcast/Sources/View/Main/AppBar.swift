@@ -19,12 +19,10 @@ struct AppBar: View {
             
             Spacer()
             
-            Button(action: {
-                Task{
+            Button("Update") {
+                Task {
                     await viewModel.fetchPodcastsFromAPI()
                 }
-            }) {
-                Text("Update")
             }
         }
         .padding(.trailing, 2)

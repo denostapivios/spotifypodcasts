@@ -13,7 +13,7 @@ class PodcastViewModel: ObservableObject {
     @Published var errorMessage: String?
     var player: AVPlayer?
     
-    private let cacheManager = CacheManager.shared
+    private let cacheManager = CacheManager()
     private let service: PodcastServiceProtocol
     private let cacheKey = "cachedPodcasts"
     

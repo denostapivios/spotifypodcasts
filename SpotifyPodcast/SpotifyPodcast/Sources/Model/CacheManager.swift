@@ -8,9 +8,8 @@
 import Foundation
 
 class CacheManager {
-    static let shared = CacheManager()
     private let cacheKey = "cachedPodcasts"
-    private init() {}
+    init() {}
     
     // Loading cached data
     func loadCachedData() async throws -> PodcastResponse? {
