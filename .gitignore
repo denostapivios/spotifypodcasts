@@ -87,3 +87,4 @@ iOSInjectionProject/
 
 # End of https://www.toptal.com/developers/gitignore/api/swift
 SpotifyPodcast/SpotifyPodcast.xcodeproj/project.xcworkspace/xcuserdata/denisostapiv.xcuserdatad/UserInterfaceState.xcuserstate
+SpotifyPodcast/SpotifyPodcast/Config.xcconfig
