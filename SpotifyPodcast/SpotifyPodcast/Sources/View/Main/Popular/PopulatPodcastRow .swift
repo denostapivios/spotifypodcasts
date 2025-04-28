@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct PopulatPodcastRow: View {
-    @ObservedObject var viewModel = PodcastViewModel()
+struct PopularPodcastRow: View {
+    @ObservedObject var viewModel: PodcastViewModel
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -33,11 +33,11 @@ struct PopulatPodcastRow: View {
             }
         }
         .onAppear {
-            viewModel.queryChange()  // Запускаємо завантаження даних
+            viewModel.refreshData()
         }
     }
 }
 
 #Preview {
-    PopulatPodcastRow()
+    PopularPodcastRow(viewModel: PodcastViewModel())
 }

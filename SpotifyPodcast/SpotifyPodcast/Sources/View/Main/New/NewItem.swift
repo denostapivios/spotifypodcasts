@@ -21,7 +21,7 @@ struct NewItem: View {
                         .frame(width: 64, height: 64)
                         .cornerRadius(4)
                     
-                case .remoute(let url):
+                case .remote(let url):
                     KFImage(url)
                         .resizable()
                         .placeholder {

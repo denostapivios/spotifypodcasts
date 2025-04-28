@@ -65,7 +65,7 @@ struct InfoPodcastView: View {
         }
         .padding()
         .onAppear {
-            viewModel.queryChange()
+            viewModel.refreshData()
         }
         .sheet(isPresented: $viewModel.isPlayerPresented) {
             if let player = viewModel.player {
@@ -143,7 +143,7 @@ private extension InfoPodcastView {
     
     var image: some View {
         switch podcast.image {
-        case .remoute(let url):
+        case .remote(let url):
             return AnyView(
                 KFImage(url)
                     .resizable()

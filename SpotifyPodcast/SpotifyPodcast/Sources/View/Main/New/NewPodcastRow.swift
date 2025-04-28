@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NewPodcastRow: View {
-    @ObservedObject var viewModel = PodcastViewModel()
+    @ObservedObject var viewModel: PodcastViewModel
     let rows = [
         GridItem(.flexible()),
         GridItem(.flexible())
@@ -37,11 +37,11 @@ struct NewPodcastRow: View {
             }
         }
         .onAppear {
-            viewModel.queryChange()
+            viewModel.refreshData()
         }
     }
 }
 
 #Preview {
-    NewPodcastRow()
+    NewPodcastRow(viewModel: PodcastViewModel())
 }

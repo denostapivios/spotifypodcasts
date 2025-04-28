@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TrendingRow: View {
-    @ObservedObject var viewModel = PodcastViewModel()
+    @ObservedObject var viewModel: PodcastViewModel
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -31,11 +31,11 @@ struct TrendingRow: View {
             }
         }
         .onAppear {
-            viewModel.queryChange()  
+            viewModel.refreshData()  
         }
     }
 }
 
 #Preview {
-    TrendingRow()
+    TrendingRow(viewModel: PodcastViewModel())
 }

@@ -8,17 +8,22 @@
 import SwiftUI
 
 struct MainView: View {
+    @StateObject var viewModel = PodcastViewModel()
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 AppBar()
-                PopulatPodcastRow()
-                NewPodcastRow()
-                TrendingRow()
-                LiveRow()
+                PopularPodcastRow(viewModel: viewModel)
+                NewPodcastRow(viewModel: viewModel)
+                TrendingRow(viewModel: viewModel)
+                LiveRow(viewModel: viewModel)
             }
         }
         .padding(16)
+        .refreshable {
+            await viewModel.fetchPodcastsFromAPI()
+        }
     }
 }
 

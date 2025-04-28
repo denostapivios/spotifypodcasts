@@ -19,7 +19,7 @@ struct ListPodcast: View {
                         VStack(spacing:10) {
                             HStack(spacing:12) {
                                 switch row.image {
-                                case .remoute(let url):
+                                case .remote(let url):
                                     KFImage(url)
                                         .resizable()
                                         .placeholder {
@@ -79,7 +79,7 @@ struct ListPodcast: View {
             }
         }
         .onAppear {
-            viewModel.queryChange()
+            viewModel.refreshData()
             
         }
     }

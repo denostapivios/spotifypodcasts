@@ -21,7 +21,7 @@ struct PopularItem: View {
                     .cornerRadius(4)
                     .padding(.bottom, 4)
                 
-            case .remoute(let url):
+            case .remote(let url):
                 KFImage(url)
                     .resizable()
                     .placeholder {

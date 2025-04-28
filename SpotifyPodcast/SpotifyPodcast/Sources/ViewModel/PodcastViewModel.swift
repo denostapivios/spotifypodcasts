@@ -8,9 +8,12 @@
 import Foundation
 import AVKit
 
+@MainActor
 class PodcastViewModel: ObservableObject {
     @Published var isPlayerPresented = false
     @Published var errorMessage: String?
+    @Published var podcastResult: PodcastResponse?
+    @Published var rows:[PodcastRow] = []
     var player: AVPlayer?
     
     private let cacheManager = CacheManager()
@@ -19,12 +22,10 @@ class PodcastViewModel: ObservableObject {
     
     internal init(service: any PodcastServiceProtocol = PodcastService()) {
         self.service = service
-        self.podcastResult = podcastResult
-        self.rows = rows
     }
     
     enum PodcastImage: Hashable {
-        case remoute (URL)
+        case remote (URL)
         case local (String)
     }
     
@@ -38,24 +39,14 @@ class PodcastViewModel: ObservableObject {
         let audioPreview: String
         
     }
-    
-    @Published var podcastResult: PodcastResponse?
-    
-    {
-        willSet{
-            objectWillChange.send()
-        }
-    }
-    
-    @Published var rows:[PodcastRow] = []
-    
-    func procesResult(dataObject:PodcastResponse) -> [PodcastRow] {
+
+    func processResult(dataObject:PodcastResponse) -> [PodcastRow] {
         dataObject.data?.podcastUnionV2?.episodesV2?.items?.map { episodData in
             let image:PodcastImage
             if
                 let imageString = episodData.entity?.data?.coverArt?.sources?.last?.url,
                 let url = URL(string: imageString){
-                image = .remoute(url)
+                image = .remote(url)
             } else {
                 image = .local("photo")
             }
@@ -101,7 +92,7 @@ class PodcastViewModel: ObservableObject {
         Task {
             do {
                 if let cachedData = try await cacheManager.loadCachedData() {
-                    let newRows = procesResult(dataObject: cachedData)
+                    let newRows = processResult(dataObject: cachedData)
                     await MainActor.run {
                         self.rows = newRows
                     }
@@ -121,7 +112,7 @@ class PodcastViewModel: ObservableObject {
     func fetchPodcastsFromAPI() async {
         do {
             let result = try await service.fetchData()
-            let newRows = procesResult(dataObject: result)
+            let newRows = processResult(dataObject: result)
             await MainActor.run {
                 self.rows = newRows
             }
@@ -133,7 +124,7 @@ class PodcastViewModel: ObservableObject {
         }
     }
     
-    func queryChange() {
+    func refreshData() {
         loadData()
     }
 }
