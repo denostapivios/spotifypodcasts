@@ -3,4 +3,66 @@
    uuid = "19DD1CF2-710C-46AF-941D-9C2CD453BDA1"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A254DD96-C9B4-48E0-A164-ADAF9BFDBB7D"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SpotifyPodcast/Sources/ViewModel/InfoPdcastViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "72"
+            endingLineNumber = "72"
+            landmarkName = "queryChange()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "A254DD96-C9B4-48E0-A164-ADAF9BFDBB7D - 4ee473eb452c638"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for closure #1 () async -&gt; () in SpotifyPodcast.InfoPdcastViewModel.queryChange() -&gt; ()"
+                  moduleName = "SpotifyPodcast.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/denisostapiv/Desktop/spotifypodcasts/SpotifyPodcast/SpotifyPodcast/Sources/ViewModel/InfoPdcastViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "72"
+                  endingLineNumber = "72">
+               </Location>
+               <Location
+                  uuid = "A254DD96-C9B4-48E0-A164-ADAF9BFDBB7D - e77b5e384ebfa437"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(6) suspend resume partial function for closure #1 () async -&gt; () in SpotifyPodcast.InfoPdcastViewModel.queryChange() -&gt; ()"
+                  moduleName = "SpotifyPodcast.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/denisostapiv/Desktop/spotifypodcasts/SpotifyPodcast/SpotifyPodcast/Sources/ViewModel/InfoPdcastViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "72"
+                  endingLineNumber = "72">
+               </Location>
+               <Location
+                  uuid = "A254DD96-C9B4-48E0-A164-ADAF9BFDBB7D - e77b5e384ebfa437"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(6) suspend resume partial function for closure #1 () async -&gt; () in SpotifyPodcast.InfoPdcastViewModel.queryChange() -&gt; ()"
+                  moduleName = "SpotifyPodcast.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/denisostapiv/Desktop/spotifypodcasts/SpotifyPodcast/SpotifyPodcast/Sources/ViewModel/InfoPdcastViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "72"
+                  endingLineNumber = "72">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

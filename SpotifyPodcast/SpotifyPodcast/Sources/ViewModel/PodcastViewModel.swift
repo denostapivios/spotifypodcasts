@@ -8,28 +8,26 @@
 import Foundation
 import AVKit
 
+@MainActor
 class PodcastViewModel: ObservableObject {
-    
     @Published var isPlayerPresented = false
     @Published var errorMessage: String?
+    @Published var podcastResult: PodcastResponse?
+    @Published var rows:[PodcastRow] = []
     var player: AVPlayer?
     
-    private let cacheManager = CacheManager.shared  // Додаємо CacheManager для кешування
+    private let cacheManager = CacheManager()
     private let service: PodcastServiceProtocol
     private let cacheKey = "cachedPodcasts"
     
     internal init(service: any PodcastServiceProtocol = PodcastService()) {
         self.service = service
-        self.podcastResult = podcastResult
-        self.rows = rows
     }
     
     enum PodcastImage: Hashable {
-        case remoute (URL)
+        case remote (URL)
         case local (String)
     }
-    
-    
     
     struct PodcastRow: Identifiable, Hashable {
         let id = UUID()
@@ -39,45 +37,33 @@ class PodcastViewModel: ObservableObject {
         let duration: Int
         let releaseDate: String
         let audioPreview: String
+        let sharingInfo: String
         
     }
-    
-    @Published var podcastResult: PodcastResponse?
-    {
-        willSet{
-            objectWillChange.send()
-        }
-    }
-    
-    @Published var rows:[PodcastRow] = []
-    
-    func procesResult(dataObject:PodcastResponse) -> [PodcastRow] {
-        
+
+    func processResult(dataObject:PodcastResponse) -> [PodcastRow] {
         dataObject.data?.podcastUnionV2?.episodesV2?.items?.map { episodData in
             let image:PodcastImage
             if
                 let imageString = episodData.entity?.data?.coverArt?.sources?.last?.url,
                 let url = URL(string: imageString){
-                
-                image = .remoute(url)
-                
+                image = .remote(url)
             } else {
-                
                 image = .local("photo")
             }
-            // Перетворення тривалість в хв
             let durationMilliseconds = episodData.entity?.data?.duration?.totalMilliseconds ?? 0
             let durationMinutes = durationMilliseconds / 60000
+            // Convert duration to minutes
             
-            // Перетворення дати
             let releaseDateIosString = episodData.entity?.data?.releaseDate?.isoString ?? "-"
             let formattedDate = ISO8601DateFormatter()
                 .date(from: releaseDateIosString)
                 .map { DateFormatter.localizedString(from: $0, dateStyle: .short, timeStyle: .none) }
             ?? "Invalid date format"
+            //Date conversion
             
-            // audio
             let audioLink = episodData.entity?.data?.audioPreview?.url ?? "-"
+            // Audio
             
             return PodcastRow(
                 title: episodData.entity?.data?.name ?? "-",
@@ -85,8 +71,8 @@ class PodcastViewModel: ObservableObject {
                 description: episodData.entity?.data?.description ?? "-",
                 duration: durationMinutes,
                 releaseDate: formattedDate,
-                audioPreview: audioLink
-                
+                audioPreview: audioLink,
+                sharingInfo: episodData.entity?.data?.sharingInfo?.shareUrl ?? "-"
             )
         }
         ?? []
@@ -98,7 +84,6 @@ class PodcastViewModel: ObservableObject {
             print("Невірний URL для аудіо")
             return
         }
-        
         player = AVPlayer(url: url)
         player?.play()
         isPlayerPresented = true
@@ -107,9 +92,8 @@ class PodcastViewModel: ObservableObject {
     func loadData() {
         Task {
             do {
-                // Перевіряємо, чи є кешовані дані
                 if let cachedData = try await cacheManager.loadCachedData() {
-                    let newRows = procesResult(dataObject: cachedData)
+                    let newRows = processResult(dataObject: cachedData)
                     await MainActor.run {
                         self.rows = newRows
                     }
@@ -120,22 +104,19 @@ class PodcastViewModel: ObservableObject {
                 }
             } catch {
                 print("Помилка завантаження з кешу: \(error.localizedDescription)")
-                await fetchPodcastsFromAPI() // Якщо не вдалося завантажити з кешу, намагаємося знову з API
+                await fetchPodcastsFromAPI()
             }
         }
     }
     
-    // Завантажуємо дані з API
+    // Loading data from the API
     func fetchPodcastsFromAPI() async {
-        
         do {
             let result = try await service.fetchData()
-            let newRows = procesResult(dataObject: result)
+            let newRows = processResult(dataObject: result)
             await MainActor.run {
                 self.rows = newRows
             }
-            
-            // Оновлюємо кеш після завантаження з API
             try await cacheManager.saveToCache(data: result)
             print("Дані завантажено з API та кешовано.")
         } catch {
@@ -144,11 +125,7 @@ class PodcastViewModel: ObservableObject {
         }
     }
     
-    // Відслідковуємо зміну запиту для оновлення даних
-    func queryChange() {
+    func refreshData() {
         loadData()
     }
-    
-    
-    
 }

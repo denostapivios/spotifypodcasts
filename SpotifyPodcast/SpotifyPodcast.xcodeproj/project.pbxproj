@@ -33,6 +33,16 @@
 		D9D079F52D71BE1400FD0C0C /* SpotifyPodcast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpotifyPodcast.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		D95ED5D72DBA30BE000DDAC5 /* Exceptions for "SpotifyPodcast" folder in "SpotifyPodcast" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = D9D079F42D71BE1400FD0C0C /* SpotifyPodcast */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D9415BC62D78D65A00B38E1E /* SpotifyPodcastTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -46,6 +56,9 @@
 		};
 		D9D079F72D71BE1400FD0C0C /* SpotifyPodcast */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D95ED5D72DBA30BE000DDAC5 /* Exceptions for "SpotifyPodcast" folder in "SpotifyPodcast" target */,
+			);
 			path = SpotifyPodcast;
 			sourceTree = "<group>";
 		};
@@ -348,6 +361,8 @@
 		};
 		D9D07A012D71BE1500FD0C0C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = D9D079F72D71BE1400FD0C0C /* SpotifyPodcast */;
+			baseConfigurationReferenceRelativePath = Config.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -411,6 +426,8 @@
 		};
 		D9D07A022D71BE1500FD0C0C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = D9D079F72D71BE1400FD0C0C /* SpotifyPodcast */;
+			baseConfigurationReferenceRelativePath = Config.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -467,6 +484,8 @@
 		};
 		D9D07A042D71BE1500FD0C0C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = D9D079F72D71BE1400FD0C0C /* SpotifyPodcast */;
+			baseConfigurationReferenceRelativePath = Config.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -475,6 +494,8 @@
 				DEVELOPMENT_ASSET_PATHS = "\"SpotifyPodcast/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SpotifyPodcast/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -495,6 +516,8 @@
 		};
 		D9D07A052D71BE1500FD0C0C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = D9D079F72D71BE1400FD0C0C /* SpotifyPodcast */;
+			baseConfigurationReferenceRelativePath = Config.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -503,6 +526,8 @@
 				DEVELOPMENT_ASSET_PATHS = "\"SpotifyPodcast/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SpotifyPodcast/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

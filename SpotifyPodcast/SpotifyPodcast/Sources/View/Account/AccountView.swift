@@ -7,7 +7,15 @@
 
 import SwiftUI
 
+enum SectionRow: String, CaseIterable {
+    case downloaded = "Downloaded"
+    case favorite = "Favorite"
+    case settings = "Settings"
+    case info = "Info"
+}
+
 struct AccountView: View {
+    
     var body: some View {
         NavigationView {
             List {
@@ -29,19 +37,13 @@ struct AccountView: View {
                 }
                 
                 Section {
-                    NavigationLink(destination: Label("Downloaded podcasts", systemImage: "square.and.arrow.down.fill")) {
-                        Text("Downloaded")
-                    }
-                    NavigationLink(destination: Label("Favorite podcasts", systemImage: "star.fill")) {
-                        Text("Favorite")
-                    }
-                    NavigationLink(destination: Label("All settings", systemImage: "gearshape.fill")) {
-                        Text("Settings")
-                    }
-                    NavigationLink(destination: Label("Info App", systemImage: "info.circle.fill")) {
-                        Text("Info")
+                    ForEach(SectionRow.allCases, id: \.self) { row in
+                        NavigationLink(destination: Text(row.rawValue)) {
+                            Text(row.rawValue)
+                        }
                     }
                 }
+                
                 Text("Version 0.0.1")
                     .foregroundStyle(.gray)
             }
