@@ -59,6 +59,7 @@ struct NewItem: View {
         description: "This is a description of the sample podcast. This is a description of the sample podcast.This is a description of the sample podcast.",
         duration: 60,
         releaseDate: "01.01.0001",
-        audioPreview: "-"
+        audioPreview: "-",
+        sharingInfo: "-"
     ))
 }

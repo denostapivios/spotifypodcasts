@@ -111,10 +111,12 @@ private extension InfoPodcastView {
     }
     
     var shareIcon: some View {
-        Image(systemName: "square.and.arrow.up")
-            .resizable()
-            .scaledToFit()
-            .frame(width: 24, height: 24)
+        ShareLink(item: podcast.sharingInfo) {
+            Image(systemName: "square.and.arrow.up")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+        }
     }
     
     var moreIcon: some View {
@@ -173,6 +175,7 @@ private extension InfoPodcastView {
         description: "This is a description of the sample podcast.",
         duration: 60,
         releaseDate: "01.01.0001",
-        audioPreview: "-"
+        audioPreview: "-",
+        sharingInfo: "-"
     ))
 }

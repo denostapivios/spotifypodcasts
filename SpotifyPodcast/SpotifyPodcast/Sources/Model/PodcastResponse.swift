@@ -40,6 +40,7 @@ struct PodcastEpisodeData: Codable {
     let duration: Duration?
     let releaseDate: ReleaseDate?
     let audioPreview: AudioPreview?
+    let sharingInfo: SharingInfo?
 }
 
 struct CoverArt: Codable {
@@ -60,4 +61,8 @@ struct ReleaseDate: Codable {
 
 struct AudioPreview: Codable {
     let url: String?
+}
+
+struct SharingInfo: Codable {
+    let shareUrl: String?
 }

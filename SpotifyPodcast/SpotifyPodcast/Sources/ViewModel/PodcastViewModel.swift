@@ -37,6 +37,7 @@ class PodcastViewModel: ObservableObject {
         let duration: Int
         let releaseDate: String
         let audioPreview: String
+        let sharingInfo: String
         
     }
 
@@ -70,8 +71,8 @@ class PodcastViewModel: ObservableObject {
                 description: episodData.entity?.data?.description ?? "-",
                 duration: durationMinutes,
                 releaseDate: formattedDate,
-                audioPreview: audioLink
-                
+                audioPreview: audioLink,
+                sharingInfo: episodData.entity?.data?.sharingInfo?.shareUrl ?? "-"
             )
         }
         ?? []
