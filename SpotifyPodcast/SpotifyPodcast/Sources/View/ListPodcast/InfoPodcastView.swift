@@ -11,7 +11,7 @@ import AVKit
 
 struct InfoPodcastView: View {
     @ObservedObject var viewModel = PodcastViewModel()
-    let podcast: PodcastViewModel.PodcastRow
+    let podcast: PodcastEpisodeUIModel
     
     var body: some View {
         ScrollView {
@@ -39,7 +39,9 @@ struct InfoPodcastView: View {
                     Spacer()
                     
                     Button(action: {
-                        viewModel.playAudio(from: podcast.audioPreview)
+                        if let url = podcast.audioPreview {
+                            viewModel.playAudio(from: url)
+                        }
                     }) {
                         
                         HStack {
@@ -87,7 +89,7 @@ private extension InfoPodcastView {
     }
     
     var duration: some View {
-        Text("\(podcast.duration) m")
+        Text(podcast.duration)
             .font(.system(size: 14))
     }
     
@@ -111,7 +113,7 @@ private extension InfoPodcastView {
     }
     
     var shareIcon: some View {
-        ShareLink(item: podcast.sharingInfo) {
+        ShareLink(item: podcast.sharingInfo ?? "https://example.com/share") {
             Image(systemName: "square.and.arrow.up")
                 .resizable()
                 .scaledToFit()
@@ -169,13 +171,9 @@ private extension InfoPodcastView {
 }
 
 #Preview {
-    InfoPodcastView(podcast: PodcastViewModel.PodcastRow(
-        title: "Sample Podcast",
-        image: .local("photo"),
-        description: "This is a description of the sample podcast.",
-        duration: 60,
-        releaseDate: "01.01.0001",
-        audioPreview: "-",
-        sharingInfo: "-"
-    ))
+    if let viewModel = PodcastEpisodeUIModel(from: .mock) {
+        InfoPodcastView(podcast: viewModel)
+    } else {
+        Text("Failed to init PodcastEpisodeUIModel from mock")
+    }
 }

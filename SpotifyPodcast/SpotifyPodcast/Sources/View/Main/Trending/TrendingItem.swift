@@ -9,7 +9,7 @@ import SwiftUI
 import Kingfisher
 
 struct TrendingItem: View {
-    var podcast: PodcastViewModel.PodcastRow
+    var podcast: PodcastEpisodeUIModel
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -42,13 +42,9 @@ struct TrendingItem: View {
 }
 
 #Preview {
-    TrendingItem(podcast: PodcastViewModel.PodcastRow (
-        title: "This is a description of the sample podcast.",
-        image: .local("photo"),
-        description: "This is a description of the sample podcast.",
-        duration: 60,
-        releaseDate: "01.01.0001",
-        audioPreview: "-",
-        sharingInfo: "-"
-    ))
+    if let viewModel = PodcastEpisodeUIModel(from: .mock) {
+        TrendingItem(podcast: viewModel)
+    } else {
+        Text("Failed to init PodcastEpisodeUIModel from mock")
+    }
 }

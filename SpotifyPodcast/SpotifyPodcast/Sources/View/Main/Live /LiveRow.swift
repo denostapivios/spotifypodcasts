@@ -16,13 +16,13 @@ struct LiveRow: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            if viewModel.rows.count > 0 {
+            if !viewModel.episodes.isEmpty {
                 Text("Live Podcas")
                     .font(.title2)
                     .fontWeight(.bold)
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHGrid(rows: rows, spacing: 8){
-                        ForEach(viewModel.rows) { podcast in
+                        ForEach(viewModel.episodes) { podcast in
                             NavigationLink(value: podcast){
                                 LiveItem(podcast: podcast)
                             }

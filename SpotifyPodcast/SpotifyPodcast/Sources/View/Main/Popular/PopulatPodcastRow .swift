@@ -12,13 +12,13 @@ struct PopularPodcastRow: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            if viewModel.rows.count > 0 {
+            if !viewModel.episodes.isEmpty {
                 Text("Popupular Podcasts")
                     .font(.title2)
                     .fontWeight(.bold)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(viewModel.rows) { podcast in
+                        ForEach(viewModel.episodes) { podcast in
                             NavigationLink(value: podcast) {
                                 PopularItem(podcast: podcast)
                             }

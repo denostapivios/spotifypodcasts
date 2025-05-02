@@ -13,8 +13,8 @@ struct ListPodcast: View {
     
     var body: some View {
         VStack {
-            if viewModel.rows.count > 0 {
-                List(viewModel.rows, id: \.title) { row in
+            if !viewModel.episodes.isEmpty {
+                List(viewModel.episodes) { row in
                     NavigationLink(value: row) {
                         VStack(spacing:10) {
                             HStack(spacing:12) {
@@ -63,7 +63,7 @@ struct ListPodcast: View {
                                     .scaledToFit()
                                     .frame(width: 24, height: 24)
                                 Spacer()
-                                Text("\(row.duration) min")
+                                Text(row.duration)
                                     .font(.system(size: 14))
                             }
                         }
