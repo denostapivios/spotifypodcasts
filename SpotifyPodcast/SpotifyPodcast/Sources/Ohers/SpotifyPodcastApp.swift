@@ -15,39 +15,31 @@ struct SpotifyPodcastApp: App {
     var body: some Scene {
         WindowGroup {
             TabView {
-                NavigationStack {
-                    MainView()
-                        .navigationDestination(for: PodcastEpisodeUIModel.self) { podcast in
-                            InfoPodcastView(podcast: podcast)
-                        }
-                }
-                .tabItem {
-                    Image(systemName: "house")
-                    Text("Home")
-                }
-                
-                NavigationStack {
-                    ListPodcast()
-                        .navigationDestination(for: PodcastEpisodeUIModel.self) { podcast in
-                            InfoPodcastView(podcast: podcast)
-                        }
-                }
-                .tabItem {
-                    Image(systemName: "music.note.list")
-                    Text("Podcasts")
-                }
-                
-                SearchView()
-                    .tabItem {
-                        Image(systemName: "magnifyingglass")
-                        Text("Search")
+                Tab("Home", systemImage: "house") {
+                    NavigationStack {
+                        MainView()
+                            .navigationDestination(for: PodcastEpisodeUIModel.self) { podcast in
+                                InfoPodcastView(podcast: podcast)
+                            }
                     }
+                }
                 
-                AccountView()
-                    .tabItem {
-                        Image(systemName: "person.crop.circle")
-                        Text("Account")
+                Tab("Popular", systemImage: "music.note.list") {
+                    NavigationStack {
+                        ListPodcast(viewModel: PodcastViewModel())
+                            .navigationDestination(for: PodcastEpisodeUIModel.self) { podcast in
+                                InfoPodcastView(podcast: podcast)
+                            }
                     }
+                }
+                
+                Tab("Favorite", systemImage: "star.fill") {
+                    SearchView()
+                }
+                
+                Tab("Account", systemImage: "person.crop.circle") {
+                    AccountView()
+                }
             }
             .preferredColorScheme(isDarkMode ? .dark : .light)
         }
