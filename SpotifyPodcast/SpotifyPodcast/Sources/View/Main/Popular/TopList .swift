@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PopularPodcastRow: View {
+struct TopList: View {
     @ObservedObject var viewModel: PodcastViewModel
     
     var body: some View {
@@ -20,7 +20,7 @@ struct PopularPodcastRow: View {
                     HStack {
                         ForEach(viewModel.episodes) { podcast in
                             NavigationLink(value: podcast) {
-                                PopularItem(podcast: podcast)
+                                TopItem(podcast: podcast)
                             }
                             .buttonStyle(.plain)
                             .padding(.trailing, 8)
@@ -42,5 +42,5 @@ struct PopularPodcastRow: View {
 }
 
 #Preview {
-    PopularPodcastRow(viewModel: PodcastViewModel())
+    TopList(viewModel: PodcastViewModel())
 }

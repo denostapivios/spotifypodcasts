@@ -8,7 +8,7 @@
 import SwiftUI
 import Kingfisher
 
-struct PopularItem: View {
+struct TopItem: View {
     var podcast: PodcastEpisodeUIModel
     
     var body: some View {
@@ -43,7 +43,7 @@ struct PopularItem: View {
 
 #Preview {
     if let viewModel = PodcastEpisodeUIModel(from: .mock) {
-        PopularItem(podcast: viewModel)
+        TopItem(podcast: viewModel)
     } else {
         Text("Failed to init PodcastEpisodeUIModel from mock")
     }

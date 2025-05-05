@@ -20,7 +20,7 @@ struct TrendingRow: View {
                     HStack {
                         ForEach(viewModel.episodes) { podcast in
                             NavigationLink(value: podcast) {
-                                PopularItem(podcast: podcast)
+                                TopItem(podcast: podcast)
                             }
                             .buttonStyle(.plain)
                         }
