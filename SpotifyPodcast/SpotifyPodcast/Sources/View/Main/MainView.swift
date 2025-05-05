@@ -18,6 +18,7 @@ struct MainView: View {
                 AllList(viewModel: viewModel)
             }
         }
+        .scrollIndicators(.hidden)
         .padding(16)
         .refreshable {
             await viewModel.fetchPodcastsFromAPI()
