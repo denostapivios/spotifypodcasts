@@ -17,7 +17,7 @@ struct NewPodcastRow: View {
     var body: some View {
         VStack(alignment: .leading) {
             if !viewModel.episodes.isEmpty {
-                Text("New Releases")
+                Text("All podcasts")
                     .font(.title2)
                     .fontWeight(.bold)
                 ScrollView(.horizontal, showsIndicators: false) {

@@ -15,9 +15,7 @@ struct MainView: View {
             VStack(alignment: .leading, spacing: 24) {
                 AppBar()
                 PopularPodcastRow(viewModel: viewModel)
-                NewPodcastRow(viewModel: viewModel)
-                TrendingRow(viewModel: viewModel)
-                LiveRow(viewModel: viewModel)
+                AllList(viewModel: viewModel)
             }
         }
         .padding(16)

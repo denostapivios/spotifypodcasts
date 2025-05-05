@@ -13,7 +13,7 @@ struct PopularPodcastRow: View {
     var body: some View {
         VStack(alignment: .leading) {
             if !viewModel.episodes.isEmpty {
-                Text("Popupular Podcasts")
+                Text("Top Podcasts")
                     .font(.title2)
                     .fontWeight(.bold)
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -23,8 +23,11 @@ struct PopularPodcastRow: View {
                                 PopularItem(podcast: podcast)
                             }
                             .buttonStyle(.plain)
+                            .padding(.trailing, 8)
                         }
+                        
                     }
+                   
                     .frame(height: 185)
                 }
             }
