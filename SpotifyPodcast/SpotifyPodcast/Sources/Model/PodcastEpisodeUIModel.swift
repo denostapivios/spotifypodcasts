@@ -64,7 +64,7 @@ extension PodcastItem {
                     coverArt: CoverArt(sources: [
                         CoverSource(url: "https://via.placeholder.com/150")
                     ]),
-                    duration: Duration(totalMilliseconds: 900_000), // 15 хв
+                    duration: Duration(totalMilliseconds: 900_000),
                     releaseDate: ReleaseDate(isoString: "2024-05-01T12:00:00Z"),
                     audioPreview: AudioPreview(url: "https://example.com/audio.mp3"),
                     sharingInfo: SharingInfo(shareUrl: "https://example.com/share")
