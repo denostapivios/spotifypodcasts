@@ -110,8 +110,8 @@ private extension InfoPodcastView {
     }
     
     var shareIcon: some View {
-        ShareLink(item: podcast.sharingInfo ?? "https://example.com/share") {
-            Image(systemName: "square.and.arrow.up")
+        ShareLink(item: podcast.sharingInfo ?? Constants.String.defaultShareURL) {
+            Image(systemName: Constants.Icons.share)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 24, height: 24)
