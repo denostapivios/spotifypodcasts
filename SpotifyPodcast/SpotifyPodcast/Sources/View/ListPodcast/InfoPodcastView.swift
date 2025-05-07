@@ -38,12 +38,11 @@ struct InfoPodcastView: View {
                     
                     Spacer()
                     
-                    Button(action: {
+                    Button {
                         if let url = podcast.audioPreview {
                             viewModel.playAudio(from: url)
                         }
-                    }) {
-                        
+                    } label: {
                         HStack {
                             buttonImage
                             buttonText
