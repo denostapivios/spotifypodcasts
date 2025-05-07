@@ -19,28 +19,27 @@ struct PodcastEpisode: Identifiable,Hashable {
     
     init?(from item: PodcastItem) {
         guard let data = item.entity?.data,
-              let id = data.id,
-              let name = data.name,
-              let description = data.description,
-              let imageUrl = data.coverArt?.sources?.last?.url,
-              let duration = data.duration?.totalMilliseconds,
-              let releaseDate = data.releaseDate?.isoString else {
+              let id = data.id else {
             return nil
         }
         
         self.id = id
-        self.title = name
-        self.description = description
+        self.title = data.name ?? "Name podcast"
+        self.description = data.description ?? "Description podcast"
         
-        self.image = URL(string: imageUrl)
+        self.image = data.coverArt?.sources?.last?.url
+            .flatMap { URL(string: $0) }
             .map { .remote($0) } ?? .local("photo")
         
-        self.duration = "\(duration / 60000) m"
+        self.duration = data.duration?.totalMilliseconds
+            .map { "\($0 / 60000) m" } ?? "0 m"
+        
         
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
-        self.releaseDate = ISO8601DateFormatter().date(from: releaseDate)
-            .map { formatter.string(from: $0) } ?? String(releaseDate.prefix(10))
+        self.releaseDate = data.releaseDate?.isoString
+            .flatMap { ISO8601DateFormatter().date(from: $0) }
+            .map { formatter.string(from: $0) } ?? "0.00.0000"
         
         self.audioPreview = data.audioPreview?.url
         self.sharingInfo = data.sharingInfo?.shareUrl
