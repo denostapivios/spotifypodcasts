@@ -52,9 +52,5 @@ struct NewItem: View {
 }
 
 #Preview {
-    if let viewModel = PodcastEpisode(from: .mock) {
-        NewItem(podcast: viewModel)
-    } else {
-        Text("Failed to init PodcastEpisodeUIModel from mock")
-    }
+        NewItem(podcast: PodcastEpisode.mock)
 }

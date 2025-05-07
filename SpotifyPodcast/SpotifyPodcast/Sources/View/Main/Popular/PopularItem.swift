@@ -42,10 +42,5 @@ struct PopularItem: View {
 }
 
 #Preview {
-    if let viewModel = PodcastEpisode(from: .mock) {
-        PopularItem(podcast: viewModel)
-    } else {
-        Text("Failed to init PodcastEpisodeUIModel from mock")
-    }
-    
+    PopularItem(podcast: PodcastEpisode.mock)
 }

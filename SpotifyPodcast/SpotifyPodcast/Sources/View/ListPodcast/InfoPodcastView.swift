@@ -168,9 +168,5 @@ private extension InfoPodcastView {
 }
 
 #Preview {
-    if let viewModel = PodcastEpisode(from: .mock) {
-        InfoPodcastView(podcast: viewModel)
-    } else {
-        Text("Failed to init PodcastEpisodeUIModel from mock")
-    }
+    InfoPodcastView(podcast: PodcastEpisode.mock)
 }

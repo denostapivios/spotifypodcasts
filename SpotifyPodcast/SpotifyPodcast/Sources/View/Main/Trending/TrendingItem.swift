@@ -42,9 +42,5 @@ struct TrendingItem: View {
 }
 
 #Preview {
-    if let viewModel = PodcastEpisode(from: .mock) {
-        TrendingItem(podcast: viewModel)
-    } else {
-        Text("Failed to init PodcastEpisodeUIModel from mock")
-    }
+        TrendingItem(podcast: PodcastEpisode.mock)
 }

@@ -16,25 +16,25 @@ struct NewPodcastRow: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            if !viewModel.episodes.isEmpty {
-                Text("New Releases")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHGrid(rows: rows, spacing: 8) {
-                        ForEach(viewModel.episodes) { podcast in
-                            NavigationLink(value: podcast) {
-                                NewItem(podcast: podcast)
-                            }
-                            .buttonStyle(.plain)
+            
+            Text("New Releases")
+                .font(.title2)
+                .fontWeight(.bold)
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHGrid(rows: rows, spacing: 8) {
+                    ForEach(viewModel.episodes.isEmpty ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
+                        NavigationLink(value: podcast) {
+                            NewItem(podcast: podcast)
+                                .redacted(reason: viewModel.episodes.isEmpty ? .placeholder : [])
+                                .animation(.default, value: viewModel.episodes.isEmpty)
                         }
+                        .buttonStyle(.plain)
                     }
-                    .frame(height: 140)
                 }
+                .frame(height: 140)
             }
-            else {
-                Text("Завантаження...")
-            }
+            .redacted(reason: viewModel.episodes.isEmpty ? .placeholder : [])
+            .animation(.default, value: viewModel.episodes.isEmpty)
         }
         .onAppear {
             viewModel.refreshData()

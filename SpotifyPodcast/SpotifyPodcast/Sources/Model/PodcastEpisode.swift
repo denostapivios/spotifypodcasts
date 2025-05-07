@@ -48,24 +48,41 @@ enum PodcastImage: Hashable {
     case placeholder (String)
 }
 
-extension PodcastItem {
-    static var mock: PodcastItem {
-        PodcastItem(
-            uid: "mock-uid",
-            entity: PodcastEntity(
-                data: PodcastEpisodeData(
-                    id: "1",
-                    name: "Mock Episode Title",
-                    description: "Mock description for preview.",
-                    coverArt: CoverArt(sources: [
-                        CoverSource(url: "https://via.placeholder.com/150")
-                    ]),
-                    duration: Duration(totalMilliseconds: 900_000), // 15 хв
-                    releaseDate: ReleaseDate(isoString: "2024-05-01T12:00:00Z"),
-                    audioPreview: AudioPreview(url: "https://example.com/audio.mp3"),
-                    sharingInfo: SharingInfo(shareUrl: "https://example.com/share")
-                )
-            )
+extension PodcastEpisode {
+    static var mock: PodcastEpisode {
+        PodcastEpisode(
+            id: "mock-1",
+            title: "Mock Episode Title",
+            description: "Mock description for preview.",
+            image: .placeholder("photo"),
+            duration: "15 хв",
+            releaseDate: "01.05.2024",
+            audioPreview: "https://example.com/audio.mp3",
+            sharingInfo: "https://example.com/share"
         )
+    }
+    
+    static var placeholder: [PodcastEpisode] {
+        (0..<5).map { _ in .mock }
+    }
+    
+    init(
+        id: String,
+        title: String,
+        description: String,
+        image: PodcastImage,
+        duration: String,
+        releaseDate: String,
+        audioPreview: String?,
+        sharingInfo: String?
+    ) {
+        self.id = id
+        self.title = title
+        self.description = description
+        self.image = image
+        self.duration = duration
+        self.releaseDate = releaseDate
+        self.audioPreview = audioPreview
+        self.sharingInfo = sharingInfo
     }
 }

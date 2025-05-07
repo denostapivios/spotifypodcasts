@@ -45,9 +45,5 @@ struct LiveItem: View {
 }
 
 #Preview {
-    if let viewModel = PodcastEpisode(from: .mock) {
-        LiveItem(podcast: viewModel)
-    } else {
-        Text("Failed to init PodcastEpisodeUIModel from mock")
-    }
+    LiveItem(podcast: PodcastEpisode.mock)
 }
