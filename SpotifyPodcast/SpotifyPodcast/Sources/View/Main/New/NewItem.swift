@@ -15,7 +15,7 @@ struct NewItem: View {
         VStack(alignment: .leading) {
             HStack {
                 switch podcast.image {
-                case .local(let imageName):
+                case .placeholder(let imageName):
                     Image(imageName)
                         .resizable()
                         .frame(width: 64, height: 64)

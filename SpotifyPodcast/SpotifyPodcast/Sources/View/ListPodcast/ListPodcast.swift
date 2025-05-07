@@ -29,7 +29,7 @@ struct ListPodcast: View {
                                         .frame(width: 50, height: 50)
                                         .cornerRadius(4)
                                     
-                                case .local(let imageName):
+                                case .placeholder(let imageName):
                                     Image(imageName)
                                         .resizable()
                                         .scaledToFit()

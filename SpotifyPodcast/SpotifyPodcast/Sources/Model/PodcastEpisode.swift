@@ -29,7 +29,7 @@ struct PodcastEpisode: Identifiable,Hashable {
         
         self.image = data.coverArt?.sources?.last?.url
             .flatMap { URL(string: $0) }
-            .map { .remote($0) } ?? .local("photo")
+            .map { .remote($0) } ?? .placeholder("photo")
         
         self.duration = data.duration?.totalMilliseconds
             .map { "\($0 / 60000) m" } ?? "0 m"
@@ -45,7 +45,7 @@ struct PodcastEpisode: Identifiable,Hashable {
 
 enum PodcastImage: Hashable {
     case remote (URL)
-    case local (String)
+    case placeholder (String)
 }
 
 extension PodcastItem {

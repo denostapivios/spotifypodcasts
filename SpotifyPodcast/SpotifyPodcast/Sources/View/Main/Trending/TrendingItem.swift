@@ -14,7 +14,7 @@ struct TrendingItem: View {
     var body: some View {
         VStack(alignment: .leading) {
             switch podcast.image {
-            case .local(let imageName):
+            case .placeholder(let imageName):
                 Image(imageName)
                     .resizable()
                     .frame(width: 250, height: 250)
