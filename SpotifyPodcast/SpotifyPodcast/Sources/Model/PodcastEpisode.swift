@@ -34,12 +34,9 @@ struct PodcastEpisode: Identifiable,Hashable {
         self.duration = data.duration?.totalMilliseconds
             .map { "\($0 / 60000) m" } ?? "0 m"
         
-        
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
         self.releaseDate = data.releaseDate?.isoString
-            .flatMap { ISO8601DateFormatter().date(from: $0) }
-            .map { formatter.string(from: $0) } ?? "0.00.0000"
+            .flatMap { ISO8601DateFormatter.shared.date(from: $0) }
+            .map { DateFormatter.mediumDate.string(from: $0) } ?? "0.00.0000"
         
         self.audioPreview = data.audioPreview?.url
         self.sharingInfo = data.sharingInfo?.shareUrl
