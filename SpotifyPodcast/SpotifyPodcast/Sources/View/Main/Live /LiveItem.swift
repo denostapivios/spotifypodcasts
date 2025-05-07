@@ -9,7 +9,7 @@ import SwiftUI
 import Kingfisher
 
 struct LiveItem: View {
-    var podcast: PodcastEpisodeUIModel
+    var podcast: PodcastEpisode
     
     var body: some View {
         HStack {
@@ -45,7 +45,7 @@ struct LiveItem: View {
 }
 
 #Preview {
-    if let viewModel = PodcastEpisodeUIModel(from: .mock) {
+    if let viewModel = PodcastEpisode(from: .mock) {
         LiveItem(podcast: viewModel)
     } else {
         Text("Failed to init PodcastEpisodeUIModel from mock")

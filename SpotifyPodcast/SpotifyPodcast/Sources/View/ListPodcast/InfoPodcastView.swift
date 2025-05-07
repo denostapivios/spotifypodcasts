@@ -11,7 +11,7 @@ import AVKit
 
 struct InfoPodcastView: View {
     @ObservedObject var viewModel = PodcastViewModel()
-    let podcast: PodcastEpisodeUIModel
+    let podcast: PodcastEpisode
     
     var body: some View {
         ScrollView {
@@ -171,7 +171,7 @@ private extension InfoPodcastView {
 }
 
 #Preview {
-    if let viewModel = PodcastEpisodeUIModel(from: .mock) {
+    if let viewModel = PodcastEpisode(from: .mock) {
         InfoPodcastView(podcast: viewModel)
     } else {
         Text("Failed to init PodcastEpisodeUIModel from mock")

@@ -17,7 +17,7 @@ struct SpotifyPodcastApp: App {
             TabView {
                 NavigationStack {
                     MainView()
-                        .navigationDestination(for: PodcastEpisodeUIModel.self) { podcast in
+                        .navigationDestination(for: PodcastEpisode.self) { podcast in
                             InfoPodcastView(podcast: podcast)
                         }
                 }
@@ -28,7 +28,7 @@ struct SpotifyPodcastApp: App {
                 
                 NavigationStack {
                     ListPodcast()
-                        .navigationDestination(for: PodcastEpisodeUIModel.self) { podcast in
+                        .navigationDestination(for: PodcastEpisode.self) { podcast in
                             InfoPodcastView(podcast: podcast)
                         }
                 }
