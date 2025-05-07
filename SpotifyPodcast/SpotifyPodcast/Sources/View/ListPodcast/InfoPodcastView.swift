@@ -56,11 +56,9 @@ struct InfoPodcastView: View {
             }
             .padding(.bottom, 10)
             
-            VStack {
-                description
-            }
-            .padding(.bottom, 10)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            description
+                .padding(.bottom, 10)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             Spacer()
         }
