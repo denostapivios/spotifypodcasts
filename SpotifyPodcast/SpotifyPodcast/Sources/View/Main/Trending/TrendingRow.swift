@@ -12,26 +12,26 @@ struct TrendingRow: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            if viewModel.rows.count > 0 {
-                Text("Trending")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(viewModel.rows) { podcast in
-                            NavigationLink(value: podcast) {
-                                PopularItem(podcast: podcast)
-                            }
-                            .buttonStyle(.plain)
+            Text("Trending")
+                .font(.title2)
+                .fontWeight(.bold)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack {
+                    ForEach(viewModel.episodes.isEmpty ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
+                        NavigationLink(value: podcast) {
+                            PopularItem(podcast: podcast)
+                                .redacted(reason: viewModel.episodes.isEmpty ? .placeholder : [])
+                                .animation(.default, value: viewModel.episodes.isEmpty)
                         }
+                        .buttonStyle(.plain)
                     }
                 }
-            } else {
-                Text("Завантаження...")
             }
+            .redacted(reason: viewModel.episodes.isEmpty ? .placeholder : [])
+            .animation(.default, value: viewModel.episodes.isEmpty)
         }
         .onAppear {
-            viewModel.refreshData()  
+            viewModel.refreshData()
         }
     }
 }

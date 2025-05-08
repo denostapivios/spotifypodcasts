@@ -9,12 +9,12 @@ import SwiftUI
 import Kingfisher
 
 struct PopularItem: View {
-    var podcast: PodcastViewModel.PodcastRow
+    var podcast: PodcastEpisode
     
     var body: some View {
         VStack(alignment: .leading) {
             switch podcast.image {
-            case .local(let imageName):
+            case .placeholder(let imageName):
                 Image(imageName)
                     .resizable()
                     .frame(width: 155, height: 155)
@@ -42,13 +42,5 @@ struct PopularItem: View {
 }
 
 #Preview {
-    PopularItem(podcast: PodcastViewModel.PodcastRow (
-        title: "This is a description of the sample podcast.",
-        image: .local("photo"),
-        description: "This is a description of the sample podcast.",
-        duration: 60,
-        releaseDate: "01.01.0001",
-        audioPreview: "-",
-        sharingInfo: "-"
-    ))
+    PopularItem(podcast: PodcastEpisode.mock)
 }

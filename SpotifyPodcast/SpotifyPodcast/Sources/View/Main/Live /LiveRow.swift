@@ -16,23 +16,22 @@ struct LiveRow: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            if viewModel.rows.count > 0 {
-                Text("Live Podcas")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHGrid(rows: rows, spacing: 8){
-                        ForEach(viewModel.rows) { podcast in
-                            NavigationLink(value: podcast){
-                                LiveItem(podcast: podcast)
-                            }
-                            .buttonStyle(.plain)
+            
+            Text("Live Podcas")
+                .font(.title2)
+                .fontWeight(.bold)
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHGrid(rows: rows, spacing: 8){
+                    ForEach(viewModel.episodes.isEmpty ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
+                        NavigationLink(value: podcast){
+                            LiveItem(podcast: podcast)
+                                .redacted(reason: viewModel.episodes.isEmpty ? .placeholder : [])
+                                .animation(.default, value: viewModel.episodes.isEmpty)
                         }
+                        .buttonStyle(.plain)
                     }
-                    .frame(height: 260)
                 }
-            } else {
-                Text("Завантаження...")
+                .frame(height: 260)
             }
         }
         .onAppear {

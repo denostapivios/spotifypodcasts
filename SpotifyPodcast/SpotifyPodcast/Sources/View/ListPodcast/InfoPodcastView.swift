@@ -11,7 +11,7 @@ import AVKit
 
 struct InfoPodcastView: View {
     @ObservedObject var viewModel = PodcastViewModel()
-    let podcast: PodcastViewModel.PodcastRow
+    let podcast: PodcastEpisode
     
     var body: some View {
         ScrollView {
@@ -38,10 +38,11 @@ struct InfoPodcastView: View {
                     
                     Spacer()
                     
-                    Button(action: {
-                        viewModel.playAudio(from: podcast.audioPreview)
-                    }) {
-                        
+                    Button {
+                        if let url = podcast.audioPreview {
+                            viewModel.playAudio(from: url)
+                        }
+                    } label: {
                         HStack {
                             buttonImage
                             buttonText
@@ -55,11 +56,9 @@ struct InfoPodcastView: View {
             }
             .padding(.bottom, 10)
             
-            VStack {
-                description
-            }
-            .padding(.bottom, 10)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            description
+                .padding(.bottom, 10)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             Spacer()
         }
@@ -87,7 +86,7 @@ private extension InfoPodcastView {
     }
     
     var duration: some View {
-        Text("\(podcast.duration) m")
+        Text(podcast.duration)
             .font(.system(size: 14))
     }
     
@@ -111,8 +110,8 @@ private extension InfoPodcastView {
     }
     
     var shareIcon: some View {
-        ShareLink(item: podcast.sharingInfo) {
-            Image(systemName: "square.and.arrow.up")
+        ShareLink(item: podcast.sharingInfo ?? Constants.String.defaultShareURL) {
+            Image(systemName: Constants.Icons.share)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 24, height: 24)
@@ -156,7 +155,7 @@ private extension InfoPodcastView {
                     .frame(width: 300, height: 300)
                     .cornerRadius(4)
             )
-        case .local(let imageName):
+        case .placeholder(let imageName):
             return AnyView(
                 Image(imageName) //інша іконка для відсутнього зображення
                     .resizable()
@@ -169,13 +168,5 @@ private extension InfoPodcastView {
 }
 
 #Preview {
-    InfoPodcastView(podcast: PodcastViewModel.PodcastRow(
-        title: "Sample Podcast",
-        image: .local("photo"),
-        description: "This is a description of the sample podcast.",
-        duration: 60,
-        releaseDate: "01.01.0001",
-        audioPreview: "-",
-        sharingInfo: "-"
-    ))
+    InfoPodcastView(podcast: PodcastEpisode.mock)
 }

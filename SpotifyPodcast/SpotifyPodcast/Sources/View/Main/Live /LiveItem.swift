@@ -9,13 +9,13 @@ import SwiftUI
 import Kingfisher
 
 struct LiveItem: View {
-    var podcast: PodcastViewModel.PodcastRow
+    var podcast: PodcastEpisode
     
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
                 switch podcast.image {
-                case .local(let imageName):
+                case .placeholder(let imageName):
                     Image(imageName)
                         .resizable()
                         .frame(width: 80, height: 80)
@@ -45,13 +45,5 @@ struct LiveItem: View {
 }
 
 #Preview {
-    LiveItem(podcast: PodcastViewModel.PodcastRow (
-        title: "This is a description of the sample podcast.",
-        image: .local("photo"),
-        description: "This is a description of the sample podcast.",
-        duration: 60,
-        releaseDate: "01.01.0001",
-        audioPreview: "-",
-        sharingInfo: "-"
-    ))
+    LiveItem(podcast: PodcastEpisode.mock)
 }
