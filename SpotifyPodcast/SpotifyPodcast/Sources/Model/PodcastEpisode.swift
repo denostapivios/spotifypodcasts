@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PodcastEpisode: Identifiable,Hashable {
+struct PodcastEpisode: Identifiable, Hashable {
     let id: String
     let title: String
     let description: String
@@ -16,6 +16,26 @@ struct PodcastEpisode: Identifiable,Hashable {
     let releaseDate: String
     let audioPreview: String?
     let sharingInfo: String?
+    
+    init(
+        id: String,
+        title: String,
+        description: String,
+        image: PodcastImage,
+        duration: String,
+        releaseDate: String,
+        audioPreview: String?,
+        sharingInfo: String?
+    ) {
+        self.id = id
+        self.title = title
+        self.description = description
+        self.image = image
+        self.duration = duration
+        self.releaseDate = releaseDate
+        self.audioPreview = audioPreview
+        self.sharingInfo = sharingInfo
+    }
     
     init?(from item: PodcastItem) {
         guard let data = item.entity?.data,
@@ -64,25 +84,5 @@ extension PodcastEpisode {
     
     static var placeholder: [PodcastEpisode] {
         (0..<5).map { _ in .mock }
-    }
-    
-    init(
-        id: String,
-        title: String,
-        description: String,
-        image: PodcastImage,
-        duration: String,
-        releaseDate: String,
-        audioPreview: String?,
-        sharingInfo: String?
-    ) {
-        self.id = id
-        self.title = title
-        self.description = description
-        self.image = image
-        self.duration = duration
-        self.releaseDate = releaseDate
-        self.audioPreview = audioPreview
-        self.sharingInfo = sharingInfo
     }
 }
