@@ -9,12 +9,12 @@ import SwiftUI
 import Kingfisher
 
 struct TrendingItem: View {
-    var podcast: PodcastEpisodeUIModel
+    var podcast: PodcastEpisode
     
     var body: some View {
         VStack(alignment: .leading) {
             switch podcast.image {
-            case .local(let imageName):
+            case .placeholder(let imageName):
                 Image(imageName)
                     .resizable()
                     .frame(width: 250, height: 250)
@@ -42,9 +42,5 @@ struct TrendingItem: View {
 }
 
 #Preview {
-    if let viewModel = PodcastEpisodeUIModel(from: .mock) {
-        TrendingItem(podcast: viewModel)
-    } else {
-        Text("Failed to init PodcastEpisodeUIModel from mock")
-    }
+        TrendingItem(podcast: PodcastEpisode.mock)
 }
