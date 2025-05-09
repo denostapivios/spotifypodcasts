@@ -16,7 +16,6 @@ struct NewPodcastRow: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            
             Text("New Releases")
                 .font(.title2)
                 .fontWeight(.bold)

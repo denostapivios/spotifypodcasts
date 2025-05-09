@@ -19,11 +19,7 @@ struct AppBar: View {
             
             Spacer()
             
-            Button("Update") {
-                Task {
-                    await viewModel.fetchPodcastsFromAPI()
-                }
-            }
+            Image(systemName: "magnifyingglass")
         }
         .padding(.trailing, 2)
     }
