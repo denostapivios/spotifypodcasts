@@ -43,6 +43,11 @@ class PodcastViewModel: ObservableObject {
         isPlayerPresented = true
     }
     
+    deinit {
+            player?.pause()
+            player = nil
+        }
+    
     func loadData() {
         Task {
             do {
