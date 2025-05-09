@@ -12,7 +12,7 @@ import AVKit
 class PodcastViewModel: ObservableObject {
     @Published var isPlayerPresented = false
     @Published var errorMessage: String?
-    @Published var episodes:[PodcastEpisodeUIModel] = []
+    @Published var episodes:[PodcastEpisode] = []
     var player: AVPlayer?
     
     private let cacheManager = CacheManager()
@@ -23,13 +23,13 @@ class PodcastViewModel: ObservableObject {
         self.service = service
     }
     
-    func processResult(dataObject:PodcastResponse) -> [PodcastEpisodeUIModel] {
+    func processResult(dataObject:PodcastResponse) -> [PodcastEpisode] {
         let items = dataObject.data?
                 .podcastUnionV2?
                 .episodesV2?
                 .items ?? []
 
-            return items.compactMap { PodcastEpisodeUIModel(from: $0) }
+            return items.compactMap { PodcastEpisode(from: $0) }
     }
     
     // audio
@@ -42,6 +42,11 @@ class PodcastViewModel: ObservableObject {
         player?.play()
         isPlayerPresented = true
     }
+    
+    deinit {
+            player?.pause()
+            player = nil
+        }
     
     func loadData() {
         Task {

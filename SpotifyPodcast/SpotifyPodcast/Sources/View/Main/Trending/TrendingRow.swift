@@ -18,20 +18,22 @@ struct TrendingRow: View {
                     .fontWeight(.bold)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(viewModel.episodes) { podcast in
+                        ForEach(viewModel.episodes.isEmpty ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
                             NavigationLink(value: podcast) {
                                 TopItem(podcast: podcast)
+                                    .redacted(reason: viewModel.episodes.isEmpty ? .placeholder : [])
+                                    .animation(.default, value: viewModel.episodes.isEmpty)
                             }
                             .buttonStyle(.plain)
                         }
                     }
                 }
-            } else {
-                Text("Завантаження...")
             }
         }
+        .redacted(reason: viewModel.episodes.isEmpty ? .placeholder : [])
+        .animation(.default, value: viewModel.episodes.isEmpty)
         .onAppear {
-            viewModel.refreshData()  
+            viewModel.refreshData()
         }
     }
 }

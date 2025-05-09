@@ -9,14 +9,14 @@ import SwiftUI
 import Kingfisher
 
 struct PopularItem: View {
-    var podcast: PodcastEpisodeUIModel
+    var podcast: PodcastEpisode
     
     var body: some View {
         VStack(alignment: .leading) {
             GeometryReader { geometry in
                 ZStack {
                     switch podcast.image {
-                    case .local(let imageName):
+                    case .placeholder(let imageName):
                         Image(imageName)
                             .resizable()
                             .scaledToFill()
@@ -50,9 +50,5 @@ struct PopularItem: View {
 
 
 #Preview {
-    if let viewModel = PodcastEpisodeUIModel(from: .mock) {
-        LiveItem(podcast: viewModel)
-    } else {
-        Text("Failed to init PodcastEpisodeUIModel from mock")
-    }
+    LiveItem(podcast: PodcastEpisode.mock)
 }

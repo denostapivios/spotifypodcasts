@@ -9,7 +9,7 @@ import SwiftUI
 import Kingfisher
 
 struct AllItem: View {
-    var podcast: PodcastEpisodeUIModel
+    var podcast: PodcastEpisode
     
     var body: some View {
         VStack(spacing:10) {
@@ -27,8 +27,8 @@ struct AllItem: View {
                 duration
             }
             Divider()
-                            .background(Color.gray.opacity(0.3))
-                            .padding(.top, 6)
+                .background(Color.gray.opacity(0.3))
+                .padding(.top, 6)
         }
         .padding(.vertical, 3)
     }
@@ -49,7 +49,7 @@ private extension AllItem {
                     .frame(width: 50, height: 50)
                     .cornerRadius(4)
             )
-        case .local(let imageName):
+        case .placeholder(let imageName):
             return AnyView(
                 Image(imageName)
                     .resizable()
@@ -95,9 +95,5 @@ private extension AllItem {
 }
 
 #Preview {
-    if let viewModel = PodcastEpisodeUIModel(from: .mock) {
-        AllItem(podcast: viewModel)
-    } else {
-        Text("Failed to init PodcastEpisodeUIModel from mock")
-    }
+    AllItem(podcast: PodcastEpisode.mock)
 }

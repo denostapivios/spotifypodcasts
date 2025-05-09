@@ -12,27 +12,21 @@ struct TopList: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            if !viewModel.episodes.isEmpty {
                 Text("Top Podcasts")
                     .font(.title2)
                     .fontWeight(.bold)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(viewModel.episodes) { podcast in
+                        ForEach(viewModel.episodes.isEmpty ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
                             NavigationLink(value: podcast) {
                                 TopItem(podcast: podcast)
+                                    .redacted(reason: viewModel.episodes.isEmpty ? .placeholder : [])
+                                    .animation(.default, value: viewModel.episodes.isEmpty)
                             }
                             .buttonStyle(.plain)
-                            .padding(.trailing, 8)
                         }
-                        
-                    }
-                   
-                    .frame(height: 185)
                 }
-            }
-            else {
-                Text("Завантаження...")
+                .frame(height: 185)
             }
         }
         .onAppear {
