@@ -11,6 +11,7 @@ struct TopList: View {
     @ObservedObject var viewModel: PodcastViewModel
     
     var body: some View {
+        
         VStack(alignment: .leading) {
             Text("Top Podcasts")
                 .font(.title2)
@@ -36,7 +37,7 @@ struct TopList: View {
         }
     }
 }
-    
-    #Preview {
-        TopList(viewModel: PodcastViewModel())
-    }
+
+#Preview {
+    TopList(viewModel: PodcastViewModel())
+}
