@@ -11,7 +11,7 @@ import AVKit
 
 struct InfoPodcastView: View {
     @ObservedObject var viewModel = PodcastViewModel()
-    let podcast: PodcastEpisodeUIModel
+    let podcast: PodcastEpisode
     
     var body: some View {
         ScrollView {
@@ -38,12 +38,11 @@ struct InfoPodcastView: View {
                     
                     Spacer()
                     
-                    Button(action: {
+                    Button {
                         if let url = podcast.audioPreview {
                             viewModel.playAudio(from: url)
                         }
-                    }) {
-                        
+                    } label: {
                         HStack {
                             buttonImage
                             buttonText
@@ -57,11 +56,9 @@ struct InfoPodcastView: View {
             }
             .padding(.bottom, 10)
             
-            VStack {
-                description
-            }
-            .padding(.bottom, 10)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            description
+                .padding(.bottom, 10)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             Spacer()
         }
@@ -113,8 +110,8 @@ private extension InfoPodcastView {
     }
     
     var shareIcon: some View {
-        ShareLink(item: podcast.sharingInfo ?? "https://example.com/share") {
-            Image(systemName: "square.and.arrow.up")
+        ShareLink(item: podcast.sharingInfo ?? Constants.String.defaultShareURL) {
+            Image(systemName: Constants.Icons.share)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 24, height: 24)
@@ -158,7 +155,7 @@ private extension InfoPodcastView {
                     .frame(width: 300, height: 300)
                     .cornerRadius(4)
             )
-        case .local(let imageName):
+        case .placeholder(let imageName):
             return AnyView(
                 Image(imageName) //інша іконка для відсутнього зображення
                     .resizable()
@@ -171,9 +168,5 @@ private extension InfoPodcastView {
 }
 
 #Preview {
-    if let viewModel = PodcastEpisodeUIModel(from: .mock) {
-        InfoPodcastView(podcast: viewModel)
-    } else {
-        Text("Failed to init PodcastEpisodeUIModel from mock")
-    }
+    InfoPodcastView(podcast: PodcastEpisode.mock)
 }
