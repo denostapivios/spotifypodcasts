@@ -35,6 +35,7 @@ struct TopList: View {
             }
         }
     }
+}
     
     #Preview {
         TopList(viewModel: PodcastViewModel())

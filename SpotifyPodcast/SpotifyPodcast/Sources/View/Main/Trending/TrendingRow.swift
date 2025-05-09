@@ -19,7 +19,7 @@ struct TrendingRow: View {
                 HStack {
                     ForEach(viewModel.episodes.isEmpty ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
                         NavigationLink(value: podcast) {
-                            PopularItem(podcast: podcast)
+                            TrendingItem(podcast: podcast)
                                 .redacted(reason: viewModel.episodes.isEmpty ? .placeholder : [])
                                 .animation(.default, value: viewModel.episodes.isEmpty)
                         }
