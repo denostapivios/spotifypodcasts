@@ -27,8 +27,8 @@ struct AllItem: View {
                 duration
             }
             Divider()
-                            .background(Color.gray.opacity(0.3))
-                            .padding(.top, 6)
+                .background(Color.gray.opacity(0.3))
+                .padding(.top, 6)
         }
         .padding(.vertical, 3)
     }
@@ -95,5 +95,5 @@ private extension AllItem {
 }
 
 #Preview {
-        AllItem(podcast: PodcastEpisode.mock)
+    AllItem(podcast: PodcastEpisode.mock)
 }
