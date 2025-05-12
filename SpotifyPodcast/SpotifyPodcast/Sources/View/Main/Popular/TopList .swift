@@ -32,7 +32,7 @@ struct TopList: View {
             }
             
             .onAppear {
-                viewModel.refreshData()
+                viewModel.loadDataIfNeeded()
             }
         }
     }

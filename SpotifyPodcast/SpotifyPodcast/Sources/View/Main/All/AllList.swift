@@ -29,7 +29,7 @@ struct AllList: View {
             }
         }
         .onAppear {
-            viewModel.refreshData()
+            viewModel.loadDataIfNeeded()
         }
     }
 }

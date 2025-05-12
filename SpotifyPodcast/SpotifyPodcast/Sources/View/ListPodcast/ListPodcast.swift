@@ -75,7 +75,7 @@ struct ListPodcast: View {
             .navigationTitle("List Podcasts")
         }
         .onAppear {
-            viewModel.refreshData()
+            viewModel.loadDataIfNeeded()
             
         }
     }
