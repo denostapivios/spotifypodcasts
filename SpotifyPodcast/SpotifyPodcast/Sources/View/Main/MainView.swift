@@ -15,7 +15,7 @@ struct MainView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 AppBar()
-                TopList(viewModel: viewModel)
+                TopPodcastsList(viewModel: viewModel)
                 AllList(viewModel: viewModel)
             }
         }

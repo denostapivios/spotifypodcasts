@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TopList: View {
+struct TopPodcastsList: View {
     @ObservedObject var viewModel: PodcastViewModel
     
     var body: some View {
@@ -39,5 +39,5 @@ struct TopList: View {
 }
 
 #Preview {
-    TopList(viewModel: PodcastViewModel())
+    TopPodcastsList(viewModel: PodcastViewModel())
 }
