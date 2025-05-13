@@ -24,13 +24,14 @@ struct TrendingRow: View {
                                 .animation(.default, value: viewModel.episodes.isEmpty)
                         }
                         .buttonStyle(.plain)
+                    }
                 }
             }
-        }
-        .redacted(reason: viewModel.episodes.isEmpty ? .placeholder : [])
-        .animation(.default, value: viewModel.episodes.isEmpty)
-        .onAppear {
-            viewModel.loadDataIfNeeded()
+            .redacted(reason: viewModel.episodes.isEmpty ? .placeholder : [])
+            .animation(.default, value: viewModel.episodes.isEmpty)
+            .onAppear {
+                viewModel.loadDataIfNeeded()
+            }
         }
     }
 }
