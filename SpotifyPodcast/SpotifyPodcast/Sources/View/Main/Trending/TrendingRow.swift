@@ -12,28 +12,25 @@ struct TrendingRow: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            if !viewModel.episodes.isEmpty {
-                Text("Trending")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(viewModel.episodes.isEmpty ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
-                            NavigationLink(value: podcast) {
-                                TopItem(podcast: podcast)
-                                    .redacted(reason: viewModel.episodes.isEmpty ? .placeholder : [])
-                                    .animation(.default, value: viewModel.episodes.isEmpty)
-                            }
-                            .buttonStyle(.plain)
+            Text("Trending")
+                .font(.title2)
+                .fontWeight(.bold)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack {
+                    ForEach(viewModel.episodes.isEmpty ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
+                        NavigationLink(value: podcast) {
+                            TrendingItem(podcast: podcast)
+                                .redacted(reason: viewModel.episodes.isEmpty ? .placeholder : [])
+                                .animation(.default, value: viewModel.episodes.isEmpty)
                         }
-                    }
+                        .buttonStyle(.plain)
                 }
             }
         }
         .redacted(reason: viewModel.episodes.isEmpty ? .placeholder : [])
         .animation(.default, value: viewModel.episodes.isEmpty)
         .onAppear {
-            viewModel.refreshData()
+            viewModel.loadDataIfNeeded()
         }
     }
 }

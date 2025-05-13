@@ -43,4 +43,4 @@ struct TopItem: View {
 
 #Preview {
     TopItem(podcast: PodcastEpisode.mock)
-}
+    }
