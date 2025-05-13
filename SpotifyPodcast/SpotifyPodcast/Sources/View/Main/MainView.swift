@@ -11,13 +11,15 @@ struct MainView: View {
     @StateObject var viewModel = PodcastViewModel()
     
     var body: some View {
+        
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 AppBar()
-                PopularPodcastRow(viewModel: viewModel)
+                TopPodcastsList(viewModel: viewModel)
                 AllList(viewModel: viewModel)
             }
         }
+        .scrollIndicators(.hidden)
         .padding(16)
         .refreshable {
             await viewModel.fetchPodcastsFromAPI()

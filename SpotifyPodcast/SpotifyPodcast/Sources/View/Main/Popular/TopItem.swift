@@ -8,9 +8,9 @@
 import SwiftUI
 import Kingfisher
 
-struct PopularItem: View {
+struct TopItem: View {
     var podcast: PodcastEpisode
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             switch podcast.image {
@@ -42,5 +42,5 @@ struct PopularItem: View {
 }
 
 #Preview {
-    PopularItem(podcast: PodcastEpisode.mock)
-}
+    TopItem(podcast: PodcastEpisode.mock)
+    }

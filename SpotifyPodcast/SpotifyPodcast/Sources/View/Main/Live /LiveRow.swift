@@ -35,7 +35,7 @@ struct LiveRow: View {
             }
         }
         .onAppear {
-            viewModel.refreshData()
+            viewModel.loadDataIfNeeded()
         }
     }
 }

@@ -13,6 +13,8 @@ class PodcastViewModel: ObservableObject {
     @Published var isPlayerPresented = false
     @Published var errorMessage: String?
     @Published var episodes:[PodcastEpisode] = []
+    @Published var hasLoaded: Bool = false
+    
     var player: AVPlayer?
     
     private let cacheManager = CacheManager()
@@ -25,11 +27,11 @@ class PodcastViewModel: ObservableObject {
     
     func processResult(dataObject:PodcastResponse) -> [PodcastEpisode] {
         let items = dataObject.data?
-                .podcastUnionV2?
-                .episodesV2?
-                .items ?? []
-
-            return items.compactMap { PodcastEpisode(from: $0) }
+            .podcastUnionV2?
+            .episodesV2?
+            .items ?? []
+        
+        return items.compactMap { PodcastEpisode(from: $0) }
     }
     
     // audio
@@ -44,9 +46,15 @@ class PodcastViewModel: ObservableObject {
     }
     
     deinit {
-            player?.pause()
-            player = nil
-        }
+        player?.pause()
+        player = nil
+    }
+    
+    func loadDataIfNeeded() {
+        guard !hasLoaded else { return }
+        hasLoaded = true
+        loadData()
+    }
     
     func loadData() {
         Task {
@@ -85,6 +93,7 @@ class PodcastViewModel: ObservableObject {
     }
     
     func refreshData() {
+        hasLoaded = false
         loadData()
     }
 }

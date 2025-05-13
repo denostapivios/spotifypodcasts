@@ -36,7 +36,7 @@ struct NewPodcastRow: View {
             .animation(.default, value: viewModel.episodes.isEmpty)
         }
         .onAppear {
-            viewModel.refreshData()
+            viewModel.loadDataIfNeeded()
         }
     }
 }
