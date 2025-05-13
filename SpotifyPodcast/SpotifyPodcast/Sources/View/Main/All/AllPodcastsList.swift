@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AllList: View {
+struct AllPodcastsList: View {
     @ObservedObject var viewModel: PodcastViewModel
     
     var body: some View {
@@ -19,7 +19,7 @@ struct AllList: View {
                 LazyVStack {
                     ForEach(viewModel.episodes) { podcast in
                         NavigationLink(value: podcast) {
-                            AllItem(podcast: podcast)
+                            PodcastRow(podcast: podcast)
                         }
                         .buttonStyle(.plain)
                     }
@@ -35,5 +35,5 @@ struct AllList: View {
 }
 
 #Preview {
-    AllList(viewModel: PodcastViewModel())
+    AllPodcastsList(viewModel: PodcastViewModel())
 }

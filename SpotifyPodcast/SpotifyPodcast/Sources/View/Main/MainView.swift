@@ -16,7 +16,7 @@ struct MainView: View {
             VStack(alignment: .leading, spacing: 24) {
                 AppBar()
                 TopList(viewModel: viewModel)
-                AllList(viewModel: viewModel)
+                AllPodcastsList(viewModel: viewModel)
             }
         }
         .scrollIndicators(.hidden)

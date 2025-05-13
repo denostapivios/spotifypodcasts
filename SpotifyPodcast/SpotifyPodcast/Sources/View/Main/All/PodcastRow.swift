@@ -8,7 +8,7 @@
 import SwiftUI
 import Kingfisher
 
-struct AllItem: View {
+struct PodcastRow: View {
     var podcast: PodcastEpisode
     
     var body: some View {
@@ -34,7 +34,7 @@ struct AllItem: View {
     }
 }
 
-private extension AllItem {
+private extension PodcastRow {
     
     var image: some View {
         switch podcast.image {
@@ -95,5 +95,5 @@ private extension AllItem {
 }
 
 #Preview {
-    AllItem(podcast: PodcastEpisode.mock)
+    PodcastRow(podcast: PodcastEpisode.mock)
 }

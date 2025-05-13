@@ -12,7 +12,7 @@ import AVKit
 class PodcastViewModel: ObservableObject {
     @Published var isPlayerPresented = false
     @Published var errorMessage: String?
-    @Published var episodes:[PodcastEpisode] = []
+    @Published var episodes: [PodcastEpisode] = []
     @Published var hasLoaded: Bool = false
     
     var player: AVPlayer?
