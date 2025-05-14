@@ -47,7 +47,6 @@ struct PopularItem: View {
     }
 }
 
-
 #Preview {
     PopularItem(podcast: PodcastEpisode.mock)
 }
