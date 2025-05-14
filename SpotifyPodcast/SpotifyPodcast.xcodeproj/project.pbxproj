@@ -37,6 +37,7 @@
 		D95ED5D72DBA30BE000DDAC5 /* Exceptions for "SpotifyPodcast" folder in "SpotifyPodcast" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Config.xcconfig,
 				Info.plist,
 			);
 			target = D9D079F42D71BE1400FD0C0C /* SpotifyPodcast */;
@@ -190,7 +191,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1620;
-				LastUpgradeCheck = 1620;
+				LastUpgradeCheck = 1630;
 				TargetAttributes = {
 					D9415BC42D78D65900B38E1E = {
 						CreatedOnToolsVersion = 16.2;

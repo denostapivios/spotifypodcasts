@@ -50,5 +50,5 @@ struct PopularItem: View {
 
 
 #Preview {
-    LiveItem(podcast: PodcastEpisode.mock)
+    PopularItem(podcast: PodcastEpisode.mock)
 }
