@@ -21,10 +21,6 @@ struct PopularItem: View {
                     case .placeholder(let imageName):
                         Image(imageName)
                             .resizable()
-                            .scaledToFill()
-                            .frame(width: imageSize, height: imageSize)
-                            .clipped()
-                            .cornerRadius(4)
                         
                     case .remote(let url):
                         KFImage(url)
@@ -32,13 +28,14 @@ struct PopularItem: View {
                             .placeholder {
                                 ProgressView()
                             }
-                            .scaledToFill()
-                            .frame(width: imageSize, height: imageSize)
-                            .clipped()
-                            .cornerRadius(4)
                     }
                 }
+                .scaledToFill()
+                .frame(width: imageSize, height: imageSize)
+                .clipped()
+                .cornerRadius(4)
             }
+            
             .aspectRatio(1, contentMode: .fit)
             
             Text(podcast.title)
