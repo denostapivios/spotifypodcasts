@@ -12,21 +12,19 @@ struct AllPodcastsList: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            if !viewModel.episodes.isEmpty {
                 Text("All podcasts")
                     .font(.title2)
                     .fontWeight(.bold)
                 LazyVStack {
-                    ForEach(viewModel.episodes) { podcast in
+                    ForEach(viewModel.isLoading ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
                         NavigationLink(value: podcast) {
                             PodcastRow(podcast: podcast)
+                                .redacted(reason: viewModel.isLoading ? .placeholder : [])
+                                .animation(.default, value: viewModel.isLoading)
                         }
                         .buttonStyle(.plain)
                     }
                 }
-            } else {
-                Text("Завантаження...")
-            }
         }
         .onAppear {
             viewModel.loadDataIfNeeded()

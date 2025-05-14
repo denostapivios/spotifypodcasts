@@ -17,11 +17,11 @@ struct TopList: View {
                     .fontWeight(.bold)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(viewModel.episodes.isEmpty ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
+                        ForEach(viewModel.isLoading ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
                             NavigationLink(value: podcast) {
                                 TopItem(podcast: podcast)
-                                    .redacted(reason: viewModel.episodes.isEmpty ? .placeholder : [])
-                                    .animation(.default, value: viewModel.episodes.isEmpty)
+                                    .redacted(reason: viewModel.isLoading ? .placeholder : [])
+                                    .animation(.default, value: viewModel.isLoading)
                             }
                             .buttonStyle(.plain)
                         }
@@ -30,7 +30,7 @@ struct TopList: View {
             }
         }
         .onAppear {
-            viewModel.refreshData()
+            viewModel.loadDataIfNeeded()
         }
     }
 }

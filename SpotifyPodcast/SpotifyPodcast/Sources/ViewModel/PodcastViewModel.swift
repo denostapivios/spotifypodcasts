@@ -13,7 +13,7 @@ class PodcastViewModel: ObservableObject {
     @Published var isPlayerPresented = false
     @Published var errorMessage: String?
     @Published var episodes: [PodcastEpisode] = []
-    @Published var hasLoaded: Bool = false
+    @Published var isLoading: Bool = false
     
     var player: AVPlayer?
     
@@ -51,13 +51,20 @@ class PodcastViewModel: ObservableObject {
     }
     
     func loadDataIfNeeded() {
-        guard !hasLoaded else { return }
-        hasLoaded = true
+        guard !isLoading else { return }
         loadData()
     }
     
     func loadData() {
+        isLoading = true
+        
         Task {
+            defer {
+                Task { @MainActor in
+                    self.isLoading = false
+                }
+            }
+            
             do {
                 if let cachedData = try await cacheManager.loadCachedData() {
                     let newRows = processResult(dataObject: cachedData)
@@ -93,7 +100,7 @@ class PodcastViewModel: ObservableObject {
     }
     
     func refreshData() {
-        hasLoaded = false
+        isLoading = false
         loadData()
     }
 }
