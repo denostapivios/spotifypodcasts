@@ -1,22 +1,20 @@
 //
-//  MainView.swift
-//  SpotifyListPodcast
+//  PopularView.swift
+//  SpotifyPodcast
 //
-//  Created by Denis Ostapiv on 18.03.2025.
+//  Created by Denis Ostapiv on 06.05.2025.
 //
 
 import SwiftUI
 
-struct MainView: View {
+struct PopularView: View {
     @StateObject var viewModel = PodcastViewModel()
     
     var body: some View {
-        
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 AppBar()
-                TopList(viewModel: viewModel)
-                AllPodcastsList(viewModel: viewModel)
+                PopularList(viewModel: viewModel)
             }
         }
         .scrollIndicators(.hidden)
@@ -28,5 +26,5 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView()
+    PopularView()
 }

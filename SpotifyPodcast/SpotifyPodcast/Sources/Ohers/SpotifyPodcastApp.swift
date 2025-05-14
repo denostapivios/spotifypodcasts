@@ -26,7 +26,7 @@ struct SpotifyPodcastApp: App {
                 
                 Tab("Popular", systemImage: "music.note.list") {
                     NavigationStack {
-                        ListPodcast(viewModel: PodcastViewModel())
+                        PopularView(viewModel: PodcastViewModel())
                             .navigationDestination(for: PodcastEpisode.self) { podcast in
                                 InfoPodcastView(podcast: podcast)
                             }
@@ -45,7 +45,3 @@ struct SpotifyPodcastApp: App {
         }
     }
 }
-
-
-
-

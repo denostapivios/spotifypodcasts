@@ -7,26 +7,24 @@
 
 import SwiftUI
 
-struct AllList: View {
+struct AllPodcastsList: View {
     @ObservedObject var viewModel: PodcastViewModel
     
     var body: some View {
         VStack(alignment: .leading) {
-            if !viewModel.episodes.isEmpty {
                 Text("All podcasts")
                     .font(.title2)
                     .fontWeight(.bold)
                 LazyVStack {
-                    ForEach(viewModel.episodes) { podcast in
+                    ForEach(viewModel.isLoading ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
                         NavigationLink(value: podcast) {
-                            AllItem(podcast: podcast)
+                            PodcastRow(podcast: podcast)
+                                .redacted(reason: viewModel.isLoading ? .placeholder : [])
+                                .animation(.default, value: viewModel.isLoading)
                         }
                         .buttonStyle(.plain)
                     }
                 }
-            } else {
-                Text("Завантаження...")
-            }
         }
         .onAppear {
             viewModel.loadDataIfNeeded()
@@ -35,5 +33,5 @@ struct AllList: View {
 }
 
 #Preview {
-    AllList(viewModel: PodcastViewModel())
+    AllPodcastsList(viewModel: PodcastViewModel())
 }

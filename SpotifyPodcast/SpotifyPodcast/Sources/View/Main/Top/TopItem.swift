@@ -1,14 +1,14 @@
 //
-//  TrendingItem.swift
+//  PopularItem.swift
 //  SpotifyListPodcast
 //
-//  Created by Denis Ostapiv on 20.03.2025.
+//  Created by Denis Ostapiv on 19.03.2025.
 //
 
 import SwiftUI
 import Kingfisher
 
-struct TrendingItem: View {
+struct TopItem: View {
     var podcast: PodcastEpisode
     
     var body: some View {
@@ -17,7 +17,7 @@ struct TrendingItem: View {
             case .placeholder(let imageName):
                 Image(imageName)
                     .resizable()
-                    .frame(width: 250, height: 250)
+                    .frame(width: 155, height: 155)
                     .cornerRadius(4)
                     .padding(.bottom, 4)
                 
@@ -27,7 +27,7 @@ struct TrendingItem: View {
                     .placeholder {
                         ProgressView()
                     }
-                    .frame(width: 250, height: 250)
+                    .frame(width: 155, height: 155)
                     .cornerRadius(4)
                     .padding(.bottom, 4)
             }
@@ -36,11 +36,11 @@ struct TrendingItem: View {
                 .font(.callout)
                 .lineLimit(1)
                 .truncationMode(.tail)
-                .frame(width: 250, alignment: .leading)
+                .frame(width: 155, alignment: .leading)
         }
     }
 }
 
 #Preview {
-        TrendingItem(podcast: PodcastEpisode.mock)
-}
+    TopItem(podcast: PodcastEpisode.mock)
+    }
