@@ -14,13 +14,15 @@ struct PopularItem: View {
     var body: some View {
         VStack(alignment: .leading) {
             GeometryReader { geometry in
+                let imageSize = geometry.size.width
+                
                 ZStack {
                     switch podcast.image {
                     case .placeholder(let imageName):
                         Image(imageName)
                             .resizable()
                             .scaledToFill()
-                            .frame(width: geometry.size.width, height: geometry.size.width)
+                            .frame(width: imageSize, height: imageSize)
                             .clipped()
                             .cornerRadius(4)
                         
@@ -31,7 +33,7 @@ struct PopularItem: View {
                                 ProgressView()
                             }
                             .scaledToFill()
-                            .frame(width: geometry.size.width, height: geometry.size.width)
+                            .frame(width: imageSize, height: imageSize)
                             .clipped()
                             .cornerRadius(4)
                     }
