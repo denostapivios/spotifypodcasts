@@ -21,6 +21,11 @@ struct PodcastUnionV2: Codable {
 
 struct EpisodesV2: Codable {
     let items: [PodcastItem]?
+    let pagingInfo: PagingInfo?
+}
+
+struct PagingInfo: Codable {
+    let nextOffset: Int?
 }
 
 struct PodcastItem: Codable {

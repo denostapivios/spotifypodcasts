@@ -12,22 +12,40 @@ struct AllPodcastsList: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-                Text("All podcasts")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                LazyVStack {
-                    ForEach(viewModel.isLoading ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
-                        NavigationLink(value: podcast) {
-                            PodcastRow(podcast: podcast)
-                                .redacted(reason: viewModel.isLoading ? .placeholder : [])
-                                .animation(.default, value: viewModel.isLoading)
-                        }
-                        .buttonStyle(.plain)
+            Text("All podcasts")
+                .font(.title2)
+                .fontWeight(.bold)
+            
+            LazyVStack {
+                ForEach(viewModel.isLoading ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
+                    NavigationLink(value: podcast) {
+                        PodcastRow(podcast: podcast)
+                            .redacted(reason: viewModel.isLoading ? .placeholder : [])
+                            .animation(.default, value: viewModel.isLoading)
                     }
+                    .buttonStyle(.plain)
                 }
-        }
-        .onAppear {
-            viewModel.loadDataIfNeeded()
+                
+                if viewModel.canLoadMore {
+                    Button {
+                        viewModel.loadData()
+                    } label: {
+                        if viewModel.isLoading {
+                            ProgressView()
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                        } else {
+                            Text("Load more")
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .font(.callout)
+                                .fontWeight(.semibold)
+                        }
+                    }
+                    .disabled(viewModel.isLoading)
+                }
+            }
+            
         }
     }
 }

@@ -11,10 +11,11 @@ struct TopList: View {
     @ObservedObject var viewModel: PodcastViewModel
     
     var body: some View {
-        VStack(alignment: .leading) {
+            VStack(alignment: .leading) {
                 Text("Top Podcasts")
                     .font(.title2)
                     .fontWeight(.bold)
+
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(viewModel.isLoading ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
@@ -25,16 +26,27 @@ struct TopList: View {
                             }
                             .buttonStyle(.plain)
                         }
+                    }
+                    .frame(height: 185)
                 }
-                .frame(height: 185)
+            }
+            .onAppear {
+                viewModel.refreshData()
             }
         }
-        .onAppear {
-            viewModel.loadDataIfNeeded()
+    }
+
+    #if DEBUG
+    extension PodcastViewModel {
+        static var preview5: PodcastViewModel {
+            let vm = PodcastViewModel()
+            vm.isLoading = false
+            vm.episodes = Array(repeating: PodcastEpisode.mock, count: 5)
+            return vm
         }
     }
-}
+    #endif
 
-#Preview {
-    TopList(viewModel: PodcastViewModel())
-}
+    #Preview {
+        TopList(viewModel: .preview5)
+    }

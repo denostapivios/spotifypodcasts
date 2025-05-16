@@ -30,12 +30,17 @@ struct PopularList: View {
                         }
                         .buttonStyle(.plain)
                     }
+                    
+                    if viewModel.isLoading {
+                        ProgressView()
+                            .padding()
+                    }
                 }
             }
             
         }
         .onAppear {
-            viewModel.loadDataIfNeeded()
+            viewModel.refreshData()
         }
     }
 }

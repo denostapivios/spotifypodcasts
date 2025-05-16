@@ -83,6 +83,17 @@ extension PodcastEpisode {
     }
     
     static var placeholder: [PodcastEpisode] {
-        (0..<5).map { _ in .mock }
+        (0..<5).map { index in
+            PodcastEpisode(
+                id: "mock-\(index)",
+                title: mock.title,
+                description: mock.description,
+                image: mock.image,
+                duration: mock.duration,
+                releaseDate: mock.releaseDate,
+                audioPreview: mock.audioPreview,
+                sharingInfo: mock.sharingInfo
+            )
+        }
     }
 }

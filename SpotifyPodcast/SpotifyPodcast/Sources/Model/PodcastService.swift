@@ -15,11 +15,22 @@ class PodcastService: ObservableObject, PodcastServiceProtocol {
     
     private let apiKey = Bundle.main.infoDictionary?["PODCAST_API_KEY"] as? String ?? ""
     private let apiHost = Bundle.main.infoDictionary?["PODCAST_API_HOST"] as? String ?? ""
-    private let requestPath = "https://spotify23.p.rapidapi.com/podcast_episodes/?id=0ofXAdFIQQRsCYj9754UFx&offset=0&limit=50"
+    private let requestPath = "https://spotify23.p.rapidapi.com/podcast_episodes/"
+    private let podcastID = "0ofXAdFIQQRsCYj9754UFx"
     
-    func fetchData() async throws -> PodcastResponse {
-        guard let url = URL(string: requestPath) else {
-            throw PodcastServiceError(reason: "Can't make a URL from \(requestPath)")
+    func fetchData(offset: Int, limit: Int) async throws -> PodcastResponse {
+        guard var components = URLComponents(string: requestPath) else {
+            throw PodcastServiceError(reason: "Can't make a URLComponents from \(requestPath)")
+        }
+        
+        components.queryItems = [
+            URLQueryItem(name: "id", value: podcastID),
+            URLQueryItem(name: "offset", value: "\(offset)"),
+            URLQueryItem(name: "limit", value: "\(limit)")
+        ]
+        
+        guard let url = components.url else {
+            throw PodcastServiceError(reason: "Can't make a final URL with components")
         }
         
         var request = URLRequest(url: url)
@@ -43,5 +54,5 @@ class PodcastService: ObservableObject, PodcastServiceProtocol {
 }
 
 protocol PodcastServiceProtocol {
-    func fetchData() async throws -> PodcastResponse
+    func fetchData(offset: Int, limit: Int) async throws -> PodcastResponse
 }

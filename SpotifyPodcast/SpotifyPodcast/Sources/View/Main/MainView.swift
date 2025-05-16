@@ -22,7 +22,7 @@ struct MainView: View {
         .scrollIndicators(.hidden)
         .padding(16)
         .refreshable {
-            await viewModel.fetchPodcastsFromAPI()
+          viewModel.refreshData()
         }
     }
 }
