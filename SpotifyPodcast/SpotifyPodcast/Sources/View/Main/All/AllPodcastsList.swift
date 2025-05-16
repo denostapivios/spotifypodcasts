@@ -17,7 +17,8 @@ struct AllPodcastsList: View {
                 .fontWeight(.bold)
             
             LazyVStack {
-                ForEach(viewModel.isLoading ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
+                //                ForEach(viewModel.isLoading ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
+                ForEach(viewModel.episodes) { podcast in
                     NavigationLink(value: podcast) {
                         PodcastRow(podcast: podcast)
                             .redacted(reason: viewModel.isLoading ? .placeholder : [])
