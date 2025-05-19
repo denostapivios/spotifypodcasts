@@ -58,25 +58,19 @@ class PodcastViewModel: ObservableObject {
         guard !isLoading, canLoadMore else { return }
         isLoading = true
         
-        print("▶️ loadData start — offset:", offset,
-              "episodes:", episodes.count,
-              "canLoadMore:", canLoadMore)
-        
         Task {
             defer { isLoading = false
-                print("⏹ loadData end — offset:", offset,
-                      "episodes:", episodes.count,
-                      "canLoadMore:", canLoadMore)
             }
             
-            
             do {
-                if offset == 0, let cachedData = try await cacheManager.loadCachedData() {
+                if offset == 0,
+                   let cachedData = try await cacheManager.loadCachedData() {
                     let newRows = processResult(dataObject: cachedData)
+                    
                     await MainActor.run {
-                        self.episodes = newRows
-                        self.offset = cachedData.data?.podcastUnionV2?.episodesV2?.pagingInfo?.nextOffset ?? 0
-                        self.canLoadMore = !newRows.isEmpty
+                        episodes = newRows
+                        offset = newRows.count
+                        canLoadMore = !newRows.isEmpty
                     }
                     print("Дані завантажено з кешу.")
                 } else {
@@ -92,25 +86,30 @@ class PodcastViewModel: ObservableObject {
     
     // Loading data from the API
     func fetchPodcastsFromAPI() async {
+        let initialOffset = offset
+        
         do {
             let result = try await service.fetchData(offset: offset, limit: limit)
-            let newRows = processResult(dataObject: result)
-            await MainActor.run {
-                self.episodes += newRows
-                self.offset = result.data?.podcastUnionV2?.episodesV2?.pagingInfo?.nextOffset ?? offset
-                self.canLoadMore = !newRows.isEmpty
-                print("✅ API fetched — newRows:", newRows.count,
-                      "totalEpisodes:", episodes.count,
-                      "nextOffset:", offset,
-                      "canLoadMore:", canLoadMore)
+            let fetched = processResult(dataObject: result)
+            
+            let unique = fetched.filter { newEp in
+                !episodes.contains(where: { $0.id == newEp.id })
             }
             
-            if offset == limit {
+            await MainActor.run {
+                episodes.append(contentsOf: unique)
+                offset = episodes.count
+                canLoadMore = !unique.isEmpty
+            }
+            
+            if initialOffset == limit {
                 try await cacheManager.saveToCache(data: result)
                 print("Дані завантажено з API та кешовано.")
             }
         } catch {
-            errorMessage = "Помилка завантаження даних з API: \(error.localizedDescription)"
+            await MainActor.run{
+                errorMessage = "Помилка завантаження даних з API: \(error.localizedDescription)"
+            }
             print("Помилка завантаження з API: \(error.localizedDescription)")
         }
     }

@@ -17,12 +17,10 @@ struct AllPodcastsList: View {
                 .fontWeight(.bold)
             
             LazyVStack {
-                //                ForEach(viewModel.isLoading ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
-                ForEach(viewModel.episodes) { podcast in
+                ForEach(viewModel.episodes, id: \.id) { podcast in
                     NavigationLink(value: podcast) {
                         PodcastRow(podcast: podcast)
                             .redacted(reason: viewModel.isLoading ? .placeholder : [])
-                            .animation(.default, value: viewModel.isLoading)
                     }
                     .buttonStyle(.plain)
                 }
