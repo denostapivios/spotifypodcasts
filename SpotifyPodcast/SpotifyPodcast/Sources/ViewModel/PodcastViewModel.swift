@@ -41,7 +41,7 @@ class PodcastViewModel: ObservableObject {
     // audio
     func playAudio(from urlString: String) {
         guard let url = URL(string: urlString), urlString != "-" else {
-            print("Невірний URL для аудіо")
+            print("Invalid audio URL")
             return
         }
         player = AVPlayer(url: url)
@@ -72,13 +72,13 @@ class PodcastViewModel: ObservableObject {
                         offset = newRows.count
                         canLoadMore = !newRows.isEmpty
                     }
-                    print("Дані завантажено з кешу.")
+                    print("Data loaded from cache")
                 } else {
-                    print("Немає кешованих даних, завантажуємо з API.")
+                    print("No cached data available, loading from API")
                     await fetchPodcastsFromAPI()
                 }
             } catch {
-                print("Помилка завантаження з кешу: \(error.localizedDescription)")
+                print("Error loading from cache: \(error.localizedDescription)")
                 await fetchPodcastsFromAPI()
             }
         }
@@ -92,8 +92,8 @@ class PodcastViewModel: ObservableObject {
             let result = try await service.fetchData(offset: offset, limit: limit)
             let fetched = processResult(dataObject: result)
             
-            let unique = fetched.filter { newEp in
-                !episodes.contains(where: { $0.id == newEp.id })
+            let unique = fetched.filter { newEpisod in
+                !episodes.contains(where: { $0.id == newEpisod.id })
             }
             
             await MainActor.run {
@@ -104,13 +104,13 @@ class PodcastViewModel: ObservableObject {
             
             if initialOffset == limit {
                 try await cacheManager.saveToCache(data: result)
-                print("Дані завантажено з API та кешовано.")
+                print("Data loaded from API and cached.")
             }
         } catch {
-            await MainActor.run{
-                errorMessage = "Помилка завантаження даних з API: \(error.localizedDescription)"
+            await MainActor.run {
+                errorMessage = "Error loading data from API: \(error.localizedDescription)"
             }
-            print("Помилка завантаження з API: \(error.localizedDescription)")
+            print("Error loading from API: \(error.localizedDescription)")
         }
     }
     

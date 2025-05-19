@@ -43,8 +43,7 @@ struct AllPodcastsList: View {
                     }
                     .disabled(viewModel.isLoading)
                 }
-            }
-            
+            }            
         }
     }
 }
