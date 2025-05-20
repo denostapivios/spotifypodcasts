@@ -62,18 +62,51 @@ class PodcastViewModel: ObservableObject {
             }
             
             do {
+                // First launch — comparing cache ↔ API
                 if offset == 0,
                    let cachedData = try await cacheManager.loadCachedData() {
-                    let newRows = processResult(dataObject: cachedData)
+                    let apiResponse = try await service.fetchData(offset: 0, limit: limit)
                     
-                    await MainActor.run {
-                        episodes = newRows
-                        offset = newRows.count
-                        canLoadMore = !newRows.isEmpty
+                    // витягуємо масиви raw items
+                    let cachedItems = cachedData.data?
+                        .podcastUnionV2?
+                        .episodesV2?
+                        .items ?? []
+                    let apiItems = apiResponse.data?
+                        .podcastUnionV2?
+                        .episodesV2?
+                        .items ?? []
+                    
+                    // Сomparing id
+                    let cachedIDs = Set(cachedItems.map { $0.entity?.data?.id ?? "" })
+                    let apiIDs    = Set(apiItems   .map { $0.entity?.data?.id ?? "" })
+                    
+                    if cachedIDs == apiIDs {
+                        
+                        // Cache and API match — using data from cache
+                        let newRows = processResult(dataObject: cachedData)
+                        await MainActor.run {
+                            episodes = newRows
+                            offset = newRows.count
+                            canLoadMore = !newRows.isEmpty
+                        }
+                        print("Using cache — data hasn't changed")
+                    } else {
+                        
+                        // Cache is outdated — fetching from API and updating the cache
+                        let newRows = processResult(dataObject: apiResponse)
+                        await MainActor.run {
+                            episodes = newRows
+                            offset = newRows.count
+                            canLoadMore = !newRows.isEmpty
+                        }
+                        try await cacheManager.saveToCache(data: apiResponse)
+                        print("Cache updated with new data from API")
                     }
-                    print("Data loaded from cache")
                 } else {
-                    print("No cached data available, loading from API")
+                    
+                    // When offset ≠ 0 or cache is missing — regular pagination via API
+                    print("No cache available or this is not the first load — fetchPodcastsFromAPI()")
                     await fetchPodcastsFromAPI()
                 }
             } catch {
