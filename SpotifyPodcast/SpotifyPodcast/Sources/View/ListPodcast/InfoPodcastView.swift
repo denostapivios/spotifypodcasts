@@ -64,7 +64,7 @@ struct InfoPodcastView: View {
         }
         .padding()
         .onAppear {
-            viewModel.loadDataIfNeeded()
+            viewModel.refreshData()
         }
         .sheet(isPresented: $viewModel.isPlayerPresented) {
             if let player = viewModel.player {
@@ -168,5 +168,5 @@ private extension InfoPodcastView {
 }
 
 #Preview {
-    InfoPodcastView(podcast: PodcastEpisode.mock)
+    InfoPodcastView(podcast: PodcastEpisode.mock())
 }

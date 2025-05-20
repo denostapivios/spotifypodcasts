@@ -22,7 +22,7 @@ struct PopularList: View {
                 .fontWeight(.bold)
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 16) {
-                    ForEach(viewModel.isLoading ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
+                    ForEach(viewModel.isLoading ? PodcastEpisode.placeholder() : viewModel.episodes) { podcast in
                         NavigationLink(value: podcast){
                             PopularItem(podcast: podcast)
                                 .redacted(reason: viewModel.isLoading ? .placeholder : [])
@@ -30,12 +30,16 @@ struct PopularList: View {
                         }
                         .buttonStyle(.plain)
                     }
+                    
+                    if viewModel.isLoading {
+                        ProgressView()
+                            .padding()
+                    }
                 }
             }
-            
         }
         .onAppear {
-            viewModel.loadDataIfNeeded()
+            viewModel.refreshData()
         }
     }
 }

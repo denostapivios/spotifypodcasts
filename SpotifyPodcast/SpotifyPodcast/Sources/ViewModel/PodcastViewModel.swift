@@ -21,6 +21,10 @@ class PodcastViewModel: ObservableObject {
     private let service: PodcastServiceProtocol
     private let cacheKey = "cachedPodcasts"
     
+    private var offset = 0
+    private let limit = 6
+    @Published private(set) var canLoadMore = true
+    
     internal init(service: any PodcastServiceProtocol = PodcastService()) {
         self.service = service
     }
@@ -30,14 +34,13 @@ class PodcastViewModel: ObservableObject {
             .podcastUnionV2?
             .episodesV2?
             .items ?? []
-        
         return items.compactMap { PodcastEpisode(from: $0) }
     }
     
     // audio
     func playAudio(from urlString: String) {
         guard let url = URL(string: urlString), urlString != "-" else {
-            print("Невірний URL для аудіо")
+            print("Invalid audio URL")
             return
         }
         player = AVPlayer(url: url)
@@ -50,34 +53,64 @@ class PodcastViewModel: ObservableObject {
         player = nil
     }
     
-    func loadDataIfNeeded() {
-        guard !isLoading else { return }
-        loadData()
-    }
-    
     func loadData() {
+        guard !isLoading, canLoadMore else { return }
         isLoading = true
         
         Task {
-            defer {
-                Task { @MainActor in
-                    self.isLoading = false
-                }
+            defer { isLoading = false
             }
             
             do {
-                if let cachedData = try await cacheManager.loadCachedData() {
-                    let newRows = processResult(dataObject: cachedData)
-                    await MainActor.run {
-                        self.episodes = newRows
+                // First launch — comparing cache ↔ API
+                if offset == 0,
+                   let cachedData = try await cacheManager.loadCachedData() {
+                    let apiResponse = try await service.fetchData(offset: 0, limit: limit)
+                    
+                    // витягуємо масиви raw items
+                    let cachedItems = cachedData.data?
+                        .podcastUnionV2?
+                        .episodesV2?
+                        .items ?? []
+                    let apiItems = apiResponse.data?
+                        .podcastUnionV2?
+                        .episodesV2?
+                        .items ?? []
+                    
+                    // Сomparing id
+                    let cachedIDs = Set(cachedItems.map { $0.entity?.data?.id ?? "" })
+                    let apiIDs    = Set(apiItems   .map { $0.entity?.data?.id ?? "" })
+                    
+                    if cachedIDs == apiIDs {
+                        
+                        // Cache and API match — using data from cache
+                        let newRows = processResult(dataObject: cachedData)
+                        await MainActor.run {
+                            episodes = newRows
+                            offset = newRows.count
+                            canLoadMore = !newRows.isEmpty
+                        }
+                        print("Using cache — data hasn't changed")
+                    } else {
+                        
+                        // Cache is outdated — fetching from API and updating the cache
+                        let newRows = processResult(dataObject: apiResponse)
+                        await MainActor.run {
+                            episodes = newRows
+                            offset = newRows.count
+                            canLoadMore = !newRows.isEmpty
+                        }
+                        try await cacheManager.saveToCache(data: apiResponse)
+                        print("Cache updated with new data from API")
                     }
-                    print("Дані завантажено з кешу.")
                 } else {
-                    print("Немає кешованих даних, завантажуємо з API.")
+                    
+                    // When offset ≠ 0 or cache is missing — regular pagination via API
+                    print("No cache available or this is not the first load — fetchPodcastsFromAPI()")
                     await fetchPodcastsFromAPI()
                 }
             } catch {
-                print("Помилка завантаження з кешу: \(error.localizedDescription)")
+                print("Error loading from cache: \(error.localizedDescription)")
                 await fetchPodcastsFromAPI()
             }
         }
@@ -85,22 +118,38 @@ class PodcastViewModel: ObservableObject {
     
     // Loading data from the API
     func fetchPodcastsFromAPI() async {
+        let initialOffset = offset
+        
         do {
-            let result = try await service.fetchData()
-            let newRows = processResult(dataObject: result)
-            await MainActor.run {
-                self.episodes = newRows
+            let result = try await service.fetchData(offset: offset, limit: limit)
+            let fetched = processResult(dataObject: result)
+            
+            let unique = fetched.filter { newEpisod in
+                !episodes.contains(where: { $0.id == newEpisod.id })
             }
-            try await cacheManager.saveToCache(data: result)
-            print("Дані завантажено з API та кешовано.")
+            
+            await MainActor.run {
+                episodes.append(contentsOf: unique)
+                offset += limit
+                canLoadMore = fetched.count == limit
+            }
+            
+            if initialOffset == limit {
+                try await cacheManager.saveToCache(data: result)
+                print("Data loaded from API and cached.")
+            }
         } catch {
-            errorMessage = "Помилка завантаження даних з API: \(error.localizedDescription)"
-            print("Помилка завантаження з API: \(error.localizedDescription)")
+            await MainActor.run {
+                errorMessage = "Error loading data from API: \(error.localizedDescription)"
+            }
+            print("Error loading from API: \(error.localizedDescription)")
         }
     }
     
     func refreshData() {
-        isLoading = false
+        offset = 0
+        canLoadMore = true
+        episodes = []
         loadData()
     }
 }

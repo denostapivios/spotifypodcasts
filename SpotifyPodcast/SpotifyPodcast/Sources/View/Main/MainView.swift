@@ -15,14 +15,16 @@ struct MainView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 AppBar()
-                TopList(viewModel: viewModel)
                 AllPodcastsList(viewModel: viewModel)
             }
         }
         .scrollIndicators(.hidden)
         .padding(16)
+        .onAppear {
+            viewModel.refreshData()   
+        }
         .refreshable {
-            await viewModel.fetchPodcastsFromAPI()
+            viewModel.refreshData()
         }
     }
 }

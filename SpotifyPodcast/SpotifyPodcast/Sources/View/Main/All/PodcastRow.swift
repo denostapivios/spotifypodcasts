@@ -95,5 +95,5 @@ private extension PodcastRow {
 }
 
 #Preview {
-    PodcastRow(podcast: PodcastEpisode.mock)
+    PodcastRow(podcast: PodcastEpisode.mock())
 }
