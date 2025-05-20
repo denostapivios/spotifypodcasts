@@ -20,8 +20,11 @@ struct MainView: View {
         }
         .scrollIndicators(.hidden)
         .padding(16)
+        .onAppear {
+            viewModel.refreshData()   
+        }
         .refreshable {
-          viewModel.refreshData()
+            viewModel.refreshData()
         }
     }
 }

@@ -27,7 +27,6 @@ class PodcastViewModel: ObservableObject {
     
     internal init(service: any PodcastServiceProtocol = PodcastService()) {
         self.service = service
-        refreshData()
     }
     
     func processResult(dataObject:PodcastResponse) -> [PodcastEpisode] {
