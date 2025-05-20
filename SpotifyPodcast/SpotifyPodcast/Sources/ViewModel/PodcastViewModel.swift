@@ -97,8 +97,8 @@ class PodcastViewModel: ObservableObject {
             
             await MainActor.run {
                 episodes.append(contentsOf: unique)
-                offset = episodes.count
-                canLoadMore = !unique.isEmpty
+                offset += limit
+                canLoadMore = fetched.count == limit
             }
             
             if initialOffset == limit {

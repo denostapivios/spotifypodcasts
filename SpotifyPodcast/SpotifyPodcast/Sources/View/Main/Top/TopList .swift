@@ -18,7 +18,7 @@ struct TopList: View {
 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(viewModel.isLoading ? PodcastEpisode.placeholder : viewModel.episodes) { podcast in
+                        ForEach(viewModel.isLoading ? PodcastEpisode.placeholder() : viewModel.episodes) { podcast in
                             NavigationLink(value: podcast) {
                                 TopItem(podcast: podcast)
                                     .redacted(reason: viewModel.isLoading ? .placeholder : [])
@@ -41,7 +41,7 @@ struct TopList: View {
         static var preview5: PodcastViewModel {
             let vm = PodcastViewModel()
             vm.isLoading = false
-            vm.episodes = Array(repeating: PodcastEpisode.mock, count: 5)
+            vm.episodes = Array(repeating: PodcastEpisode.mock(), count: 5)
             return vm
         }
     }

@@ -168,5 +168,5 @@ private extension InfoPodcastView {
 }
 
 #Preview {
-    InfoPodcastView(podcast: PodcastEpisode.mock)
+    InfoPodcastView(podcast: PodcastEpisode.mock())
 }

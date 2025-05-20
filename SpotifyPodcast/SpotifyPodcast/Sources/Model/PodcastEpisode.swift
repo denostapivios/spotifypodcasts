@@ -69,30 +69,33 @@ enum PodcastImage: Hashable {
 }
 
 extension PodcastEpisode {
-    static var mock: PodcastEpisode {
-        PodcastEpisode(
-            id: "mock-1",
-            title: "Mock Episode Title",
-            description: "Mock description for preview.",
-            image: .placeholder("photo"),
-            duration: "15 хв",
-            releaseDate: "01.05.2024",
-            audioPreview: "https://example.com/audio.mp3",
-            sharingInfo: "https://example.com/share"
+    static func mock(
+            id: String = UUID().uuidString,
+            title: String =  "Mock Episode Title",
+            description: String =  "Mock description for preview.",
+            image: PodcastImage = .placeholder("photo"),
+            duration: String = "15 хв",
+            releaseDate: String = "01.05.2024",
+            audioPreview:String? =  "https://example.com/audio.mp3",
+            sharingInfo:String? =  "https://example.com/share"
+    ) -> PodcastEpisode {
+       PodcastEpisode(
+            id: id,
+                        title: title,
+                        description: description,
+                        image: image,
+                        duration: duration,
+                        releaseDate: releaseDate,
+                        audioPreview: audioPreview,
+                        sharingInfo: sharingInfo
         )
     }
     
-    static var placeholder: [PodcastEpisode] {
-        (0..<5).map { index in
-            PodcastEpisode(
-                id: "mock-\(index)",
-                title: mock.title,
-                description: mock.description,
-                image: mock.image,
-                duration: mock.duration,
-                releaseDate: mock.releaseDate,
-                audioPreview: mock.audioPreview,
-                sharingInfo: mock.sharingInfo
+    
+    static func placeholder(count: Int = 5) -> [PodcastEpisode] {
+        (0..<count).map { index in
+            PodcastEpisode.mock(
+                title: "Mock Episode \(index + 1)",
             )
         }
     }

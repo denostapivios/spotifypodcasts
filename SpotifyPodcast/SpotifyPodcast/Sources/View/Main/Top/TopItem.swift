@@ -42,5 +42,5 @@ struct TopItem: View {
 }
 
 #Preview {
-    TopItem(podcast: PodcastEpisode.mock)
+    TopItem(podcast: PodcastEpisode.mock())
     }
