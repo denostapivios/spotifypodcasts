@@ -16,9 +16,12 @@ class PodcastService: ObservableObject, PodcastServiceProtocol {
     private let apiKey: String
     private let apiHost: String
     
-    init(apiKey: String, apiHost: String) {
-        self.apiKey = Bundle.main.infoDictionary?["PODCAST_API_KEY"] as? String ?? ""
-        self.apiHost = Bundle.main.infoDictionary?["PODCAST_API_HOST"] as? String ?? ""
+    init(
+        apiKey: String = Bundle.main.infoDictionary?["PODCAST_API_KEY"] as? String ?? "",
+        apiHost: String = Bundle.main.infoDictionary?["PODCAST_API_HOST"] as? String ?? ""
+    ) {
+        self.apiKey = apiKey
+        self.apiHost = apiHost
     }
     
     //  Link for TopList
@@ -48,7 +51,7 @@ class PodcastService: ObservableObject, PodcastServiceProtocol {
     private func performRequest(url: URL) async throws -> PodcastResponse {
         var request = URLRequest(url: url)
         // Send a network request
-
+        
         request.setValue(apiKey, forHTTPHeaderField: "x-rapidapi-key")
         request.setValue(apiHost, forHTTPHeaderField: "x-rapidapi-host")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
