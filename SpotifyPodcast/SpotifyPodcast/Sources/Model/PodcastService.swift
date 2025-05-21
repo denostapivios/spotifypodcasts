@@ -13,29 +13,42 @@ class PodcastService: ObservableObject, PodcastServiceProtocol {
         let reason: String
     }
     
-    private let apiKey = Bundle.main.infoDictionary?["PODCAST_API_KEY"] as? String ?? ""
-    private let apiHost = Bundle.main.infoDictionary?["PODCAST_API_HOST"] as? String ?? ""
-    private let requestPath = "https://spotify23.p.rapidapi.com/podcast_episodes/"
-    private let podcastID = "0ofXAdFIQQRsCYj9754UFx"
+    private let apiKey: String
+    private let apiHost: String
     
-    func fetchData(offset: Int, limit: Int) async throws -> PodcastResponse {
-        guard var components = URLComponents(string: requestPath) else {
-            throw PodcastServiceError(reason: "Can't make a URLComponents from \(requestPath)")
+    init(apiKey: String, apiHost: String) {
+        self.apiKey = Bundle.main.infoDictionary?["PODCAST_API_KEY"] as? String ?? ""
+        self.apiHost = Bundle.main.infoDictionary?["PODCAST_API_HOST"] as? String ?? ""
+    }
+    
+    //  Link for TopList
+    func fetchData(from urlString: String) async throws -> PodcastResponse {
+        guard let url = URL(string: urlString) else {
+            throw PodcastServiceError(reason: "Can't make a URL from \(urlString)")
         }
-        
+        return try await performRequest(url: url)
+    }
+    
+    //  Link for list with paginations (AllPodcastList, PopularList and other)
+    func fetchData(from baseURL: String, podcastID: String, offset: Int, limit: Int) async throws -> PodcastResponse {
+        guard var components = URLComponents(string: baseURL) else {
+            throw PodcastServiceError(reason: "Can't make a URLComponents from \(baseURL)")
+        }
         components.queryItems = [
             URLQueryItem(name: "id", value: podcastID),
             URLQueryItem(name: "offset", value: "\(offset)"),
             URLQueryItem(name: "limit", value: "\(limit)")
         ]
-        
         guard let url = components.url else {
             throw PodcastServiceError(reason: "Can't make a final URL with components")
         }
-        
+        return try await performRequest(url: url)
+    }
+    
+    private func performRequest(url: URL) async throws -> PodcastResponse {
         var request = URLRequest(url: url)
         // Send a network request
-        
+
         request.setValue(apiKey, forHTTPHeaderField: "x-rapidapi-key")
         request.setValue(apiHost, forHTTPHeaderField: "x-rapidapi-host")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -53,6 +66,9 @@ class PodcastService: ObservableObject, PodcastServiceProtocol {
     }
 }
 
+
+
 protocol PodcastServiceProtocol {
-    func fetchData(offset: Int, limit: Int) async throws -> PodcastResponse
+    func fetchData(from urlString: String) async throws -> PodcastResponse
+    func fetchData(from baseURL: String, podcastID: String, offset: Int, limit: Int) async throws -> PodcastResponse
 }
