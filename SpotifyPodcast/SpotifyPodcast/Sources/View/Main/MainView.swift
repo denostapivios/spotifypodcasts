@@ -9,13 +9,16 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject var viewModel = PodcastViewModel()
+    @StateObject var topListViewModel = TopListViewModel()
+    @StateObject var searchViewModel = SearchListViewModel()
     
     var body: some View {
         
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                AppBar()
-                AllPodcastsList(viewModel: viewModel)
+                AppBar(searchText: $searchViewModel.searchText)
+                TopList(viewModel: topListViewModel)
+                AllPodcastsList(viewModel: viewModel, searchViewModel: searchViewModel)
             }
         }
         .scrollIndicators(.hidden)
