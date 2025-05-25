@@ -89,6 +89,7 @@ class PodcastViewModel: ObservableObject {
                         let newRows = processResult(dataObject: cachedData)
                         await MainActor.run {
                             episodes = newRows
+                            sortEpisodesByDate()
                             offset = newRows.count
                             canLoadMore = !newRows.isEmpty
                         }
@@ -99,6 +100,7 @@ class PodcastViewModel: ObservableObject {
                         let newRows = processResult(dataObject: apiResponse)
                         await MainActor.run {
                             episodes = newRows
+                            sortEpisodesByDate()
                             offset = newRows.count
                             canLoadMore = !newRows.isEmpty
                         }
@@ -132,6 +134,7 @@ class PodcastViewModel: ObservableObject {
             
             await MainActor.run {
                 episodes.append(contentsOf: unique)
+                sortEpisodesByDate()
                 offset += limit
                 canLoadMore = fetched.count == limit
             }
@@ -145,6 +148,16 @@ class PodcastViewModel: ObservableObject {
                 errorMessage = "Error loading data from API: \(error.localizedDescription)"
             }
             print("Error loading from API: \(error.localizedDescription)")
+        }
+    }
+    
+    private func sortEpisodesByDate() {
+        episodes.sort {
+            guard let date1 = DateFormatter.mediumDate.date(from: $0.releaseDate),
+                  let date2 = DateFormatter.mediumDate.date(from: $1.releaseDate) else {
+                return false
+            }
+            return date1 > date2
         }
     }
     
