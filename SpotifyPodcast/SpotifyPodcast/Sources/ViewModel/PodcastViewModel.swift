@@ -67,7 +67,12 @@ class PodcastViewModel: ObservableObject {
                 // First launch — comparing cache ↔ API
                 if offset == 0,
                    let cachedData = try await cacheManager.loadCachedData() {
-                    let apiResponse = try await service.fetchData(from: baseURL, podcastID: podcastID, offset: offset, limit: limit)
+                    let apiResponse = try await service.fetchData(
+                        from: baseURL,
+                        podcastID: podcastID,
+                        offset: offset,
+                        limit: limit
+                    )
                     
                     // Get arrays of raw items
                     let cachedItems = cachedData.data?
@@ -123,7 +128,12 @@ class PodcastViewModel: ObservableObject {
         let initialOffset = offset
         
         do {
-            let result = try await service.fetchData(from: baseURL, podcastID: podcastID, offset: offset, limit: limit)
+            let result = try await service.fetchData(
+                from: baseURL,
+                podcastID: podcastID,
+                offset: offset,
+                limit: limit
+            )
             let fetched = processResult(dataObject: result)
             
             let unique = fetched.filter { newEpisod in
