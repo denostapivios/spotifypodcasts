@@ -19,8 +19,8 @@ class PodcastViewModel: ObservableObject {
     
     private let cacheManager = CacheManager()
     private let service: PodcastServiceProtocol
-    private let baseURL = Constants.API.PodcastListBaseURL
-    private let podcastID = Constants.API.PodcastListPodcastID
+    private let baseURL = Constants.API.BaseURL
+    private let podcastID = Constants.API.PodcastID
     private let cacheKey = "cachedPodcasts"
     
     private var offset = 0

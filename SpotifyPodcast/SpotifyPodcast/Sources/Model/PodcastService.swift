@@ -24,15 +24,6 @@ class PodcastService: ObservableObject, PodcastServiceProtocol {
         self.apiHost = apiHost
     }
     
-    //  Link for TopList
-    func fetchData(from urlString: String) async throws -> PodcastResponse {
-        guard let url = URL(string: urlString) else {
-            throw PodcastServiceError(reason: "Can't make a URL from \(urlString)")
-        }
-        return try await performRequest(url: url)
-    }
-    
-    //  Link for list with paginations (AllPodcastList, PopularList and other)
     func fetchData(from baseURL: String, podcastID: String, offset: Int, limit: Int) async throws -> PodcastResponse {
         guard var components = URLComponents(string: baseURL) else {
             throw PodcastServiceError(reason: "Can't make a URLComponents from \(baseURL)")
@@ -69,9 +60,6 @@ class PodcastService: ObservableObject, PodcastServiceProtocol {
     }
 }
 
-
-
 protocol PodcastServiceProtocol {
-    func fetchData(from urlString: String) async throws -> PodcastResponse
     func fetchData(from baseURL: String, podcastID: String, offset: Int, limit: Int) async throws -> PodcastResponse
 }
