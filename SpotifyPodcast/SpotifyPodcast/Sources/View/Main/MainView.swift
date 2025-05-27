@@ -30,9 +30,7 @@ struct MainView: View {
             viewModel.refreshData()
         }
         .onChange(of: searchViewModel.searchText) { _, newValue in
-            print("🔄 Введено: \(newValue)")
             debounceManager.debounce {
-                print("✅ Викликаємо фільтрацію")
                 searchViewModel.filterPodcast()
             }
         }

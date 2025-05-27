@@ -11,11 +11,9 @@ class DebounceManager {
     private var workItem: DispatchWorkItem?
     
     func debounce(delay: TimeInterval = 0.5, action: @escaping () -> Void) {
-        print("🕒 debounce викликано")
         workItem?.cancel()
         
         let task = DispatchWorkItem {
-                print("⏱ debounce виконано через \(delay) сек")
                 action()
             }
         workItem = task
