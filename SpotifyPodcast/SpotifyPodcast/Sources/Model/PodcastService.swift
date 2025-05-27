@@ -24,7 +24,12 @@ class PodcastService: ObservableObject, PodcastServiceProtocol {
         self.apiHost = apiHost
     }
     
-    func fetchData(from baseURL: String, podcastID: String, offset: Int, limit: Int) async throws -> PodcastResponse {
+    func fetchData(
+        from baseURL: String,
+        podcastID: String,
+        offset: Int,
+        limit: Int
+    ) async throws -> PodcastResponse {
         guard var components = URLComponents(string: baseURL) else {
             throw PodcastServiceError(reason: "Can't make a URLComponents from \(baseURL)")
         }
@@ -61,5 +66,10 @@ class PodcastService: ObservableObject, PodcastServiceProtocol {
 }
 
 protocol PodcastServiceProtocol {
-    func fetchData(from baseURL: String, podcastID: String, offset: Int, limit: Int) async throws -> PodcastResponse
+    func fetchData(
+        from baseURL: String,
+        podcastID: String,
+        offset: Int,
+        limit: Int
+    ) async throws -> PodcastResponse
 }

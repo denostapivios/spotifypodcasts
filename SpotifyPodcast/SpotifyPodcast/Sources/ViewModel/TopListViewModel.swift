@@ -16,11 +16,6 @@ class TopListViewModel: ObservableObject {
     private let cacheManager = CacheManager()
     private let service: PodcastServiceProtocol
     private let cacheKey = "cachedPodcasts"
-    private let baseURL = Constants.API.BaseURL
-    private let podcastID = Constants.API.PodcastID
-    
-    private var offset = 11
-    private let limit = 5
     
     internal init(service: any PodcastServiceProtocol = PodcastService()) {
         self.service = service
@@ -48,7 +43,12 @@ class TopListViewModel: ObservableObject {
             do {
                 // First launch — comparing cache ↔ API
                 if let cachedData = try await cacheManager.loadCachedData() {
-                    let apiResponse = try await service.fetchData(from: baseURL, podcastID: podcastID, offset: offset, limit: limit)
+                    let apiResponse = try await service.fetchData(
+                        from: Constants.API.BaseURL,
+                        podcastID: Constants.API.PodcastID,
+                        offset: Constants.API.offset,
+                        limit: Constants.API.limit
+                    )
                     
                     // Get arrays of raw items
                     let cachedItems = cachedData.data?
@@ -98,7 +98,12 @@ class TopListViewModel: ObservableObject {
     // Loading data from the API
     func fetchPodcastsFromAPI() async {
         do {
-            let result = try await service.fetchData(from: baseURL, podcastID: podcastID, offset: offset, limit: limit)
+            let result = try await service.fetchData(
+                from: Constants.API.BaseURL,
+                podcastID: Constants.API.PodcastID,
+                offset: Constants.API.offset,
+                limit: Constants.API.limit
+            )
             let fetched = processResult(dataObject: result)
             
             await MainActor.run {

@@ -18,13 +18,12 @@ class PodcastViewModel: ObservableObject {
     var player: AVPlayer?
     
     private let cacheManager = CacheManager()
-    private let service: PodcastServiceProtocol
-    private let baseURL = Constants.API.BaseURL
-    private let podcastID = Constants.API.PodcastID
     private let cacheKey = "cachedPodcasts"
+    private let service: PodcastServiceProtocol
     
+    private let limit = Constants.API.limit
     private var offset = 0
-    private let limit = 6
+    
     @Published private(set) var canLoadMore = true
     
     internal init(service: any PodcastServiceProtocol = PodcastService()) {
@@ -67,7 +66,12 @@ class PodcastViewModel: ObservableObject {
                 // First launch — comparing cache ↔ API
                 if offset == 0,
                    let cachedData = try await cacheManager.loadCachedData() {
-                    let apiResponse = try await service.fetchData(from: baseURL, podcastID: podcastID, offset: offset, limit: limit)
+                    let apiResponse = try await service.fetchData(
+                        from: Constants.API.BaseURL,
+                        podcastID: Constants.API.PodcastID,
+                        offset: offset,
+                        limit: limit
+                    )
                     
                     // Get arrays of raw items
                     let cachedItems = cachedData.data?
@@ -123,7 +127,12 @@ class PodcastViewModel: ObservableObject {
         let initialOffset = offset
         
         do {
-            let result = try await service.fetchData(from: baseURL, podcastID: podcastID, offset: offset, limit: limit)
+            let result = try await service.fetchData(
+                from: Constants.API.BaseURL,
+                podcastID: Constants.API.PodcastID,
+                offset: offset,
+                limit: limit
+            )
             let fetched = processResult(dataObject: result)
             
             let unique = fetched.filter { newEpisod in
