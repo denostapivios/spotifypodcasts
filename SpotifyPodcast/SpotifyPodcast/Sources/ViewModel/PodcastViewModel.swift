@@ -67,8 +67,8 @@ class PodcastViewModel: ObservableObject {
                 if offset == 0,
                    let cachedData = try await cacheManager.loadCachedData() {
                     let apiResponse = try await service.fetchData(
-                        from: Constants.API.BaseURL,
-                        podcastID: Constants.API.PodcastID,
+                        from: Constants.API.baseURL,
+                        podcastID: Constants.API.podcastID,
                         offset: offset,
                         limit: limit
                     )
@@ -128,8 +128,8 @@ class PodcastViewModel: ObservableObject {
         
         do {
             let result = try await service.fetchData(
-                from: Constants.API.BaseURL,
-                podcastID: Constants.API.PodcastID,
+                from: Constants.API.baseURL,
+                podcastID: Constants.API.podcastID,
                 offset: offset,
                 limit: limit
             )

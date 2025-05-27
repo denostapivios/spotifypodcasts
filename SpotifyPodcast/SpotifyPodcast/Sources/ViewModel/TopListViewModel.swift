@@ -44,8 +44,8 @@ class TopListViewModel: ObservableObject {
                 // First launch — comparing cache ↔ API
                 if let cachedData = try await cacheManager.loadCachedData() {
                     let apiResponse = try await service.fetchData(
-                        from: Constants.API.BaseURL,
-                        podcastID: Constants.API.PodcastID,
+                        from: Constants.API.baseURL,
+                        podcastID: Constants.API.podcastID,
                         offset: Constants.API.offset,
                         limit: Constants.API.limit
                     )
@@ -99,8 +99,8 @@ class TopListViewModel: ObservableObject {
     func fetchPodcastsFromAPI() async {
         do {
             let result = try await service.fetchData(
-                from: Constants.API.BaseURL,
-                podcastID: Constants.API.PodcastID,
+                from: Constants.API.baseURL,
+                podcastID: Constants.API.podcastID,
                 offset: Constants.API.offset,
                 limit: Constants.API.limit
             )
