@@ -12,6 +12,9 @@ struct MainView: View {
     @StateObject var topListViewModel = TopListViewModel()
     @StateObject var searchViewModel = SearchListViewModel()
     
+    @State private var searchText: String = ""
+    private let debounceManager = DebounceManager()
+    
     var body: some View {
         
         ScrollView {
@@ -24,7 +27,14 @@ struct MainView: View {
         .scrollIndicators(.hidden)
         .padding(16)
         .onAppear {
-            viewModel.refreshData()   
+            viewModel.refreshData()
+        }
+        .onChange(of: searchViewModel.searchText) { _, newValue in
+            print("🔄 Введено: \(newValue)")
+            debounceManager.debounce {
+                print("✅ Викликаємо фільтрацію")
+                searchViewModel.filterPodcast()
+            }
         }
         .refreshable {
             viewModel.refreshData()

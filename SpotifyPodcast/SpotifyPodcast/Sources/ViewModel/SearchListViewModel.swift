@@ -9,9 +9,7 @@ import Foundation
 
 class SearchListViewModel: ObservableObject {
     @Published var episodes: [PodcastEpisode] = []
-    @Published var searchText: String = "" {
-        didSet { filterPodcast() }
-    }
+    @Published var searchText: String = ""
     
     private let service: PodcastServiceProtocol
     private var allEpisodes: [PodcastEpisode] = []
@@ -25,7 +23,7 @@ class SearchListViewModel: ObservableObject {
         filterPodcast()
     }
     
-    private func filterPodcast() {
+    func filterPodcast() {
         guard !searchText.isEmpty else {
             episodes = allEpisodes
             return
