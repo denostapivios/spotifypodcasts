@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TopList: View {
-    @ObservedObject var viewModel: PodcastViewModel
+    @ObservedObject var viewModel: TopListViewModel
     
     var body: some View {
             VStack(alignment: .leading) {
@@ -37,9 +37,9 @@ struct TopList: View {
     }
 
     #if DEBUG
-    extension PodcastViewModel {
-        static var preview5: PodcastViewModel {
-            let vm = PodcastViewModel()
+    extension TopListViewModel {
+        static var preview5: TopListViewModel {
+            let vm = TopListViewModel()
             vm.isLoading = false
             vm.episodes = Array(repeating: PodcastEpisode.mock(), count: 5)
             return vm

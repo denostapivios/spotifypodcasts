@@ -16,4 +16,11 @@ enum Constants {
     enum String {
         static let defaultShareURL = "https://example.com/share"
     }
+    
+    enum API {
+        static let baseURL = "https://spotify23.p.rapidapi.com/podcast_episodes/"
+        static let podcastID = "0ofXAdFIQQRsCYj9754UFx"
+        static let offset = 0
+        static let limit = 6
+    }
 }

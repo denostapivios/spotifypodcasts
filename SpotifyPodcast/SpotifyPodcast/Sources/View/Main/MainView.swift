@@ -9,12 +9,14 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject var viewModel = PodcastViewModel()
+    @StateObject var topListViewModel = TopListViewModel()
     
     var body: some View {
         
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 AppBar()
+                TopList(viewModel: topListViewModel)
                 AllPodcastsList(viewModel: viewModel)
             }
         }
