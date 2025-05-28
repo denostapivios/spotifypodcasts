@@ -90,22 +90,12 @@ class PodcastViewModel: ObservableObject {
                     if cachedIDs == apiIDs {
                         
                         // Cache and API match — using data from cache
-                        let newRows = processResult(dataObject: cachedData)
-                        await MainActor.run {
-                            episodes = newRows
-                            offset = newRows.count
-                            canLoadMore = !newRows.isEmpty
-                        }
+                       await applyEpisodes(from: cachedData)
                         print("Using cache — data hasn't changed")
                     } else {
                         
                         // Cache is outdated — fetching from API and updating the cache
-                        let newRows = processResult(dataObject: apiResponse)
-                        await MainActor.run {
-                            episodes = newRows
-                            offset = newRows.count
-                            canLoadMore = !newRows.isEmpty
-                        }
+                        await applyEpisodes(from: apiResponse)
                         try await cacheManager.saveToCache(data: apiResponse)
                         print("Cache updated with new data from API")
                     }
@@ -141,6 +131,7 @@ class PodcastViewModel: ObservableObject {
             
             await MainActor.run {
                 episodes.append(contentsOf: unique)
+                sortEpisodesByDate()
                 offset += limit
                 canLoadMore = fetched.count == limit
             }
@@ -154,6 +145,24 @@ class PodcastViewModel: ObservableObject {
                 errorMessage = "Error loading data from API: \(error.localizedDescription)"
             }
             print("Error loading from API: \(error.localizedDescription)")
+        }
+    }
+    
+    private func applyEpisodes(from data: PodcastResponse) async {
+        let newRows = processResult(dataObject: data)
+        episodes = newRows
+        sortEpisodesByDate()
+        offset = newRows.count
+        canLoadMore = !newRows.isEmpty
+    }
+    
+    private func sortEpisodesByDate() {
+        episodes.sort {
+            guard let date1 = DateFormatter.mediumDate.date(from: $0.releaseDate),
+                  let date2 = DateFormatter.mediumDate.date(from: $1.releaseDate) else {
+                return false
+            }
+            return date1 > date2
         }
     }
     
