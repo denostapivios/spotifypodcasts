@@ -18,8 +18,9 @@ enum Constants {
     }
     
     enum API {
-        static let PodcastListBaseURL = "https://spotify23.p.rapidapi.com/podcast_episodes/"
-        static let PodcastListPodcastID = "0ofXAdFIQQRsCYj9754UFx"
-        static let TopListBaseURL = "https://spotify23.p.rapidapi.com/podcast_episodes/?id=0ofXAdFIQQRsCYj9754UFx&offset=11&limit=5"
+        static let baseURL = "https://spotify23.p.rapidapi.com/podcast_episodes/"
+        static let podcastID = "0ofXAdFIQQRsCYj9754UFx"
+        static let offset = 0
+        static let limit = 6
     }
 }

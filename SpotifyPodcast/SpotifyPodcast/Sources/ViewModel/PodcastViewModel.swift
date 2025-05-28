@@ -18,13 +18,12 @@ class PodcastViewModel: ObservableObject {
     var player: AVPlayer?
     
     private let cacheManager = CacheManager()
-    private let service: PodcastServiceProtocol
-    private let baseURL = Constants.API.PodcastListBaseURL
-    private let podcastID = Constants.API.PodcastListPodcastID
     private let cacheKey = "cachedPodcasts"
+    private let service: PodcastServiceProtocol
     
+    private let limit = Constants.API.limit
     private var offset = 0
-    private let limit = 6
+    
     @Published private(set) var canLoadMore = true
     
     internal init(service: any PodcastServiceProtocol = PodcastService()) {
@@ -68,8 +67,8 @@ class PodcastViewModel: ObservableObject {
                 if offset == 0,
                    let cachedData = try await cacheManager.loadCachedData() {
                     let apiResponse = try await service.fetchData(
-                        from: baseURL,
-                        podcastID: podcastID,
+                        from: Constants.API.baseURL,
+                        podcastID: Constants.API.podcastID,
                         offset: offset,
                         limit: limit
                     )
@@ -129,8 +128,8 @@ class PodcastViewModel: ObservableObject {
         
         do {
             let result = try await service.fetchData(
-                from: baseURL,
-                podcastID: podcastID,
+                from: Constants.API.baseURL,
+                podcastID: Constants.API.podcastID,
                 offset: offset,
                 limit: limit
             )
