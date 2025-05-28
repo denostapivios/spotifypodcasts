@@ -30,8 +30,12 @@ struct MainView: View {
             viewModel.refreshData()
         }
         .onChange(of: searchViewModel.searchText) { _, newValue in
-            debounceManager.debounce {
-                searchViewModel.filterPodcast()
+            Task {
+                await debounceManager.debounce {
+                    await MainActor.run {
+                        searchViewModel.filterPodcast()
+                    }
+                }
             }
         }
         .refreshable {

@@ -7,17 +7,16 @@
 
 import Foundation
 
-class DebounceManager {
-    private var workItem: DispatchWorkItem?
+actor DebounceManager {
+    private var workItem: Task<Void,Never>?
     
-    func debounce(delay: TimeInterval = 0.5, action: @escaping () -> Void) {
+    func debounce(delay: TimeInterval = 5.0, action: @escaping () async -> Void) {
         workItem?.cancel()
         
-        let task = DispatchWorkItem {
-                action()
-            }
-        workItem = task
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: task)
+        workItem = Task {
+            try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+            guard !Task.isCancelled else { return }
+            await action()
+        }
     }
 }
