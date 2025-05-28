@@ -9,11 +9,11 @@ import SwiftUI
 
 struct PopularView: View {
     @StateObject var viewModel = PodcastViewModel()
-    
+    @StateObject var searchViewModel = SearchListViewModel()
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                AppBar()
+                AppBar(searchText: $searchViewModel.searchText)
                 PopularList(viewModel: viewModel)
             }
         }

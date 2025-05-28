@@ -10,20 +10,33 @@ import SwiftUI
 struct MainView: View {
     @StateObject var viewModel = PodcastViewModel()
     @StateObject var topListViewModel = TopListViewModel()
+    @StateObject var searchViewModel = SearchListViewModel()
+    
+    @State private var searchText: String = ""
+    private let debounceManager = DebounceManager()
     
     var body: some View {
         
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                AppBar()
+                AppBar(searchText: $searchViewModel.searchText)
                 TopList(viewModel: topListViewModel)
-                AllPodcastsList(viewModel: viewModel)
+                AllPodcastsList(viewModel: viewModel, searchViewModel: searchViewModel)
             }
         }
         .scrollIndicators(.hidden)
         .padding(16)
         .onAppear {
-            viewModel.refreshData()   
+            viewModel.refreshData()
+        }
+        .onChange(of: searchViewModel.searchText) { _, newValue in
+            Task {
+                await debounceManager.debounce {
+                    await MainActor.run {
+                        searchViewModel.filterPodcast()
+                    }
+                }
+            }
         }
         .refreshable {
             viewModel.refreshData()

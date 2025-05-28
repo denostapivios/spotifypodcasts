@@ -8,23 +8,58 @@
 import SwiftUI
 
 struct AppBar: View {
-    @ObservedObject var viewModel = PodcastViewModel()
+    @Binding var searchText: String
+    @State private var isSearching = false
     
     var body: some View {
-        HStack {
-            Image("logo")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 100, height: 32)
-            
-            Spacer()
-            
-            Image(systemName: "magnifyingglass")
+        VStack {
+            if isSearching {
+                HStack {
+                    SearchBar(
+                        searchText: $searchText,
+                        placeholder: "Search podcasts"
+                    ) {
+                        withAnimation(.easeInOut) {
+                            searchText = ""
+                            isSearching = false
+                        }
+                    }
+                }
+                
+            } else {
+                HStack {
+                    Image("logo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 32)
+                    
+                    Spacer()
+                    
+                    Button {
+                        withAnimation(.easeInOut) {
+                            isSearching = true
+                        }
+                    } label: {
+                        Image(systemName: "magnifyingglass")
+                            .imageScale(.large)
+                    }
+                    .buttonStyle(.plain)
+                }
+                .padding(.trailing, 2)
+            }
         }
-        .padding(.trailing, 2)
+        .animation(.default, value: isSearching)
     }
 }
 
 #Preview {
-    AppBar()
+    AppBarPreviewWrapper()
+}
+
+private struct AppBarPreviewWrapper: View {
+    @State private var searchText = ""
+    
+    var body: some View {
+        AppBar(searchText: $searchText)
+    }
 }
