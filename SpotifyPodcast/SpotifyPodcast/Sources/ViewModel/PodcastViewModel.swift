@@ -7,6 +7,7 @@
 
 import Foundation
 import AVKit
+import SwiftData
 
 @MainActor
 class PodcastViewModel: ObservableObject {
@@ -17,8 +18,7 @@ class PodcastViewModel: ObservableObject {
     
     var player: AVPlayer?
     
-    private let cacheManager = CacheManager()
-    private let cacheKey = "cachedPodcasts"
+    private let cacheManager: CacheManager
     private let service: PodcastServiceProtocol
     
     private let limit = Constants.API.limit
@@ -26,8 +26,9 @@ class PodcastViewModel: ObservableObject {
     
     @Published private(set) var canLoadMore = true
     
-    internal init(service: any PodcastServiceProtocol = PodcastService()) {
+    internal init(modelContext: ModelContext,service: any PodcastServiceProtocol = PodcastService()) {
         self.service = service
+        self.cacheManager = CacheManager(modelContext: modelContext)
     }
     
     func processResult(dataObject:PodcastResponse) -> [PodcastEpisode] {
@@ -90,7 +91,7 @@ class PodcastViewModel: ObservableObject {
                     if cachedIDs == apiIDs {
                         
                         // Cache and API match — using data from cache
-                       await applyEpisodes(from: cachedData)
+                        await applyEpisodes(from: cachedData)
                         print("Using cache — data hasn't changed")
                     } else {
                         
