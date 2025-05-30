@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftData
 
 @MainActor
 class TopListViewModel: ObservableObject {
@@ -13,12 +14,12 @@ class TopListViewModel: ObservableObject {
     @Published var episodes: [PodcastEpisode] = []
     @Published var isLoading: Bool = false
     
-    private let cacheManager = CacheManager()
+    private let cacheManager: CacheManager
     private let service: PodcastServiceProtocol
-    private let cacheKey = "cachedPodcasts"
     
-    internal init(service: any PodcastServiceProtocol = PodcastService()) {
+    internal init(modelContext: ModelContext,service: any PodcastServiceProtocol = PodcastService()) {
         self.service = service
+        self.cacheManager = CacheManager(modelContext: modelContext)
     }
     
     func processResult(dataObject:PodcastResponse) -> [PodcastEpisode] {

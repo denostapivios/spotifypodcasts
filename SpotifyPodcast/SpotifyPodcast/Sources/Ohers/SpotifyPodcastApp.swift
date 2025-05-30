@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct SpotifyPodcastApp: App {
@@ -14,34 +15,47 @@ struct SpotifyPodcastApp: App {
     
     var body: some Scene {
         WindowGroup {
-            TabView {
-                Tab("Home", systemImage: "house") {
-                    NavigationStack {
-                        MainView()
-                            .navigationDestination(for: PodcastEpisode.self) { podcast in
-                                InfoPodcastView(podcast: podcast)
-                            }
+            AppContent()
+                .preferredColorScheme(isDarkMode ? .dark : .light)
+        }
+        .modelContainer(for: CachedPodcast.self)
+    }
+}
+
+
+struct AppContent: View {
+    @Environment(\.modelContext) private var context
+    
+    var body: some View {
+        TabView {
+            Tab("Home", systemImage: "house") {
+                NavigationStack {
+                    MainView(
+                        viewModel: PodcastViewModel(modelContext: context),
+                        topListViewModel: TopListViewModel(modelContext: context)
+                    )
+                    .navigationDestination(for: PodcastEpisode.self) { podcast in
+                        InfoPodcastView(context: context, podcast: podcast)
                     }
-                }
-                
-                Tab("Popular", systemImage: "music.note.list") {
-                    NavigationStack {
-                        PopularView(viewModel: PodcastViewModel())
-                            .navigationDestination(for: PodcastEpisode.self) { podcast in
-                                InfoPodcastView(podcast: podcast)
-                            }
-                    }
-                }
-                
-                Tab("Favorite", systemImage: "star.fill") {
-                    SearchView()
-                }
-                
-                Tab("Account", systemImage: "person.crop.circle") {
-                    AccountView()
                 }
             }
-            .preferredColorScheme(isDarkMode ? .dark : .light)
+            
+            Tab("Popular", systemImage: "music.note.list") {
+                NavigationStack {
+                    PopularView(context: context)
+                        .navigationDestination(for: PodcastEpisode.self) { podcast in
+                            InfoPodcastView(context: context, podcast: podcast)
+                        }
+                }
+            }
+            
+            Tab("Favorite", systemImage: "star.fill") {
+                SearchView()
+            }
+            
+            Tab("Account", systemImage: "person.crop.circle") {
+                AccountView()
+            }
         }
     }
 }

@@ -6,47 +6,42 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct TopList: View {
     @ObservedObject var viewModel: TopListViewModel
     
     var body: some View {
-            VStack(alignment: .leading) {
-                Text("Top Podcasts")
-                    .font(.title2)
-                    .fontWeight(.bold)
-
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(viewModel.isLoading ? PodcastEpisode.placeholder() : viewModel.episodes) { podcast in
-                            NavigationLink(value: podcast) {
-                                TopItem(podcast: podcast)
-                                    .redacted(reason: viewModel.isLoading ? .placeholder : [])
-                                    .animation(.default, value: viewModel.isLoading)
-                            }
-                            .buttonStyle(.plain)
+        VStack(alignment: .leading) {
+            Text("Top Podcasts")
+                .font(.title2)
+                .fontWeight(.bold)
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack {
+                    ForEach(viewModel.isLoading ? PodcastEpisode.placeholder() : viewModel.episodes) { podcast in
+                        NavigationLink(value: podcast) {
+                            TopItem(podcast: podcast)
+                                .redacted(reason: viewModel.isLoading ? .placeholder : [])
+                                .animation(.default, value: viewModel.isLoading)
                         }
+                        .buttonStyle(.plain)
                     }
-                    .frame(height: 185)
                 }
-            }
-            .onAppear {
-                viewModel.refreshData()
+                .frame(height: 185)
             }
         }
-    }
-
-    #if DEBUG
-    extension TopListViewModel {
-        static var preview5: TopListViewModel {
-            let vm = TopListViewModel()
-            vm.isLoading = false
-            vm.episodes = Array(repeating: PodcastEpisode.mock(), count: 5)
-            return vm
+        .onAppear {
+            viewModel.refreshData()
         }
     }
-    #endif
+}
 
-    #Preview {
-        TopList(viewModel: .preview5)
-    }
+#Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: CachedPodcast.self, configurations: config)
+    let topViewModel = TopListViewModel(modelContext: container.mainContext)
+    topViewModel.episodes = Array(repeating: PodcastEpisode.mock(), count: 5)
+    topViewModel.isLoading = false
+    return TopList(viewModel: topViewModel)
+}

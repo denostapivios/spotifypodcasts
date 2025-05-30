@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 
+
 class CacheManager {
     private let modelContext: ModelContext
     
@@ -17,25 +18,27 @@ class CacheManager {
     
     // Loading cached data
     func loadCachedData() async throws -> PodcastResponse? {
-        let results = try modelContext.fetch(FetchDescriptor<CachedPodcast>())
-        guard let latest = results.first else { return nil }
-        return try JSONDecoder().decode(PodcastResponse.self, from: latest.jsonData)
+        try await MainActor.run{
+            let results = try modelContext.fetch(FetchDescriptor<CachedPodcast>())
+            guard let latest = results.first else { return nil }
+            return try JSONDecoder().decode(PodcastResponse.self, from: latest.jsonData)
+        }
     }
     
     // Caching data
     func saveToCache(data: PodcastResponse) async throws {
         let encodedData = try JSONEncoder().encode(data)
-        let existing = try modelContext.fetch(FetchDescriptor<CachedPodcast>())
-        for item in existing {
-            modelContext.delete(item)
+        
+        try await MainActor.run{
+            let existing = try modelContext.fetch(FetchDescriptor<CachedPodcast>())
+            for item in existing {
+                modelContext.delete(item)
+            }
+            
+            let cached = CachedPodcast(jsonData: encodedData)
+            modelContext.insert(cached)
+            
+            try modelContext.save()
         }
-        
-        let cached = CachedPodcast(jsonData: encodedData)
-        modelContext.insert(cached)
-        
-        try modelContext.save()
     }
 }
-
-
-
