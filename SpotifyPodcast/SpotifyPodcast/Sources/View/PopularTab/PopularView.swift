@@ -9,11 +9,11 @@ import SwiftUI
 import SwiftData
 
 struct PopularView: View {
-    @StateObject var viewModel: PodcastViewModel
+    @StateObject var viewModel: PopularViewModel
     @StateObject var searchViewModel = SearchListViewModel()
     
     init(context: ModelContext) {
-        _viewModel = StateObject(wrappedValue: PodcastViewModel(modelContext: context))
+        _viewModel = StateObject(wrappedValue: PopularViewModel(modelContext: context))
     }
     
     
