@@ -9,6 +9,8 @@ import SwiftUI
 import SwiftData
 
 struct PopularView: View {
+    @Environment(\.modelContext) private var modelContex
+    
     @StateObject var viewModel: PopularViewModel
     @StateObject var searchViewModel = SearchListViewModel()
     
@@ -27,7 +29,7 @@ struct PopularView: View {
         .scrollIndicators(.hidden)
         .padding(16)
         .refreshable {
-            await viewModel.fetchPodcastsFromAPI()
+            viewModel.refreshData()
         }
     }
 }
