@@ -112,7 +112,7 @@ class PopularViewModel: ObservableObject {
             
             await MainActor.run {
                 episodes.append(contentsOf: unique)
-                sortEpisodesByDate()
+                sortEpisodesByDuration()
                 offset += limit
                 canLoadMore = fetched.count == limit
             }
@@ -132,19 +132,13 @@ class PopularViewModel: ObservableObject {
     private func applyEpisodes(from data: PodcastResponse) async {
         let newRows = processResult(dataObject: data)
         episodes = newRows
-        sortEpisodesByDate()
+        sortEpisodesByDuration()
         offset = newRows.count
         canLoadMore = !newRows.isEmpty
     }
     
-    private func sortEpisodesByDate() {
-        episodes.sort {
-            guard let date1 = DateFormatter.mediumDate.date(from: $0.releaseDate),
-                  let date2 = DateFormatter.mediumDate.date(from: $1.releaseDate) else {
-                return false
-            }
-            return date1 > date2
-        }
+    private func sortEpisodesByDuration() {
+        episodes.sort { $0.durationMillis > $1.durationMillis }
     }
     
     func refreshData() {
