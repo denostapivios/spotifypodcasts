@@ -70,24 +70,24 @@ enum PodcastImage: Hashable {
 
 extension PodcastEpisode {
     static func mock(
-            id: String = UUID().uuidString,
-            title: String =  "Mock Episode Title",
-            description: String =  "Mock description for preview.",
-            image: PodcastImage = .placeholder("photo"),
-            duration: String = "15 хв",
-            releaseDate: String = "01.05.2024",
-            audioPreview:String? =  "https://example.com/audio.mp3",
-            sharingInfo:String? =  "https://example.com/share"
+        id: String = UUID().uuidString,
+        title: String =  "Mock Episode Title",
+        description: String =  "Mock description for preview.",
+        image: PodcastImage = .placeholder("photo"),
+        duration: String = "15 хв",
+        releaseDate: String = "01.05.2024",
+        audioPreview:String? =  "https://example.com/audio.mp3",
+        sharingInfo:String? =  "https://example.com/share"
     ) -> PodcastEpisode {
-       PodcastEpisode(
+        PodcastEpisode(
             id: id,
-                        title: title,
-                        description: description,
-                        image: image,
-                        duration: duration,
-                        releaseDate: releaseDate,
-                        audioPreview: audioPreview,
-                        sharingInfo: sharingInfo
+            title: title,
+            description: description,
+            image: image,
+            duration: duration,
+            releaseDate: releaseDate,
+            audioPreview: audioPreview,
+            sharingInfo: sharingInfo
         )
     }
     

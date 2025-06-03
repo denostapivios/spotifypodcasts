@@ -18,11 +18,15 @@ class CacheManager {
     
     // Loading cached data
     func loadCachedData() async throws -> PodcastResponse? {
-        try await MainActor.run{
-            let results = try modelContext.fetch(FetchDescriptor<CachedPodcast>())
-            guard let latest = results.first else { return nil }
-            return try JSONDecoder().decode(PodcastResponse.self, from: latest.jsonData)
+        let results = try await MainActor.run {
+            try modelContext.fetch(FetchDescriptor<CachedPodcast>())
         }
+        
+        guard let latest = results.first else { return nil }
+        
+        return try await Task.detached(priority: .utility) {
+            try JSONDecoder().decode(PodcastResponse.self, from: latest.jsonData)
+        }.value
     }
     
     // Caching data
