@@ -31,10 +31,17 @@ class CacheManager {
     
     // Caching data
     func saveToCache(data: PodcastResponse) async throws {
-        let encodedData = try JSONEncoder().encode(data)
+        let encodedData = try await Task(priority: .utility) {
+            try JSONEncoder().encode(data)
+        }.value
         
-        try await MainActor.run{
+        try await MainActor.run {
             let existing = try modelContext.fetch(FetchDescriptor<CachedPodcast>())
+            
+            if let current = existing.first, current.jsonData == encodedData {
+                return
+            }
+            
             for item in existing {
                 modelContext.delete(item)
             }
