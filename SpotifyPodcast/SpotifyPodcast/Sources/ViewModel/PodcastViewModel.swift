@@ -26,7 +26,7 @@ class PodcastViewModel: ObservableObject {
     
     @Published private(set) var canLoadMore = true
     
-    internal init(modelContext: ModelContext,service: any PodcastServiceProtocol = PodcastService()) {
+    internal init(modelContext: ModelContext, service: any PodcastServiceProtocol = PodcastService()) {
         self.service = service
         self.cacheManager = CacheManager(modelContext: modelContext)
     }

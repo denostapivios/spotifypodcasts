@@ -15,7 +15,7 @@ struct MainView: View {
     @StateObject var topListViewModel: TopListViewModel
     @StateObject var searchViewModel = SearchListViewModel()
     
-    @State private var searchText: String = " "
+    @State private var searchText: String = ""
     private let debounceManager = DebounceManager()
     
     init(viewModel: PodcastViewModel, topListViewModel: TopListViewModel) {
