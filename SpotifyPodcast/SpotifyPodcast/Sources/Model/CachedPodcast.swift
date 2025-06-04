@@ -13,10 +13,17 @@ class CachedPodcast {
     var id: UUID
     var timestamp: Date
     var jsonData: Data
+    var contentHash: String
     
-    init(id: UUID = .init(), timestamp: Date = .now, jsonData: Data) {
+    init(
+        id: UUID = .init(),
+        timestamp: Date = .now,
+        jsonData: Data,
+        contentHash: String
+    ) {
         self.id = id
         self.timestamp = timestamp
         self.jsonData = jsonData
+        self.contentHash = contentHash
     }
 }
