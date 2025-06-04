@@ -7,6 +7,7 @@
 
 import Foundation
 import AVKit
+import SwiftData
 
 @MainActor
 class PodcastViewModel: ObservableObject {
@@ -17,8 +18,7 @@ class PodcastViewModel: ObservableObject {
     
     var player: AVPlayer?
     
-    private let cacheManager = CacheManager()
-    private let cacheKey = "cachedPodcasts"
+    private let cacheManager: CacheManager
     private let service: PodcastServiceProtocol
     
     private let limit = Constants.API.limit
@@ -26,8 +26,9 @@ class PodcastViewModel: ObservableObject {
     
     @Published private(set) var canLoadMore = true
     
-    internal init(service: any PodcastServiceProtocol = PodcastService()) {
+    internal init(modelContext: ModelContext, service: any PodcastServiceProtocol = PodcastService()) {
         self.service = service
+        self.cacheManager = CacheManager(modelContext: modelContext)
     }
     
     func processResult(dataObject:PodcastResponse) -> [PodcastEpisode] {
@@ -64,8 +65,12 @@ class PodcastViewModel: ObservableObject {
             
             do {
                 // First launch — comparing cache ↔ API
-                if offset == 0,
-                   let cachedData = try await cacheManager.loadCachedData() {
+                if offset == 0 {
+                    if let cachedData = try await cacheManager.loadCachedData() {
+                        // Використовуємо кешовані дані до оновлення
+                        applyEpisodes(from: cachedData)
+                        print("Cache used before update")
+                    }
                     let apiResponse = try await service.fetchData(
                         from: Constants.API.baseURL,
                         podcastID: Constants.API.podcastID,
@@ -73,31 +78,11 @@ class PodcastViewModel: ObservableObject {
                         limit: limit
                     )
                     
-                    // Get arrays of raw items
-                    let cachedItems = cachedData.data?
-                        .podcastUnionV2?
-                        .episodesV2?
-                        .items ?? []
-                    let apiItems = apiResponse.data?
-                        .podcastUnionV2?
-                        .episodesV2?
-                        .items ?? []
+                    try await cacheManager.saveToCache(data: apiResponse)
                     
-                    // Сomparing id
-                    let cachedIDs = Set(cachedItems.map { $0.entity?.data?.id ?? "" })
-                    let apiIDs    = Set(apiItems   .map { $0.entity?.data?.id ?? "" })
-                    
-                    if cachedIDs == apiIDs {
-                        
-                        // Cache and API match — using data from cache
-                       await applyEpisodes(from: cachedData)
-                        print("Using cache — data hasn't changed")
-                    } else {
-                        
-                        // Cache is outdated — fetching from API and updating the cache
-                        await applyEpisodes(from: apiResponse)
-                        try await cacheManager.saveToCache(data: apiResponse)
-                        print("Cache updated with new data from API")
+                    if let updatedCachedData = try await cacheManager.loadCachedData() {
+                        applyEpisodes(from: updatedCachedData)
+                        print("Loaded from cache (or updated)")
                     }
                 } else {
                     
@@ -136,7 +121,7 @@ class PodcastViewModel: ObservableObject {
                 canLoadMore = fetched.count == limit
             }
             
-            if initialOffset == limit {
+            if initialOffset == 0 {
                 try await cacheManager.saveToCache(data: result)
                 print("Data loaded from API and cached.")
             }
@@ -148,7 +133,7 @@ class PodcastViewModel: ObservableObject {
         }
     }
     
-    private func applyEpisodes(from data: PodcastResponse) async {
+    private func applyEpisodes(from data: PodcastResponse) {
         let newRows = processResult(dataObject: data)
         episodes = newRows
         sortEpisodesByDate()
