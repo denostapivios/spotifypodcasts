@@ -40,7 +40,7 @@ class CacheManager {
             
             if let existingItem = existing.first {
                 if existingItem.contentHash == newHash {
-                    print("✅ Кеш не змінився — запис пропущено")
+                    print("Cache has not changed - entry skipped")
                     return
                 }
                 modelContext.delete(existingItem)
@@ -52,7 +52,7 @@ class CacheManager {
                 contentHash: newHash,
             )
             modelContext.insert(cached)
-            print("💾 Нові дані збережено у кеш")
+            print("New data saved to cache")
             
         }
     }

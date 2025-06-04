@@ -56,7 +56,6 @@ class PodcastViewModel: ObservableObject {
     }
     
     func loadData() {
-        print("🔄 loadData() викликано — offset=\(offset), canLoadMore=\(canLoadMore), isLoading=\(isLoading)")
         guard !isLoading, canLoadMore else { return }
         isLoading = true
         
@@ -69,8 +68,8 @@ class PodcastViewModel: ObservableObject {
                 if offset == 0 {
                     if let cachedData = try await cacheManager.loadCachedData() {
                         // Використовуємо кешовані дані до оновлення
-                        await applyEpisodes(from: cachedData)
-                        print("📥 Використано кеш перед оновленням")
+                        applyEpisodes(from: cachedData)
+                        print("Cache used before update")
                     }
                     let apiResponse = try await service.fetchData(
                         from: Constants.API.baseURL,
@@ -82,8 +81,8 @@ class PodcastViewModel: ObservableObject {
                     try await cacheManager.saveToCache(data: apiResponse)
                     
                     if let updatedCachedData = try await cacheManager.loadCachedData() {
-                        await applyEpisodes(from: updatedCachedData)
-                        print("✅ Завантажено з кешу (або оновлено)")
+                        applyEpisodes(from: updatedCachedData)
+                        print("Loaded from cache (or updated)")
                     }
                 } else {
                     
@@ -134,7 +133,7 @@ class PodcastViewModel: ObservableObject {
         }
     }
     
-    private func applyEpisodes(from data: PodcastResponse) async {
+    private func applyEpisodes(from data: PodcastResponse) {
         let newRows = processResult(dataObject: data)
         episodes = newRows
         sortEpisodesByDate()
