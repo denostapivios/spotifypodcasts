@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AllPodcastsList: View {
     @ObservedObject var viewModel: PodcastViewModel
@@ -53,8 +54,10 @@ struct AllPodcastsList: View {
 }
 
 #Preview {
-    AllPodcastsList(
-        viewModel: PodcastViewModel(),
-        searchViewModel: SearchListViewModel()
-    )
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: CachedPodcast.self, configurations: config)
+    
+    let viewModel = PodcastViewModel(modelContext: container.mainContext)
+    let searchViewModel = SearchListViewModel()
+    return AllPodcastsList(viewModel: viewModel, searchViewModel: searchViewModel)
 }
