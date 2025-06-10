@@ -7,8 +7,6 @@
 
 import Foundation
 import SwiftData
-import CryptoKit
-
 
 class CacheManager {
     private let modelContext: ModelContext
@@ -32,36 +30,25 @@ class CacheManager {
     
     // Caching data
     func saveToCache(data: PodcastResponse) async throws {
-        let encodedData = try JSONEncoder().encode(data)
-        let newHash = await hashPodcastData(data)
+        let encodedData = try await Task(priority: .utility) {
+            try JSONEncoder().encode(data)
+        }.value
         
         try await MainActor.run {
             let existing = try modelContext.fetch(FetchDescriptor<CachedPodcast>())
             
-            if let existingItem = existing.first {
-                if existingItem.contentHash == newHash {
-                    print("Cache has not changed - entry skipped")
-                    return
-                }
-                modelContext.delete(existingItem)
+            if let current = existing.first, current.jsonData == encodedData {
+                return
             }
             
-            let cached = CachedPodcast(
-                timestamp: .now,
-                jsonData: encodedData,
-                contentHash: newHash,
-            )
-            modelContext.insert(cached)
-            print("New data saved to cache")
+            for item in existing {
+                modelContext.delete(item)
+            }
             
+            let cached = CachedPodcast(jsonData: encodedData)
+            modelContext.insert(cached)
+            
+            try modelContext.save()
         }
-    }
-    
-    private func hashPodcastData(_ data: PodcastResponse) async -> String {
-        await Task(priority: .utility) {
-            guard let encoded = try? JSONEncoder().encode(data) else { return "" }
-            let digest = SHA256.hash(data: encoded)
-            return digest.map { String(format: "%02x", $0) }.joined()
-        }.value
     }
 }

@@ -65,12 +65,9 @@ class PodcastViewModel: ObservableObject {
             
             do {
                 // First launch — comparing cache ↔ API
-                if offset == 0 {
-                    if let cachedData = try await cacheManager.loadCachedData() {
-                        // Використовуємо кешовані дані до оновлення
-                        applyEpisodes(from: cachedData)
-                        print("Cache used before update")
-                    }
+
+                if offset == 0,
+                   let cachedData = try await cacheManager.loadCachedData() {
                     let apiResponse = try await service.fetchData(
                         from: Constants.API.baseURL,
                         podcastID: Constants.API.podcastID,
@@ -78,11 +75,31 @@ class PodcastViewModel: ObservableObject {
                         limit: limit
                     )
                     
-                    try await cacheManager.saveToCache(data: apiResponse)
+                    // Get arrays of raw items
+                    let cachedItems = cachedData.data?
+                        .podcastUnionV2?
+                        .episodesV2?
+                        .items ?? []
+                    let apiItems = apiResponse.data?
+                        .podcastUnionV2?
+                        .episodesV2?
+                        .items ?? []
                     
-                    if let updatedCachedData = try await cacheManager.loadCachedData() {
-                        applyEpisodes(from: updatedCachedData)
-                        print("Loaded from cache (or updated)")
+                    // Сomparing id
+                    let cachedIDs = Set(cachedItems.map { $0.entity?.data?.id ?? "" })
+                    let apiIDs    = Set(apiItems   .map { $0.entity?.data?.id ?? "" })
+                    
+                    if cachedIDs == apiIDs {
+                        
+                        // Cache and API match — using data from cache
+                        await applyEpisodes(from: cachedData)
+                        print("Using cache — data hasn't changed")
+                    } else {
+                        
+                        // Cache is outdated — fetching from API and updating the cache
+                        await applyEpisodes(from: apiResponse)
+                        try await cacheManager.saveToCache(data: apiResponse)
+                        print("Cache updated with new data from API")
                     }
                 } else {
                     
@@ -121,7 +138,7 @@ class PodcastViewModel: ObservableObject {
                 canLoadMore = fetched.count == limit
             }
             
-            if initialOffset == 0 {
+            if initialOffset == limit {
                 try await cacheManager.saveToCache(data: result)
                 print("Data loaded from API and cached.")
             }
