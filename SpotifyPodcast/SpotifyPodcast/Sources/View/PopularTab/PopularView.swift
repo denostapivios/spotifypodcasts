@@ -6,10 +6,17 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct PopularView: View {
-    @StateObject var viewModel = PodcastViewModel()
+    @StateObject var viewModel: PodcastViewModel
     @StateObject var searchViewModel = SearchListViewModel()
+    
+    init(context: ModelContext) {
+        _viewModel = StateObject(wrappedValue: PodcastViewModel(modelContext: context))
+    }
+    
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
@@ -26,5 +33,7 @@ struct PopularView: View {
 }
 
 #Preview {
-    PopularView()
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: CachedPodcast.self, configurations: config)
+    return PopularView(context: container.mainContext)
 }
