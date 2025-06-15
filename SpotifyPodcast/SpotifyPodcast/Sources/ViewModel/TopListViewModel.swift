@@ -47,7 +47,7 @@ class TopListViewModel: ObservableObject {
                     let apiResponse = try await service.fetchData(
                         from: Constants.API.baseURL,
                         podcastID: Constants.API.podcastID,
-                        offset: Constants.API.offset,
+                        offset: Constants.API.offsetTop,
                         limit: Constants.API.limit
                     )
                     
@@ -61,24 +61,22 @@ class TopListViewModel: ObservableObject {
                         .episodesV2?
                         .items ?? []
                     
-                    // Сomparing id
-                    let cachedIDs = Set(cachedItems.map { $0.entity?.data?.id ?? "" })
-                    let apiIDs    = Set(apiItems   .map { $0.entity?.data?.id ?? "" })
+                    // Сomparing eposodes
+                    let cachedEpisodes = cachedItems.compactMap { PodcastEpisode(from: $0) }
+                    let apiEpisodes = apiItems.compactMap { PodcastEpisode(from: $0) }
                     
-                    if cachedIDs == apiIDs {
+                    if cachedEpisodes == apiEpisodes {
                         
                         // Cache and API match — using data from cache
-                        let newRows = processResult(dataObject: cachedData)
                         await MainActor.run {
-                            episodes = newRows
+                            episodes = cachedEpisodes
                         }
                         print("Using cache — data hasn't changed")
                     } else {
                         
                         // Cache is outdated — fetching from API and updating the cache
-                        let newRows = processResult(dataObject: apiResponse)
                         await MainActor.run {
-                            episodes = newRows
+                            episodes = apiEpisodes
                         }
                         try await cacheManager.saveToCache(data: apiResponse)
                         print("Cache updated with new data from API")

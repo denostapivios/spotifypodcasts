@@ -84,18 +84,19 @@ class PodcastViewModel: ObservableObject {
                         .episodesV2?
                         .items ?? []
                     
-                    // Сomparing id
-                    let cachedIDs = Set(cachedItems.map { $0.entity?.data?.id ?? "" })
-                    let apiIDs    = Set(apiItems   .map { $0.entity?.data?.id ?? "" })
+                    // Сomparing eposodes
+                    let cachedEpisodes = cachedItems.compactMap { PodcastEpisode(from: $0) }
+                    let apiEpisodes = apiItems.compactMap { PodcastEpisode(from: $0) }
                     
-                    if cachedIDs == apiIDs {
-                        
-                        // Cache and API match — using data from cache
-                        await applyEpisodes(from: cachedData)
+                    if cachedEpisodes == apiEpisodes {
+                        await MainActor.run {
+                            episodes = cachedEpisodes
+                            sortEpisodesByDate()
+                            offset = cachedEpisodes.count
+                            canLoadMore = !cachedEpisodes.isEmpty
+                        }
                         print("Using cache — data hasn't changed")
                     } else {
-                        
-                        // Cache is outdated — fetching from API and updating the cache
                         await applyEpisodes(from: apiResponse)
                         try await cacheManager.saveToCache(data: apiResponse)
                         print("Cache updated with new data from API")

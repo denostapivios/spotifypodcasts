@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PodcastEpisode: Identifiable, Hashable {
+struct PodcastEpisode: Identifiable, Hashable, Equatable {
     let id: String
     let title: String
     let description: String
