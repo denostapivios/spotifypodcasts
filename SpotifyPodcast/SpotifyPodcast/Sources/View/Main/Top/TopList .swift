@@ -18,7 +18,7 @@ struct TopList: View {
                 .fontWeight(.bold)
             
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
+                LazyHStack {
                     ForEach(viewModel.isLoading ? PodcastEpisode.placeholder() : viewModel.episodes) { podcast in
                         NavigationLink(value: podcast) {
                             TopItem(podcast: podcast)
@@ -28,7 +28,6 @@ struct TopList: View {
                         .buttonStyle(.plain)
                     }
                 }
-                .frame(height: 185)
             }
         }
         .onAppear {

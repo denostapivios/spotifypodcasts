@@ -11,13 +11,15 @@ import Kingfisher
 struct TopItem: View {
     var podcast: PodcastEpisode
     
+    private let size: CGFloat = 155
+    
     var body: some View {
         VStack(alignment: .leading) {
             switch podcast.image {
             case .placeholder(let imageName):
                 Image(imageName)
                     .resizable()
-                    .frame(width: 155, height: 155)
+                    .frame(width: size, height: size)
                     .cornerRadius(4)
                     .padding(.bottom, 4)
                 
@@ -27,7 +29,7 @@ struct TopItem: View {
                     .placeholder {
                         ProgressView()
                     }
-                    .frame(width: 155, height: 155)
+                    .frame(width: size, height: size)
                     .cornerRadius(4)
                     .padding(.bottom, 4)
             }
@@ -36,11 +38,11 @@ struct TopItem: View {
                 .font(.callout)
                 .lineLimit(1)
                 .truncationMode(.tail)
-                .frame(width: 155, alignment: .leading)
+                .frame(width: size, alignment: .leading)
         }
     }
 }
 
 #Preview {
     TopItem(podcast: PodcastEpisode.mock())
-    }
+}
