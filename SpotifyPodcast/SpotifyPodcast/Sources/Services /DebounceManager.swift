@@ -10,7 +10,7 @@ import Foundation
 actor DebounceManager {
     private var workItem: Task<Void,Never>?
     
-    func debounce(delay: TimeInterval = 5.0, action: @escaping () async -> Void) {
+    func debounce(delay: TimeInterval = 0.5, action: @escaping () async -> Void) {
         workItem?.cancel()
         
         workItem = Task {

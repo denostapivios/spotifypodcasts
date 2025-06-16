@@ -6,23 +6,50 @@
 //
 
 import Foundation
+import SwiftData
+
 
 class CacheManager {
-    private let cacheKey = "cachedPodcasts"
-    init() {}
+    private let modelContext: ModelContext
+    
+    init(modelContext: ModelContext) {
+        self.modelContext = modelContext
+    }
     
     // Loading cached data
     func loadCachedData() async throws -> PodcastResponse? {
-        guard let cachedData = UserDefaults.standard.data(forKey: cacheKey) else { return nil }
-        return try JSONDecoder().decode(PodcastResponse.self, from: cachedData)
+        let results = try await MainActor.run {
+            try modelContext.fetch(FetchDescriptor<CachedPodcast>())
+        }
+        
+        guard let latest = results.first else { return nil }
+        
+        return try await Task.detached(priority: .utility) {
+            try JSONDecoder().decode(PodcastResponse.self, from: latest.jsonData)
+        }.value
     }
     
     // Caching data
     func saveToCache(data: PodcastResponse) async throws {
-        let encodedData = try JSONEncoder().encode(data)
-        UserDefaults.standard.set(encodedData, forKey: cacheKey)
+        let encodedData = try await Task(priority: .utility) {
+            try JSONEncoder().encode(data)
+        }.value
+        
+        try await MainActor.run {
+            let existing = try modelContext.fetch(FetchDescriptor<CachedPodcast>())
+            
+            if let current = existing.first, current.jsonData == encodedData {
+                return
+            }
+            
+            for item in existing {
+                modelContext.delete(item)
+            }
+            
+            let cached = CachedPodcast(jsonData: encodedData)
+            modelContext.insert(cached)
+            
+            try modelContext.save()
+        }
     }
 }
-
-
-

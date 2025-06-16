@@ -8,10 +8,16 @@
 import SwiftUI
 import Kingfisher
 import AVKit
+import SwiftData
 
 struct InfoPodcastView: View {
-    @ObservedObject var viewModel = PodcastViewModel()
+    @StateObject var viewModel: PodcastViewModel
     let podcast: PodcastEpisode
+    
+    init(context: ModelContext, podcast: PodcastEpisode) {
+        _viewModel = StateObject(wrappedValue: PodcastViewModel(modelContext: context))
+        self.podcast = podcast
+    }
     
     var body: some View {
         ScrollView {
@@ -168,5 +174,7 @@ private extension InfoPodcastView {
 }
 
 #Preview {
-    InfoPodcastView(podcast: PodcastEpisode.mock())
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: CachedPodcast.self, configurations: config)
+    return InfoPodcastView(context: container.mainContext, podcast: PodcastEpisode.mock())
 }

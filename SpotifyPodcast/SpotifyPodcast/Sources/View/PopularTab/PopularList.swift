@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct PopularList: View {
-    @StateObject var viewModel = PodcastViewModel()
+    @ObservedObject var viewModel: PodcastViewModel
     
     let columns = [
         GridItem(.flexible(), spacing: 16),
@@ -45,5 +46,8 @@ struct PopularList: View {
 }
 
 #Preview {
-    PopularList(viewModel:PodcastViewModel())
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: CachedPodcast.self, configurations: config)
+    let viewModel = PodcastViewModel(modelContext: container.mainContext)
+    return PopularList(viewModel: viewModel)
 }

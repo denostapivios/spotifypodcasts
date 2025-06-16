@@ -6,14 +6,22 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MainView: View {
-    @StateObject var viewModel = PodcastViewModel()
-    @StateObject var topListViewModel = TopListViewModel()
+    @Environment(\.modelContext) private var modelContex
+    
+    @StateObject var viewModel: PodcastViewModel
+    @StateObject var topListViewModel: TopListViewModel
     @StateObject var searchViewModel = SearchListViewModel()
     
     @State private var searchText: String = ""
     private let debounceManager = DebounceManager()
+    
+    init(viewModel: PodcastViewModel, topListViewModel: TopListViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+        _topListViewModel = StateObject(wrappedValue: topListViewModel)
+    }
     
     var body: some View {
         
@@ -45,5 +53,9 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView()
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: CachedPodcast.self, configurations: config)
+    let viewModel = PodcastViewModel(modelContext: container.mainContext)
+    let topViewModel = TopListViewModel(modelContext: container.mainContext)
+    MainView(viewModel: viewModel, topListViewModel: topViewModel)
 }
