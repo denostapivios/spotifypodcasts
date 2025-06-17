@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct MainView: View {
-    @Environment(\.modelContext) private var modelContex
+//    @Environment(\.modelContext) private var modelContext
     
     @StateObject var viewModel: PodcastViewModel
     @StateObject var topListViewModel: TopListViewModel
