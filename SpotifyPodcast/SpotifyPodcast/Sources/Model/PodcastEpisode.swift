@@ -12,18 +12,21 @@ struct PodcastEpisode: Identifiable, Hashable, Equatable {
     let title: String
     let description: String
     let image: PodcastImage
-    let duration: String
     let durationMilliseconds: Int
     let releaseDate: String
     let audioPreview: String?
     let sharingInfo: String?
+    
+    var duration: String {
+            let minutes = durationMilliseconds / 60000
+            return "\(minutes) m"
+        }
     
     init(
         id: String,
         title: String,
         description: String,
         image: PodcastImage,
-        duration: String,
         durationMillis: Int,
         releaseDate: String,
         audioPreview: String?,
@@ -33,7 +36,6 @@ struct PodcastEpisode: Identifiable, Hashable, Equatable {
         self.title = title
         self.description = description
         self.image = image
-        self.duration = duration
         self.durationMilliseconds = durationMillis
         self.releaseDate = releaseDate
         self.audioPreview = audioPreview
@@ -54,9 +56,8 @@ struct PodcastEpisode: Identifiable, Hashable, Equatable {
             .flatMap { URL(string: $0) }
             .map { .remote($0) } ?? .placeholder("photo")
         
-        let (millis, string) = Self.extractDuration(from: data)
+        let (millis) = Self.extractDuration(from: data)
         self.durationMilliseconds = millis
-        self.duration = string
         
         self.releaseDate = data.releaseDate?.isoString
             .flatMap { ISO8601DateFormatter.shared.date(from: $0) }
@@ -66,9 +67,9 @@ struct PodcastEpisode: Identifiable, Hashable, Equatable {
         self.sharingInfo = data.sharingInfo?.shareUrl
     }
     
-    private static func extractDuration(from data: PodcastEpisodeData) -> (Int, String) {
+    private static func extractDuration(from data: PodcastEpisodeData) -> (Int) {
         let millis = data.duration?.totalMilliseconds ?? 0
-        return (millis, "\(millis / 60000) m")
+        return (millis)
     }
 }
 
@@ -84,7 +85,7 @@ extension PodcastEpisode {
         description: String =  "Mock description for preview.",
         image: PodcastImage = .placeholder("photo"),
         duration: String = "15 хв",
-        durationMillis: Int = 15 * 60 * 1000,
+        durationMillis: Int = 1500000,
         releaseDate: String = "01.05.2024",
         audioPreview:String? =  "https://example.com/audio.mp3",
         sharingInfo:String? =  "https://example.com/share"
@@ -94,7 +95,6 @@ extension PodcastEpisode {
             title: title,
             description: description,
             image: image,
-            duration: duration,
             durationMillis: durationMillis,
             releaseDate: releaseDate,
             audioPreview: audioPreview,
