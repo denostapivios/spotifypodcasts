@@ -150,7 +150,7 @@ class PopularViewModel: ObservableObject {
     }
     
     private func sortEpisodesByDuration() {
-        episodes.sort { $0.durationMillis > $1.durationMillis }
+        episodes.sort { $0.durationMilliseconds > $1.durationMilliseconds }
     }
     
     func refreshData() {

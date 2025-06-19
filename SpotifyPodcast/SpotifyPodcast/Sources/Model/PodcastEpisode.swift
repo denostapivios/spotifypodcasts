@@ -13,7 +13,7 @@ struct PodcastEpisode: Identifiable, Hashable, Equatable {
     let description: String
     let image: PodcastImage
     let duration: String
-    let durationMillis: Int
+    let durationMilliseconds: Int
     let releaseDate: String
     let audioPreview: String?
     let sharingInfo: String?
@@ -34,7 +34,7 @@ struct PodcastEpisode: Identifiable, Hashable, Equatable {
         self.description = description
         self.image = image
         self.duration = duration
-        self.durationMillis = durationMillis
+        self.durationMilliseconds = durationMillis
         self.releaseDate = releaseDate
         self.audioPreview = audioPreview
         self.sharingInfo = sharingInfo
@@ -55,7 +55,7 @@ struct PodcastEpisode: Identifiable, Hashable, Equatable {
             .map { .remote($0) } ?? .placeholder("photo")
         
         let millis = data.duration?.totalMilliseconds ?? 0
-        self.durationMillis = millis
+        self.durationMilliseconds = millis
         self.duration = "\(millis / 60000) m"
         
         self.releaseDate = data.releaseDate?.isoString
