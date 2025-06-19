@@ -54,9 +54,9 @@ struct PodcastEpisode: Identifiable, Hashable, Equatable {
             .flatMap { URL(string: $0) }
             .map { .remote($0) } ?? .placeholder("photo")
         
-        let millis = data.duration?.totalMilliseconds ?? 0
+        let (millis, string) = Self.extractDuration(from: data)
         self.durationMilliseconds = millis
-        self.duration = "\(millis / 60000) m"
+        self.duration = string
         
         self.releaseDate = data.releaseDate?.isoString
             .flatMap { ISO8601DateFormatter.shared.date(from: $0) }
@@ -64,6 +64,11 @@ struct PodcastEpisode: Identifiable, Hashable, Equatable {
         
         self.audioPreview = data.audioPreview?.url
         self.sharingInfo = data.sharingInfo?.shareUrl
+    }
+    
+    private static func extractDuration(from data: PodcastEpisodeData) -> (Int, String) {
+        let millis = data.duration?.totalMilliseconds ?? 0
+        return (millis, "\(millis / 60000) m")
     }
 }
 
