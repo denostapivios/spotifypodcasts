@@ -43,6 +43,50 @@ final class PopularViewModel: ObservableObject {
         }
     }
     
+    func fetchPodcastsFromAPI() async {
+        let initialOffset = offset
+        
+        do {
+            let result = try await service.fetchData(
+                from: Constants.API.baseURL,
+                podcastID: Constants.API.podcastID,
+                offset: offset,
+                limit: limit
+            )
+            let fetched = processResult(dataObject: result)
+            
+            let unique = fetched.filter { newEpisod in
+                !episodes.contains(where: { $0.id == newEpisod.id })
+            }
+            
+            await MainActor.run {
+                episodes.append(contentsOf: unique)
+                sortEpisodesByDuration()
+                offset += limit
+                canLoadMore = fetched.count == limit
+            }
+            
+            if initialOffset == limit {
+                try await cacheManager.saveToCache(data: result)
+                print("Data loaded from API and cached.")
+            }
+        } catch {
+            await MainActor.run {
+                errorMessage = "Error loading data from API: \(error.localizedDescription)"
+            }
+            print("Error loading from API: \(error.localizedDescription)")
+        }
+    }
+    
+    func refreshData() {
+        offset = 0
+        canLoadMore = true
+        episodes = []
+        loadData()
+    }
+}
+
+private extension PopularViewModel {
     private func performLoad() async {
         do {
             if isFirstPageLoad(),
@@ -102,41 +146,6 @@ final class PopularViewModel: ObservableObject {
         canLoadMore = !episodes.isEmpty
     }
     
-    func fetchPodcastsFromAPI() async {
-        let initialOffset = offset
-        
-        do {
-            let result = try await service.fetchData(
-                from: Constants.API.baseURL,
-                podcastID: Constants.API.podcastID,
-                offset: offset,
-                limit: limit
-            )
-            let fetched = processResult(dataObject: result)
-            
-            let unique = fetched.filter { newEpisod in
-                !episodes.contains(where: { $0.id == newEpisod.id })
-            }
-            
-            await MainActor.run {
-                episodes.append(contentsOf: unique)
-                sortEpisodesByDuration()
-                offset += limit
-                canLoadMore = fetched.count == limit
-            }
-            
-            if initialOffset == limit {
-                try await cacheManager.saveToCache(data: result)
-                print("Data loaded from API and cached.")
-            }
-        } catch {
-            await MainActor.run {
-                errorMessage = "Error loading data from API: \(error.localizedDescription)"
-            }
-            print("Error loading from API: \(error.localizedDescription)")
-        }
-    }
-    
     private func applyEpisodes(from data: PodcastResponse) {
         let newRows = processResult(dataObject: data)
         episodes = newRows
@@ -148,12 +157,4 @@ final class PopularViewModel: ObservableObject {
     private func sortEpisodesByDuration() {
         episodes.sort { $0.durationMilliseconds > $1.durationMilliseconds }
     }
-    
-    func refreshData() {
-        offset = 0
-        canLoadMore = true
-        episodes = []
-        loadData()
-    }
 }
-
