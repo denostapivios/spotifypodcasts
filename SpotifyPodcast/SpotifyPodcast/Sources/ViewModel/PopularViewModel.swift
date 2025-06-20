@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @MainActor
-class PopularViewModel: ObservableObject {
+final class PopularViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var episodes: [PodcastEpisode] = []
     @Published var isLoading: Bool = false
