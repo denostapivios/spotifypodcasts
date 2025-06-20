@@ -20,7 +20,7 @@ class PopularViewModel: ObservableObject {
     private let limit = Constants.API.limit
     private var offset = 0
     
-    internal init(modelContext: ModelContext,service: any PodcastServiceProtocol = PodcastService()) {
+    init(modelContext: ModelContext, service: any PodcastServiceProtocol = PodcastService()) {
         self.service = service
         self.cacheManager = CacheManager(modelContext: modelContext)
     }
