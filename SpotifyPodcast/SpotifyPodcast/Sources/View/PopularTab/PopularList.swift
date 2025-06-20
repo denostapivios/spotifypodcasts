@@ -9,7 +9,8 @@ import SwiftUI
 import SwiftData
 
 struct PopularList: View {
-    @ObservedObject var viewModel: PodcastViewModel
+    @ObservedObject var viewModel: PopularViewModel
+    @ObservedObject var searchViewModel: SearchListViewModel
     
     let columns = [
         GridItem(.flexible(), spacing: 16),
@@ -23,24 +24,37 @@ struct PopularList: View {
                 .fontWeight(.bold)
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 16) {
-                    ForEach(viewModel.isLoading ? PodcastEpisode.placeholder() : viewModel.episodes) { podcast in
+                    ForEach(searchViewModel.episodes, id: \.id) { podcast in
                         NavigationLink(value: podcast){
                             PopularItem(podcast: podcast)
                                 .redacted(reason: viewModel.isLoading ? .placeholder : [])
-                                .animation(.default, value: viewModel.isLoading)
                         }
                         .buttonStyle(.plain)
                     }
                     
-                    if viewModel.isLoading {
-                        ProgressView()
-                            .padding()
+                    if viewModel.canLoadMore {
+                        Button {
+                            viewModel.loadData()
+                        } label: {
+                            if viewModel.isLoading {
+                                ProgressView()
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                            } else {
+                                Text("Load more")
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .font(.callout)
+                                    .fontWeight(.semibold)
+                            }
+                        }
+                        .disabled(viewModel.isLoading)
                     }
                 }
             }
         }
-        .onAppear {
-            viewModel.refreshData()
+        .onReceive(viewModel.$episodes) { episodes in
+            searchViewModel.updatePodcast(with: episodes)
         }
     }
 }
@@ -48,6 +62,7 @@ struct PopularList: View {
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: CachedPodcast.self, configurations: config)
-    let viewModel = PodcastViewModel(modelContext: container.mainContext)
-    return PopularList(viewModel: viewModel)
+    let viewModel = PopularViewModel(modelContext: container.mainContext)
+    let searchViewModel = SearchListViewModel()
+    PopularList(viewModel: viewModel, searchViewModel: searchViewModel)
 }

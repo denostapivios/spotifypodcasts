@@ -9,25 +9,37 @@ import SwiftUI
 import SwiftData
 
 struct PopularView: View {
-    @StateObject var viewModel: PodcastViewModel
+    
+    @StateObject var viewModel: PopularViewModel
     @StateObject var searchViewModel = SearchListViewModel()
     
-    init(context: ModelContext) {
-        _viewModel = StateObject(wrappedValue: PodcastViewModel(modelContext: context))
-    }
+    private let debounceManager = DebounceManager()
     
+    init(viewModel: PopularViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 AppBar(searchText: $searchViewModel.searchText)
-                PopularList(viewModel: viewModel)
+                PopularList(viewModel: viewModel, searchViewModel: searchViewModel)
             }
         }
         .scrollIndicators(.hidden)
         .padding(16)
+        .task {
+            viewModel.loadData()
+        }
         .refreshable {
-            await viewModel.fetchPodcastsFromAPI()
+            viewModel.refreshData()
+        }
+        .onChange(of: searchViewModel.searchText) { _, newValue in
+            Task {
+                await debounceManager.debounce {
+                    searchViewModel.filterPodcast()
+                }
+            }
         }
     }
 }
@@ -35,5 +47,6 @@ struct PopularView: View {
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: CachedPodcast.self, configurations: config)
-    return PopularView(context: container.mainContext)
+    let viewModel = PopularViewModel(modelContext: container.mainContext)
+    PopularView(viewModel: viewModel)
 }
