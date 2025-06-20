@@ -105,7 +105,6 @@ class PopularViewModel: ObservableObject {
         canLoadMore = !episodes.isEmpty
     }
     
-    // Loading data from the API
     func fetchPodcastsFromAPI() async {
         let initialOffset = offset
         

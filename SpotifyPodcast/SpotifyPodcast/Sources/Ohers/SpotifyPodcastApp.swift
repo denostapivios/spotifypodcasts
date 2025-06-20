@@ -42,9 +42,7 @@ struct AppContent: View {
             
             Tab("Popular", systemImage: "music.note.list") {
                 NavigationStack {
-                    PopularView(
-                        viewModel: PopularViewModel(modelContext: context)
-                    )
+                    PopularView(viewModel: PopularViewModel(modelContext: context))
                     .navigationDestination(for: PodcastEpisode.self) { podcast in
                         InfoPodcastView(context: context, podcast: podcast)
                     }
