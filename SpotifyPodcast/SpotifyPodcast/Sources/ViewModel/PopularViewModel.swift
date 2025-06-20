@@ -95,7 +95,6 @@ final class PopularViewModel: ObservableObject {
             .compactMap { PodcastEpisode(from: $0) } ?? []
     }
     
-    @MainActor
     private func updateUI(with episodes: [PodcastEpisode]) {
         self.episodes = episodes
         sortEpisodesByDuration()
