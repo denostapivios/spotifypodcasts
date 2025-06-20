@@ -13,14 +13,12 @@ class PopularViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var episodes: [PodcastEpisode] = []
     @Published var isLoading: Bool = false
+    @Published private(set) var canLoadMore = true
     
     private let cacheManager: CacheManager
     private let service: PodcastServiceProtocol
-    
     private let limit = Constants.API.limit
     private var offset = 0
-    
-    @Published private(set) var canLoadMore = true
     
     internal init(modelContext: ModelContext,service: any PodcastServiceProtocol = PodcastService()) {
         self.service = service
