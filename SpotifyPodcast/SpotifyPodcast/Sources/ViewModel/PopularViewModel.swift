@@ -87,7 +87,7 @@ final class PopularViewModel: ObservableObject {
 }
 
 private extension PopularViewModel {
-    private func performLoad() async {
+    func performLoad() async {
         do {
             if isFirstPageLoad(),
                let cachedData = try await cacheManager.loadCachedData() {
@@ -102,11 +102,11 @@ private extension PopularViewModel {
         }
     }
     
-    private func isFirstPageLoad() -> Bool {
+    func isFirstPageLoad() -> Bool {
         offset == 0
     }
     
-    private func handleInitialLoadWithCache(cachedData: PodcastResponse) async throws {
+    func handleInitialLoadWithCache(cachedData: PodcastResponse) async throws {
         let apiResponse = try await service.fetchData(
             from: Constants.API.baseURL,
             podcastID: Constants.API.podcastID,
@@ -131,7 +131,7 @@ private extension PopularViewModel {
         }
     }
     
-    private func extractEpisodes(from response: PodcastResponse) -> [PodcastEpisode] {
+    func extractEpisodes(from response: PodcastResponse) -> [PodcastEpisode] {
         response.data?
             .podcastUnionV2?
             .episodesV2?
@@ -139,14 +139,14 @@ private extension PopularViewModel {
             .compactMap { PodcastEpisode(from: $0) } ?? []
     }
     
-    private func updateUI(with episodes: [PodcastEpisode]) {
+    func updateUI(with episodes: [PodcastEpisode]) {
         self.episodes = episodes
         sortEpisodesByDuration()
         offset = episodes.count
         canLoadMore = !episodes.isEmpty
     }
     
-    private func applyEpisodes(from data: PodcastResponse) {
+    func applyEpisodes(from data: PodcastResponse) {
         let newRows = processResult(dataObject: data)
         episodes = newRows
         sortEpisodesByDuration()
@@ -154,7 +154,7 @@ private extension PopularViewModel {
         canLoadMore = !newRows.isEmpty
     }
     
-    private func sortEpisodesByDuration() {
+    func sortEpisodesByDuration() {
         episodes.sort { $0.durationMilliseconds > $1.durationMilliseconds }
     }
 }
