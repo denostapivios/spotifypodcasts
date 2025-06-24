@@ -11,24 +11,31 @@ import SwiftData
 
 @MainActor
 class PodcastViewModel: ObservableObject {
+    @Published var searchText: String = ""
     @Published var isPlayerPresented = false
     @Published var errorMessage: String?
     @Published var episodes: [PodcastEpisode] = []
+    @Published var filteredEpisodes: [PodcastEpisode] = []
     @Published var isLoading: Bool = false
     
     var player: AVPlayer?
     
     private let cacheManager: CacheManager
     private let service: PodcastServiceProtocol
-    
+    private let searchService: SearchService
     private let limit = Constants.API.limit
     private var offset = 0
     
     @Published private(set) var canLoadMore = true
     
-    internal init(modelContext: ModelContext, service: any PodcastServiceProtocol = PodcastService()) {
+    internal init(
+        modelContext: ModelContext,
+        service: any PodcastServiceProtocol = PodcastService(),
+        searchService: SearchService = SearchService()
+    ) {
         self.service = service
         self.cacheManager = CacheManager(modelContext: modelContext)
+        self.searchService = searchService
     }
     
     func processResult(dataObject:PodcastResponse) -> [PodcastEpisode] {
@@ -91,7 +98,6 @@ class PodcastViewModel: ObservableObject {
             offset: offset,
             limit: limit
         )
-        
         let cachedEpisodes = extractEpisodes(from: cachedData)
         let apiEpisodes = extractEpisodes(from: apiResponse)
         
@@ -121,6 +127,7 @@ class PodcastViewModel: ObservableObject {
     private func updateUI(with episodes: [PodcastEpisode]) {
         self.episodes = episodes
         sortEpisodesByDate()
+        applySearch()
         offset = episodes.count
         canLoadMore = !episodes.isEmpty
     }
@@ -145,6 +152,7 @@ class PodcastViewModel: ObservableObject {
             await MainActor.run {
                 episodes.append(contentsOf: unique)
                 sortEpisodesByDate()
+                applySearch()
                 offset += limit
                 canLoadMore = fetched.count == limit
             }
@@ -166,6 +174,7 @@ class PodcastViewModel: ObservableObject {
         let newRows = processResult(dataObject: data)
         episodes = newRows
         sortEpisodesByDate()
+        applySearch()
         offset = newRows.count
         canLoadMore = !newRows.isEmpty
     }
@@ -178,6 +187,10 @@ class PodcastViewModel: ObservableObject {
             }
             return date1 > date2
         }
+    }
+    
+    func applySearch() {
+        filteredEpisodes = searchService.filter(episodes, by: searchText)
     }
     
     func refreshData() {

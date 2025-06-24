@@ -9,12 +9,10 @@ import SwiftUI
 import SwiftData
 
 struct MainView: View {
-    
     @StateObject var viewModel: PodcastViewModel
     @StateObject var topListViewModel: TopListViewModel
-    @StateObject var searchViewModel = SearchListViewModel()
-    
     @State private var searchText: String = ""
+    
     private let debounceManager = DebounceManager()
     
     init(viewModel: PodcastViewModel, topListViewModel: TopListViewModel) {
@@ -23,12 +21,11 @@ struct MainView: View {
     }
     
     var body: some View {
-        
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                AppBar(searchText: $searchViewModel.searchText)
+                AppBar(searchText: $viewModel.searchText)
                 TopList(viewModel: topListViewModel)
-                AllPodcastsList(viewModel: viewModel, searchViewModel: searchViewModel)
+                AllPodcastsList(viewModel: viewModel)
             }
         }
         .scrollIndicators(.hidden)
@@ -36,11 +33,11 @@ struct MainView: View {
         .onAppear {
             viewModel.refreshData()
         }
-        .onChange(of: searchViewModel.searchText) { _, newValue in
+        .onChange(of: viewModel.searchText) { _, newValue in
             Task {
                 await debounceManager.debounce {
                     await MainActor.run {
-                        searchViewModel.filterPodcast()
+                        viewModel.applySearch()
                     }
                 }
             }

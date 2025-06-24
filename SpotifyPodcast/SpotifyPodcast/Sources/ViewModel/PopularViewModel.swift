@@ -10,19 +10,27 @@ import SwiftData
 
 @MainActor
 final class PopularViewModel: ObservableObject {
+    @Published var searchText: String = ""
     @Published var errorMessage: String?
     @Published var episodes: [PodcastEpisode] = []
+    @Published var filteredEpisodes: [PodcastEpisode] = []
     @Published var isLoading: Bool = false
     @Published private(set) var canLoadMore = true
     
     private let cacheManager: CacheManager
     private let service: PodcastServiceProtocol
+    private let searchService: SearchService
     private let limit = Constants.API.limit
     private var offset = 0
     
-    init(modelContext: ModelContext, service: any PodcastServiceProtocol = PodcastService()) {
+    init(
+        modelContext: ModelContext,
+        service: any PodcastServiceProtocol = PodcastService(),
+        searchService: SearchService = SearchService()
+    ) {
         self.service = service
         self.cacheManager = CacheManager(modelContext: modelContext)
+        self.searchService = searchService
     }
     
     func processResult(dataObject:PodcastResponse) -> [PodcastEpisode] {
@@ -62,6 +70,7 @@ final class PopularViewModel: ObservableObject {
             await MainActor.run {
                 episodes.append(contentsOf: unique)
                 sortEpisodesByDuration()
+                applySearch()
                 offset += limit
                 canLoadMore = fetched.count == limit
             }
@@ -76,6 +85,10 @@ final class PopularViewModel: ObservableObject {
             }
             print("Error loading from API: \(error.localizedDescription)")
         }
+    }
+    
+    func applySearch() {
+        filteredEpisodes = searchService.filter(episodes, by: searchText)
     }
     
     func refreshData() {
@@ -142,6 +155,7 @@ private extension PopularViewModel {
     func updateUI(with episodes: [PodcastEpisode]) {
         self.episodes = episodes
         sortEpisodesByDuration()
+        applySearch()
         offset = episodes.count
         canLoadMore = !episodes.isEmpty
     }
@@ -150,6 +164,7 @@ private extension PopularViewModel {
         let newRows = processResult(dataObject: data)
         episodes = newRows
         sortEpisodesByDuration()
+        applySearch()
         offset = newRows.count
         canLoadMore = !newRows.isEmpty
     }

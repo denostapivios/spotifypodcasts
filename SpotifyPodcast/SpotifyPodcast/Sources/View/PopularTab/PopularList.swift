@@ -10,7 +10,6 @@ import SwiftData
 
 struct PopularList: View {
     @ObservedObject var viewModel: PopularViewModel
-    @ObservedObject var searchViewModel: SearchListViewModel
     
     let columns = [
         GridItem(.flexible(), spacing: 16),
@@ -24,7 +23,7 @@ struct PopularList: View {
                 .fontWeight(.bold)
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 16) {
-                    ForEach(searchViewModel.episodes, id: \.id) { podcast in
+                    ForEach(viewModel.filteredEpisodes, id: \.id) { podcast in
                         NavigationLink(value: podcast){
                             PopularItem(podcast: podcast)
                                 .redacted(reason: viewModel.isLoading ? .placeholder : [])
@@ -52,9 +51,6 @@ struct PopularList: View {
                     }
                 }
             }
-        }
-        .onReceive(viewModel.$episodes) { episodes in
-            searchViewModel.updatePodcast(with: episodes)
         }
     }
 }

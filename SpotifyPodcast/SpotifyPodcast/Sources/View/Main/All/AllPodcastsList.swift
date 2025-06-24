@@ -10,7 +10,6 @@ import SwiftData
 
 struct AllPodcastsList: View {
     @ObservedObject var viewModel: PodcastViewModel
-    @ObservedObject var searchViewModel: SearchListViewModel
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -19,7 +18,7 @@ struct AllPodcastsList: View {
                 .fontWeight(.bold)
             
             LazyVStack {
-                ForEach(searchViewModel.episodes, id: \.id) { podcast in
+                ForEach(viewModel.filteredEpisodes, id: \.id) { podcast in
                     NavigationLink(value: podcast) {
                         PodcastRow(podcast: podcast)
                             .redacted(reason: viewModel.isLoading ? .placeholder : [])
@@ -46,9 +45,6 @@ struct AllPodcastsList: View {
                     .disabled(viewModel.isLoading)
                 }
             }
-        }
-        .onReceive(viewModel.$episodes) { episodes in
-            searchViewModel.updatePodcast(with: episodes)
         }
     }
 }

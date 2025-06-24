@@ -9,10 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct PopularView: View {
-    
     @StateObject var viewModel: PopularViewModel
-    @StateObject var searchViewModel = SearchListViewModel()
-    
     private let debounceManager = DebounceManager()
     
     init(viewModel: PopularViewModel) {
@@ -22,8 +19,8 @@ struct PopularView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                AppBar(searchText: $searchViewModel.searchText)
-                PopularList(viewModel: viewModel, searchViewModel: searchViewModel)
+                AppBar(searchText: $viewModel.searchText)
+                PopularList(viewModel: viewModel)
             }
         }
         .scrollIndicators(.hidden)
@@ -34,10 +31,12 @@ struct PopularView: View {
         .refreshable {
             viewModel.refreshData()
         }
-        .onChange(of: searchViewModel.searchText) { _, newValue in
+        .onChange(of: viewModel.searchText) { _, newValue in
             Task {
                 await debounceManager.debounce {
-                    searchViewModel.filterPodcast()
+                    await MainActor.run {
+                        viewModel.applySearch()
+                    }
                 }
             }
         }
