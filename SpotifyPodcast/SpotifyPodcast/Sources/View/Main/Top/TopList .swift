@@ -35,12 +35,3 @@ struct TopList: View {
         }
     }
 }
-
-#Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: CachedPodcast.self, configurations: config)
-    let topViewModel = TopListViewModel(modelContext: container.mainContext)
-    topViewModel.episodes = Array(repeating: PodcastEpisode.mock(), count: 5)
-    topViewModel.isLoading = false
-    return TopList(viewModel: topViewModel)
-}

@@ -93,7 +93,3 @@ private extension PodcastRow {
             .font(.system(size: 14))
     }
 }
-
-#Preview {
-    PodcastRow(podcast: PodcastEpisode.mock())
-}

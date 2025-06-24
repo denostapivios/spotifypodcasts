@@ -58,11 +58,3 @@ struct PopularList: View {
         }
     }
 }
-
-#Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: CachedPodcast.self, configurations: config)
-    let viewModel = PopularViewModel(modelContext: container.mainContext)
-    let searchViewModel = SearchListViewModel()
-    PopularList(viewModel: viewModel, searchViewModel: searchViewModel)
-}

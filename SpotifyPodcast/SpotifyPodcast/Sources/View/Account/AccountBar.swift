@@ -23,7 +23,3 @@ struct AccountBar: View {
         .padding(.trailing, 2)
     }
 }
-
-#Preview {
-    AccountBar()
-}

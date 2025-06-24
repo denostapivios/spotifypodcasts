@@ -46,7 +46,3 @@ struct PopularItem: View {
         .frame(maxWidth: .infinity)
     }
 }
-
-#Preview {
-    PopularItem(podcast: PodcastEpisode.mock())
-}

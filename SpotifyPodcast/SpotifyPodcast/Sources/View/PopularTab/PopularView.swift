@@ -43,10 +43,3 @@ struct PopularView: View {
         }
     }
 }
-
-#Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: CachedPodcast.self, configurations: config)
-    let viewModel = PopularViewModel(modelContext: container.mainContext)
-    PopularView(viewModel: viewModel)
-}

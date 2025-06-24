@@ -50,11 +50,3 @@ struct MainView: View {
         }
     }
 }
-
-#Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: CachedPodcast.self, configurations: config)
-    let viewModel = PodcastViewModel(modelContext: container.mainContext)
-    let topViewModel = TopListViewModel(modelContext: container.mainContext)
-    MainView(viewModel: viewModel, topListViewModel: topViewModel)
-}
