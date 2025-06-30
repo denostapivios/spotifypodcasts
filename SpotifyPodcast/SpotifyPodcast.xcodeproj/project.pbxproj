@@ -45,11 +45,6 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		D9415BC62D78D65A00B38E1E /* SpotifyPodcastTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SpotifyPodcastTests;
-			sourceTree = "<group>";
-		};
 		D9415BD32D78D69D00B38E1E /* SpotifyPodcastSwiftTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = SpotifyPodcastSwiftTests;
@@ -95,7 +90,6 @@
 			isa = PBXGroup;
 			children = (
 				D9D079F72D71BE1400FD0C0C /* SpotifyPodcast */,
-				D9415BC62D78D65A00B38E1E /* SpotifyPodcastTests */,
 				D9415BD32D78D69D00B38E1E /* SpotifyPodcastSwiftTests */,
 				D9D079F62D71BE1400FD0C0C /* Products */,
 			);
@@ -126,9 +120,6 @@
 			);
 			dependencies = (
 				D9415BCA2D78D65A00B38E1E /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				D9415BC62D78D65A00B38E1E /* SpotifyPodcastTests */,
 			);
 			name = SpotifyPodcastTests;
 			packageProductDependencies = (

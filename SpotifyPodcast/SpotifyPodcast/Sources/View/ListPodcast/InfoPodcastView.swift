@@ -163,7 +163,7 @@ private extension InfoPodcastView {
             )
         case .placeholder(let imageName):
             return AnyView(
-                Image(imageName) //інша іконка для відсутнього зображення
+                Image(imageName)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 300, height: 300)
