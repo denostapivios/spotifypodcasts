@@ -52,7 +52,3 @@ struct AccountView: View {
         
     }
 }
-
-#Preview {
-    AccountView()
-}

@@ -50,7 +50,3 @@ struct SearchBar: View {
         .transition(.move(edge: .top).combined(with: .opacity))
     }
 }
-
-#Preview {
-    SearchBar(searchText: .constant(""), onCancel: {})
-}

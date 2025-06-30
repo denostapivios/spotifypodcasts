@@ -10,7 +10,6 @@ import SwiftData
 
 struct AllPodcastsList: View {
     @ObservedObject var viewModel: PodcastViewModel
-    @ObservedObject var searchViewModel: SearchListViewModel
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -19,7 +18,7 @@ struct AllPodcastsList: View {
                 .fontWeight(.bold)
             
             LazyVStack {
-                ForEach(searchViewModel.episodes, id: \.id) { podcast in
+                ForEach(viewModel.filteredEpisodes, id: \.id) { podcast in
                     NavigationLink(value: podcast) {
                         PodcastRow(podcast: podcast)
                             .redacted(reason: viewModel.isLoading ? .placeholder : [])
@@ -47,17 +46,5 @@ struct AllPodcastsList: View {
                 }
             }
         }
-        .onReceive(viewModel.$episodes) { episodes in
-            searchViewModel.updatePodcast(with: episodes)
-        }
     }
-}
-
-#Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: CachedPodcast.self, configurations: config)
-    
-    let viewModel = PodcastViewModel(modelContext: container.mainContext)
-    let searchViewModel = SearchListViewModel()
-    return AllPodcastsList(viewModel: viewModel, searchViewModel: searchViewModel)
 }

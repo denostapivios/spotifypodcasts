@@ -9,13 +9,10 @@ import SwiftUI
 import SwiftData
 
 struct MainView: View {
-    @Environment(\.modelContext) private var modelContex
-    
     @StateObject var viewModel: PodcastViewModel
     @StateObject var topListViewModel: TopListViewModel
-    @StateObject var searchViewModel = SearchListViewModel()
-    
     @State private var searchText: String = ""
+    
     private let debounceManager = DebounceManager()
     
     init(viewModel: PodcastViewModel, topListViewModel: TopListViewModel) {
@@ -24,12 +21,11 @@ struct MainView: View {
     }
     
     var body: some View {
-        
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                AppBar(searchText: $searchViewModel.searchText)
+                AppBar(searchText: $viewModel.searchText)
                 TopList(viewModel: topListViewModel)
-                AllPodcastsList(viewModel: viewModel, searchViewModel: searchViewModel)
+                AllPodcastsList(viewModel: viewModel)
             }
         }
         .scrollIndicators(.hidden)
@@ -37,11 +33,11 @@ struct MainView: View {
         .onAppear {
             viewModel.refreshData()
         }
-        .onChange(of: searchViewModel.searchText) { _, newValue in
+        .onChange(of: viewModel.searchText) { _, newValue in
             Task {
                 await debounceManager.debounce {
                     await MainActor.run {
-                        searchViewModel.filterPodcast()
+                        viewModel.applySearch()
                     }
                 }
             }
@@ -50,12 +46,4 @@ struct MainView: View {
             viewModel.refreshData()
         }
     }
-}
-
-#Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: CachedPodcast.self, configurations: config)
-    let viewModel = PodcastViewModel(modelContext: container.mainContext)
-    let topViewModel = TopListViewModel(modelContext: container.mainContext)
-    MainView(viewModel: viewModel, topListViewModel: topViewModel)
 }

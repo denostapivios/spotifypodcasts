@@ -172,9 +172,3 @@ private extension InfoPodcastView {
         }
     }
 }
-
-#Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: CachedPodcast.self, configurations: config)
-    return InfoPodcastView(context: container.mainContext, podcast: PodcastEpisode.mock())
-}

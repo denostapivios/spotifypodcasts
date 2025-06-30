@@ -52,10 +52,6 @@ struct AppBar: View {
     }
 }
 
-#Preview {
-    AppBarPreviewWrapper()
-}
-
 private struct AppBarPreviewWrapper: View {
     @State private var searchText = ""
     
