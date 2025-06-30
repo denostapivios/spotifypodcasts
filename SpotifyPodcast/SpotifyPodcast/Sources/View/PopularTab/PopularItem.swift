@@ -35,7 +35,6 @@ struct PopularItem: View {
                 .clipped()
                 .cornerRadius(4)
             }
-            
             .aspectRatio(1, contentMode: .fit)
             
             Text(podcast.title)

@@ -18,9 +18,9 @@ struct PodcastEpisode: Identifiable, Hashable, Equatable {
     let sharingInfo: String?
     
     var duration: String {
-            let minutes = durationMilliseconds / 60000
-            return "\(minutes) m"
-        }
+        let minutes = durationMilliseconds / 60000
+        return "\(minutes) m"
+    }
     
     init(
         id: String,
@@ -81,14 +81,14 @@ enum PodcastImage: Hashable {
 extension PodcastEpisode {
     static func mock(
         id: String = UUID().uuidString,
-        title: String =  "Mock Episode Title",
-        description: String =  "Mock description for preview.",
+        title: String = "Mock Episode Title",
+        description: String = "Mock description for preview.",
         image: PodcastImage = .placeholder("photo"),
         duration: String = "15 хв",
         durationMillis: Int = 1500000,
         releaseDate: String = "01.05.2024",
-        audioPreview:String? =  "https://example.com/audio.mp3",
-        sharingInfo:String? =  "https://example.com/share"
+        audioPreview:String? = "https://example.com/audio.mp3",
+        sharingInfo:String? = "https://example.com/share"
     ) -> PodcastEpisode {
         PodcastEpisode(
             id: id,

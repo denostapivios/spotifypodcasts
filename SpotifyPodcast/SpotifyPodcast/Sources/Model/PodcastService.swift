@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 // Service for sharing a podcast list
 class PodcastService: ObservableObject, PodcastServiceProtocol {
     

@@ -49,6 +49,5 @@ struct AccountView: View {
             }
             .navigationTitle("Account")
         }
-        
     }
 }

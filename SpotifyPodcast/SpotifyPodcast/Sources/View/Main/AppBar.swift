@@ -25,7 +25,6 @@ struct AppBar: View {
                         }
                     }
                 }
-                
             } else {
                 HStack {
                     Image("logo")
