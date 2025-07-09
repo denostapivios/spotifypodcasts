@@ -113,10 +113,27 @@ class TopListViewModel: ObservableObject {
             print("Data loaded from API and cached.")
             
         } catch {
-            await MainActor.run {
-                errorMessage = "Error loading data from API: \(error.localizedDescription)"
-            }
             print("Error loading from API: \(error.localizedDescription)")
+            
+            // fallback
+            if let fallback = service.loadFallbackFromFile() {
+                let fallbackEpisodes = processResult(dataObject: fallback)
+                
+                // offsetTop and limit
+                let start = min(Constants.API.offsetTop, fallbackEpisodes.count)
+                let end = min(start + Constants.API.limit, fallbackEpisodes.count)
+                let sliced = Array(fallbackEpisodes[start..<end])
+                await MainActor.run {
+                    episodes = sliced
+                    errorMessage = "Show fallback (offset \(start), limit \(Constants.API.limit))"
+                }
+                print("Loaded fallback.json")
+            } else {
+                await MainActor.run {
+                    errorMessage = "Error loading data from API or fallback.json"
+                }
+                print("No fallback available")
+            }
         }
     }
     
