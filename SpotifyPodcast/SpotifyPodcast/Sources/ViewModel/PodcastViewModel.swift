@@ -162,10 +162,29 @@ class PodcastViewModel: ObservableObject {
                 print("Data loaded from API and cached.")
             }
         } catch {
-            await MainActor.run {
-                errorMessage = "Error loading data from API: \(error.localizedDescription)"
+            print("API error: \(error.localizedDescription)")
+            
+            if let fallback = service.loadFallbackFromFile() {
+                let allEpisodes = processResult(dataObject: fallback)
+                let start = min(offset, allEpisodes.count)
+                let end = min(start + limit, allEpisodes.count)
+                let sliced = Array(allEpisodes[start..<end])
+                
+                await MainActor.run {
+                    episodes.append(contentsOf: sliced)
+                    sortEpisodesByDate()
+                    applySearch()
+                    offset += sliced.count
+                    canLoadMore = sliced.count == limit
+                    errorMessage = "Show fallback (offset \(start), limit \(limit))"
+                }
+                print("Loaded fallback.json (offset: \(start), limit: \(limit))")
+            } else {
+                await MainActor.run {
+                    errorMessage = "Error: Failed to load API or fallback.json"
+                }
+                print("No fallback available")
             }
-            print("Error loading from API: \(error.localizedDescription)")
         }
     }
     
