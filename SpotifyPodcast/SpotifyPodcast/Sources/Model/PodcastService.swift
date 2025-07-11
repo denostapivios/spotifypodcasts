@@ -46,6 +46,12 @@ class PodcastService: ObservableObject, PodcastServiceProtocol {
     }
     
     private func performRequest(url: URL) async throws -> PodcastResponse {
+        
+        // Simulation of 500 if a launch argument is provided
+        if ProcessInfo.processInfo.arguments.contains("SIMULATE_500") {
+            throw PodcastServiceError(reason: "Simulated Internal Server Error (500)")
+        }
+        
         var request = URLRequest(url: url)
         // Send a network request
         
