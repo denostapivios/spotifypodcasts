@@ -46,6 +46,12 @@ class PodcastService: ObservableObject, PodcastServiceProtocol {
     }
     
     private func performRequest(url: URL) async throws -> PodcastResponse {
+        
+        // Simulation of 500 if a launch argument is provided
+        if ProcessInfo.processInfo.arguments.contains("SIMULATE_500") {
+            throw PodcastServiceError(reason: "Simulated Internal Server Error (500)")
+        }
+        
         var request = URLRequest(url: url)
         // Send a network request
         
@@ -54,15 +60,36 @@ class PodcastService: ObservableObject, PodcastServiceProtocol {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         // Headers and API keys
         
-        let response = try await URLSession.shared.data(for: request)
+        let (data, response) = try await URLSession.shared.data(for: request)
         // Received a response
         
-        let data = response.0
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw PodcastServiceError(reason: "Invalid response")
+        }
+        
+        if httpResponse.statusCode == 500 {
+            throw PodcastServiceError(reason: "Internal Server Error (500)")
+        }
         
         let decodedResponse = try JSONDecoder().decode(PodcastResponse.self, from: data)
         // Parsed JSON data into a model
         
         return decodedResponse
+    }
+    
+    func loadFallbackFromFile() -> PodcastResponse? {
+        guard let url = Bundle.main.url(forResource: "fallback", withExtension: "json"),
+              let data = try? Data(contentsOf: url) else {
+            print("Could not be found or read fallback.json")
+            return nil
+        }
+        do {
+            let decoded = try JSONDecoder().decode(PodcastResponse.self, from: data)
+            return decoded
+        } catch {
+            print("Decoding error fallback.json: \(error)")
+            return nil
+        }
     }
 }
 
@@ -73,4 +100,6 @@ protocol PodcastServiceProtocol {
         offset: Int,
         limit: Int
     ) async throws -> PodcastResponse
+    
+    func loadFallbackFromFile() -> PodcastResponse?
 }
