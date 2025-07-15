@@ -72,66 +72,6 @@ class PodcastViewModel: ObservableObject {
         }
     }
     
-    private func performLoad() async {
-        do {
-            if isFirstPageLoad(),
-               let cachedData = try await cacheManager.loadCachedData() {
-                try await handleInitialLoadWithCache(cachedData: cachedData)
-            } else {
-                print("No cache available or this is not the first load — fetchPodcastsFromAPI()")
-                await fetchPodcastsFromAPI()
-            }
-        } catch {
-            print("Error loading from cache: \(error.localizedDescription)")
-            await fetchPodcastsFromAPI()
-        }
-    }
-    
-    private func isFirstPageLoad() -> Bool {
-        offset == 0
-    }
-    
-    private func handleInitialLoadWithCache(cachedData: PodcastResponse) async throws {
-        let apiResponse = try await service.fetchData(
-            from: Constants.API.baseURL,
-            podcastID: Constants.API.podcastID,
-            offset: offset,
-            limit: limit
-        )
-        let cachedEpisodes = extractEpisodes(from: cachedData)
-        let apiEpisodes = extractEpisodes(from: apiResponse)
-        
-        if cachedEpisodes == apiEpisodes {
-            await MainActor.run {
-                updateUI(with: cachedEpisodes)
-            }
-            print("Using cache — data hasn't changed")
-        } else {
-            await MainActor.run {
-                applyEpisodes(from: apiResponse)
-            }
-            try await cacheManager.saveToCache(data: apiResponse)
-            print("Cache updated with new data from API")
-        }
-    }
-    
-    private func extractEpisodes(from response: PodcastResponse) -> [PodcastEpisode] {
-        response.data?
-            .podcastUnionV2?
-            .episodesV2?
-            .items?
-            .compactMap { PodcastEpisode(from: $0) } ?? []
-    }
-    
-    @MainActor
-    private func updateUI(with episodes: [PodcastEpisode]) {
-        self.episodes = episodes
-        sortEpisodesByDate()
-        applySearch()
-        offset = episodes.count
-        canLoadMore = !episodes.isEmpty
-    }
-    
     // Loading data from the API
     func fetchPodcastsFromAPI() async {
         let initialOffset = offset
@@ -188,7 +128,78 @@ class PodcastViewModel: ObservableObject {
         }
     }
     
-    @MainActor
+    func applySearch() {
+        filteredEpisodes = searchService.filter(episodes, by: searchText)
+    }
+    
+    func refreshData() {
+        offset = 0
+        canLoadMore = true
+        episodes = []
+        loadData()
+    }
+}
+
+private extension PodcastViewModel {
+    private func performLoad() async {
+        do {
+            if isFirstPageLoad(),
+               let cachedData = try await cacheManager.loadCachedData() {
+                try await handleInitialLoadWithCache(cachedData: cachedData)
+            } else {
+                print("No cache available or this is not the first load — fetchPodcastsFromAPI()")
+                await fetchPodcastsFromAPI()
+            }
+        } catch {
+            print("Error loading from cache: \(error.localizedDescription)")
+            await fetchPodcastsFromAPI()
+        }
+    }
+    
+    private func isFirstPageLoad() -> Bool {
+        offset == 0
+    }
+    
+    private func handleInitialLoadWithCache(cachedData: PodcastResponse) async throws {
+        let apiResponse = try await service.fetchData(
+            from: Constants.API.baseURL,
+            podcastID: Constants.API.podcastID,
+            offset: offset,
+            limit: limit
+        )
+        let cachedEpisodes = extractEpisodes(from: cachedData)
+        let apiEpisodes = extractEpisodes(from: apiResponse)
+        
+        if cachedEpisodes == apiEpisodes {
+            await MainActor.run {
+                updateUI(with: cachedEpisodes)
+            }
+            print("Using cache — data hasn't changed")
+        } else {
+            await MainActor.run {
+                applyEpisodes(from: apiResponse)
+            }
+            try await cacheManager.saveToCache(data: apiResponse)
+            print("Cache updated with new data from API")
+        }
+    }
+    
+    private func extractEpisodes(from response: PodcastResponse) -> [PodcastEpisode] {
+        response.data?
+            .podcastUnionV2?
+            .episodesV2?
+            .items?
+            .compactMap { PodcastEpisode(from: $0) } ?? []
+    }
+    
+    private func updateUI(with episodes: [PodcastEpisode]) {
+        self.episodes = episodes
+        sortEpisodesByDate()
+        applySearch()
+        offset = episodes.count
+        canLoadMore = !episodes.isEmpty
+    }
+    
     private func applyEpisodes(from data: PodcastResponse) {
         let newRows = processResult(dataObject: data)
         episodes = newRows
@@ -206,16 +217,5 @@ class PodcastViewModel: ObservableObject {
             }
             return date1 > date2
         }
-    }
-    
-    func applySearch() {
-        filteredEpisodes = searchService.filter(episodes, by: searchText)
-    }
-    
-    func refreshData() {
-        offset = 0
-        canLoadMore = true
-        episodes = []
-        loadData()
     }
 }
