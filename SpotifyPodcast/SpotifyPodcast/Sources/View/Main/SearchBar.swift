@@ -42,11 +42,11 @@ struct SearchBar: View {
                         .foregroundColor(.gray)
                 }
             }
-            .padding(.horizontal, 8)
+            .padding(.horizontal, .spacingSmall)
             .padding(.vertical, 6)
         }
         .frame(height: 36)
-        .padding(.trailing, 2)
+        .padding(.trailing, .spacingTiny)
         .transition(.move(edge: .top).combined(with: .opacity))
     }
 }

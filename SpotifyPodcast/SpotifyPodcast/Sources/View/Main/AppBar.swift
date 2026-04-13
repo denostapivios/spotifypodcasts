@@ -44,7 +44,7 @@ struct AppBar: View {
                     }
                     .buttonStyle(.plain)
                 }
-                .padding(.trailing, 2)
+                .padding(.trailing, .spacingTiny)
             }
         }
         .animation(.default, value: isSearching)

@@ -20,6 +20,6 @@ struct AccountBar: View {
             Toggle("", isOn: $isDarkMode)
                 .labelsHidden()
         }
-        .padding(.trailing, 2)
+        .padding(.trailing, .spacingTiny)
     }
 }

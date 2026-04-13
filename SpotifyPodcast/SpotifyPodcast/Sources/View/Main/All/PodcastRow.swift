@@ -47,7 +47,7 @@ private extension PodcastRow {
                     }
                     .scaledToFit()
                     .frame(width: 50, height: 50)
-                    .cornerRadius(4)
+                    .cornerRadius(.radiusSmall)
             )
         case .placeholder(let imageName):
             return AnyView(
@@ -55,7 +55,7 @@ private extension PodcastRow {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 50, height: 50)
-                    .cornerRadius(4)
+                    .cornerRadius(.radiusSmall)
             )
         }
     }
@@ -78,14 +78,14 @@ private extension PodcastRow {
         Image(systemName: "star")
             .resizable()
             .scaledToFit()
-            .frame(width: 24, height: 24)
+            .frame(width: .iconMedium, height: .iconMedium)
     }
     
     var shareIcon: some View {
         Image(systemName: "square.and.arrow.up")
             .resizable()
             .scaledToFit()
-            .frame(width: 24, height: 24)
+            .frame(width: .iconMedium, height: .iconMedium)
     }
     
     var duration: some View {

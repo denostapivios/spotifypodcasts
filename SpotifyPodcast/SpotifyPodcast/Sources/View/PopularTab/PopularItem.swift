@@ -33,7 +33,7 @@ struct PopularItem: View {
                 .scaledToFill()
                 .frame(width: imageSize, height: imageSize)
                 .clipped()
-                .cornerRadius(4)
+                .cornerRadius(.radiusSmall)
             }
             .aspectRatio(1, contentMode: .fit)
             

@@ -12,7 +12,7 @@ struct PopularList: View {
     var viewModel: PopularViewModel
 
     let columns = [
-        GridItem(.flexible(), spacing: 16),
+        GridItem(.flexible(), spacing: .spacingMedium),
         GridItem(.flexible()),
     ]
 
@@ -22,7 +22,7 @@ struct PopularList: View {
                 .font(.title2)
                 .fontWeight(.bold)
             ScrollView {
-                LazyVGrid(columns: columns, spacing: 16) {
+                LazyVGrid(columns: columns, spacing: .spacingMedium) {
                     ForEach(viewModel.filteredEpisodes, id: \.id) { podcast in
                         Button {
                             coordinator.navigateTo(place: .popularDetail(podcast))

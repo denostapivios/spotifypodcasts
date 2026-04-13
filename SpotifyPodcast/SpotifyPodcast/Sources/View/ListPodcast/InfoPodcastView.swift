@@ -25,7 +25,7 @@ struct InfoPodcastView: View {
             VStack {
                 image
             }
-            .padding(.bottom, 16)
+            .padding(.bottom, .spacingMedium)
 
             title
 
@@ -57,7 +57,7 @@ struct InfoPodcastView: View {
                         .padding()
                         .frame(width: 120, height: 48)
                         .background(Color.green)
-                        .cornerRadius(4)
+                        .cornerRadius(.radiusSmall)
                     }
                 }
             }
@@ -106,14 +106,14 @@ private extension InfoPodcastView {
         Image(systemName: "star")
             .resizable()
             .scaledToFit()
-            .frame(width: 24, height: 24)
+            .frame(width: .iconMedium, height: .iconMedium)
     }
 
     var downloadedIcon: some View {
         Image(systemName: "square.and.arrow.down")
             .resizable()
             .scaledToFit()
-            .frame(width: 24, height: 24)
+            .frame(width: .iconMedium, height: .iconMedium)
     }
 
     var shareIcon: some View {
@@ -121,7 +121,7 @@ private extension InfoPodcastView {
             Image(systemName: Constants.Icons.share)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 24, height: 24)
+                .frame(width: .iconMedium, height: .iconMedium)
         }
     }
 
@@ -129,7 +129,7 @@ private extension InfoPodcastView {
         Image(systemName: "ellipsis")
             .resizable()
             .scaledToFit()
-            .frame(width: 24, height: 24)
+            .frame(width: .iconMedium, height: .iconMedium)
     }
 
     var description: some View {
@@ -158,7 +158,7 @@ private extension InfoPodcastView {
                     .placeholder { ProgressView() }
                     .scaledToFit()
                     .frame(width: 300, height: 300)
-                    .cornerRadius(4)
+                    .cornerRadius(.radiusSmall)
             )
         case .placeholder(let imageName):
             return AnyView(
@@ -166,7 +166,7 @@ private extension InfoPodcastView {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 300, height: 300)
-                    .cornerRadius(4)
+                    .cornerRadius(.radiusSmall)
             )
         }
     }

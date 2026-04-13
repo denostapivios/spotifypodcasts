@@ -20,8 +20,8 @@ struct TopItem: View {
                 Image(imageName)
                     .resizable()
                     .frame(width: size, height: size)
-                    .cornerRadius(4)
-                    .padding(.bottom, 4)
+                    .cornerRadius(.radiusSmall)
+                    .padding(.bottom, .spacingXSmall)
                 
             case .remote(let url):
                 KFImage(url)
@@ -30,8 +30,8 @@ struct TopItem: View {
                         ProgressView()
                     }
                     .frame(width: size, height: size)
-                    .cornerRadius(4)
-                    .padding(.bottom, 4)
+                    .cornerRadius(.radiusSmall)
+                    .padding(.bottom, .spacingXSmall)
             }
             
             Text (podcast.title)

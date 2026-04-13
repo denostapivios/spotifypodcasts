@@ -21,13 +21,13 @@ struct PopularView: View {
         @Bindable var viewModel = viewModel
         NavigationStack(path: $coordinator.popularPath) {
             ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
+                VStack(alignment: .leading, spacing: .spacingLarge) {
                     AppBar(searchText: $viewModel.searchText)
                     PopularList(viewModel: viewModel)
                 }
             }
             .scrollIndicators(.hidden)
-            .padding(16)
+            .padding(.spacingMedium)
             .task {
                 viewModel.loadData()
             }
