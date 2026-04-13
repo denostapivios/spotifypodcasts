@@ -6,38 +6,43 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct PopularView: View {
+    @Environment(AppCoordinator.self) private var coordinator
     @State var viewModel: PopularViewModel
-    private let debounceManager = DebounceManager()
+    @State private var debounceManager = DebounceManager()
 
     init(viewModel: PopularViewModel) {
         self.viewModel = viewModel
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                AppBar(searchText: $viewModel.searchText)
-                PopularList(viewModel: viewModel)
+        @Bindable var coordinator = coordinator
+        @Bindable var viewModel = viewModel
+        NavigationStack(path: $coordinator.popularPath) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    AppBar(searchText: $viewModel.searchText)
+                    PopularList(viewModel: viewModel)
+                }
             }
-        }
-        .scrollIndicators(.hidden)
-        .padding(16)
-        .task {
-            viewModel.loadData()
-        }
-        .refreshable {
-            viewModel.refreshData()
-        }
-        .onChange(of: viewModel.searchText) { _, newValue in
-            Task {
-                await debounceManager.debounce {
-                    await MainActor.run {
-                        viewModel.applySearch()
+            .scrollIndicators(.hidden)
+            .padding(16)
+            .task {
+                viewModel.loadData()
+            }
+            .refreshable {
+                viewModel.refreshData()
+            }
+            .onChange(of: viewModel.searchText) { _, _ in
+                Task {
+                    await debounceManager.debounce {
+                        await MainActor.run { viewModel.applySearch() }
                     }
                 }
+            }
+            .navigationDestination(for: Place.self) { place in
+                coordinator.view(for: place)
             }
         }
     }

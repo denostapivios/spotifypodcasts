@@ -6,21 +6,23 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct TopList: View {
+    @Environment(AppCoordinator.self) private var coordinator
     var viewModel: TopListViewModel
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             Text("Top Podcasts")
                 .font(.title2)
                 .fontWeight(.bold)
-            
+
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack {
                     ForEach(viewModel.isLoading ? PodcastEpisode.placeholder() : viewModel.episodes) { podcast in
-                        NavigationLink(value: podcast) {
+                        Button {
+                            coordinator.navigateTo(place: .homeDetail(podcast))
+                        } label: {
                             TopItem(podcast: podcast)
                                 .redacted(reason: viewModel.isLoading ? .placeholder : [])
                                 .animation(.default, value: viewModel.isLoading)

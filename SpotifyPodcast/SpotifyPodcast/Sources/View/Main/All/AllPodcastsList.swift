@@ -6,26 +6,28 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct AllPodcastsList: View {
+    @Environment(AppCoordinator.self) private var coordinator
     var viewModel: PodcastViewModel
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             Text("All podcasts")
                 .font(.title2)
                 .fontWeight(.bold)
-            
+
             LazyVStack {
                 ForEach(viewModel.filteredEpisodes, id: \.id) { podcast in
-                    NavigationLink(value: podcast) {
+                    Button {
+                        coordinator.navigateTo(place: .homeDetail(podcast))
+                    } label: {
                         PodcastRow(podcast: podcast)
                             .redacted(reason: viewModel.isLoading ? .placeholder : [])
                     }
                     .buttonStyle(.plain)
                 }
-                
+
                 if viewModel.canLoadMore {
                     Button {
                         viewModel.loadData()

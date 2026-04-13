@@ -6,13 +6,11 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct MainView: View {
+    @Environment(AppCoordinator.self) private var coordinator
     @State var viewModel: PodcastViewModel
     @State var topListViewModel: TopListViewModel
-    @State private var searchText: String = ""
-
     @State private var debounceManager = DebounceManager()
 
     init(viewModel: PodcastViewModel, topListViewModel: TopListViewModel) {
@@ -21,29 +19,34 @@ struct MainView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                AppBar(searchText: $viewModel.searchText)
-                TopList(viewModel: topListViewModel)
-                AllPodcastsList(viewModel: viewModel)
+        @Bindable var coordinator = coordinator
+        @Bindable var viewModel = viewModel
+        NavigationStack(path: $coordinator.homePath) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    AppBar(searchText: $viewModel.searchText)
+                    TopList(viewModel: topListViewModel)
+                    AllPodcastsList(viewModel: viewModel)
+                }
             }
-        }
-        .scrollIndicators(.hidden)
-        .padding(16)
-        .onAppear {
-            viewModel.refreshData()
-        }
-        .onChange(of: viewModel.searchText) { _, newValue in
-            Task {
-                await debounceManager.debounce {
-                    await MainActor.run {
-                        viewModel.applySearch()
+            .scrollIndicators(.hidden)
+            .padding(16)
+            .onAppear {
+                viewModel.refreshData()
+            }
+            .onChange(of: viewModel.searchText) { _, _ in
+                Task {
+                    await debounceManager.debounce {
+                        await MainActor.run { viewModel.applySearch() }
                     }
                 }
             }
-        }
-        .refreshable {
-            viewModel.refreshData()
+            .refreshable {
+                viewModel.refreshData()
+            }
+            .navigationDestination(for: Place.self) { place in
+                coordinator.view(for: place)
+            }
         }
     }
 }

@@ -14,12 +14,13 @@ struct InfoPodcastView: View {
     @State var viewModel: PodcastViewModel
     let podcast: PodcastEpisode
 
-    init(context: ModelContext, podcast: PodcastEpisode) {
-        self.viewModel = PodcastViewModel(modelContext: context)
+    init(podcast: PodcastEpisode, viewModel: PodcastViewModel) {
         self.podcast = podcast
+        self.viewModel = viewModel
     }
 
     var body: some View {
+        @Bindable var viewModel = viewModel
         ScrollView {
             VStack {
                 image
@@ -28,7 +29,7 @@ struct InfoPodcastView: View {
 
             title
 
-            HStack (spacing:10) {
+            HStack(spacing: 10) {
                 duration
                 Spacer()
                 releaseDate
@@ -36,7 +37,7 @@ struct InfoPodcastView: View {
             .padding(.bottom, 10)
 
             VStack {
-                HStack(spacing:12) {
+                HStack(spacing: 12) {
                     favoriteIcon
                     downloadedIcon
                     shareIcon
@@ -154,9 +155,7 @@ private extension InfoPodcastView {
             return AnyView(
                 KFImage(url)
                     .resizable()
-                    .placeholder {
-                        ProgressView()
-                    }
+                    .placeholder { ProgressView() }
                     .scaledToFit()
                     .frame(width: 300, height: 300)
                     .cornerRadius(4)

@@ -6,16 +6,16 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct PopularList: View {
+    @Environment(AppCoordinator.self) private var coordinator
     var viewModel: PopularViewModel
-    
+
     let columns = [
         GridItem(.flexible(), spacing: 16),
         GridItem(.flexible()),
     ]
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             Text("Popular Podcasts")
@@ -24,13 +24,15 @@ struct PopularList: View {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 16) {
                     ForEach(viewModel.filteredEpisodes, id: \.id) { podcast in
-                        NavigationLink(value: podcast){
+                        Button {
+                            coordinator.navigateTo(place: .popularDetail(podcast))
+                        } label: {
                             PopularItem(podcast: podcast)
                                 .redacted(reason: viewModel.isLoading ? .placeholder : [])
                         }
                         .buttonStyle(.plain)
                     }
-                    
+
                     if viewModel.canLoadMore {
                         Button {
                             viewModel.loadData()
