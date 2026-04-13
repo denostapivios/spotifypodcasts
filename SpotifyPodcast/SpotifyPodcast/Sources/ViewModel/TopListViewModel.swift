@@ -13,15 +13,15 @@ class TopListViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var episodes: [PodcastEpisode] = []
     @Published var isLoading: Bool = false
-    
+
     private let cacheManager: CacheManager
     private let service: PodcastServiceProtocol
-    
+
     internal init(modelContext: ModelContext, service: any PodcastServiceProtocol = PodcastService()) {
         self.service = service
         self.cacheManager = CacheManager(modelContext: modelContext)
     }
-    
+
     func processResult(dataObject:PodcastResponse) -> [PodcastEpisode] {
         let items = dataObject.data?
             .podcastUnionV2?
@@ -29,11 +29,11 @@ class TopListViewModel: ObservableObject {
             .items ?? []
         return items.compactMap { PodcastEpisode(from: $0) }
     }
-    
+
     func loadData() {
         guard !isLoading else { return }
         isLoading = true
-        
+
         Task {
             defer {
                 Task { @MainActor in
@@ -43,7 +43,7 @@ class TopListViewModel: ObservableObject {
             await performLoad()
         }
     }
-    
+
     // Loading data from the API
     func fetchPodcastsFromAPI() async {
         do {
@@ -54,21 +54,21 @@ class TopListViewModel: ObservableObject {
                 limit: Constants.API.limit
             )
             let fetched = processResult(dataObject: result)
-            
+
             await MainActor.run {
                 episodes = fetched
             }
-            
+
             try await cacheManager.saveToCache(data: result)
             print("Data loaded from API and cached.")
-            
+
         } catch {
             print("Error loading from API: \(error.localizedDescription)")
-            
+
             // fallback
             if let fallback = service.loadFallbackFromFile() {
                 let fallbackEpisodes = processResult(dataObject: fallback)
-                
+
                 // offsetTop and limit
                 let start = min(Constants.API.offsetTop, fallbackEpisodes.count)
                 let end = min(start + Constants.API.limit, fallbackEpisodes.count)
@@ -86,7 +86,7 @@ class TopListViewModel: ObservableObject {
             }
         }
     }
-    
+
     func refreshData() {
         episodes = []
         loadData()
@@ -107,7 +107,7 @@ private extension TopListViewModel {
             await fetchPodcastsFromAPI()
         }
     }
-    
+
     func handleInitialLoadWithCache(with cachedData: PodcastResponse) async throws {
         let apiResponse = try await service.fetchData(
             from: Constants.API.baseURL,
@@ -115,10 +115,10 @@ private extension TopListViewModel {
             offset: Constants.API.offsetTop,
             limit: Constants.API.limit
         )
-        
+
         let cachedEpisodes = extractEpisodes(from: cachedData)
         let apiEpisodes = extractEpisodes(from: apiResponse)
-        
+
         if cachedEpisodes == apiEpisodes {
             await MainActor.run {
                 episodes = cachedEpisodes
@@ -132,7 +132,7 @@ private extension TopListViewModel {
             print("Cache updated with new data from API")
         }
     }
-    
+
     func extractEpisodes(from response: PodcastResponse) -> [PodcastEpisode] {
         let items = response.data?
             .podcastUnionV2?
@@ -140,5 +140,5 @@ private extension TopListViewModel {
             .items ?? []
         return items.compactMap { PodcastEpisode(from: $0) }
     }
-    
+
 }

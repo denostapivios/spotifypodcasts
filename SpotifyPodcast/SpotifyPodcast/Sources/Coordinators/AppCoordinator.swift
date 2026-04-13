@@ -9,23 +9,23 @@ import SwiftUI
 
 @Observable
 final class AppCoordinator {
-    
+
     var path = NavigationPath()
     var root: Place = .mainSplash
-    
+
     func navigate(to route: Place) {
         path.append(route)
     }
-    
+
     func goBack() {
         guard !path.isEmpty else { return }
         path.removeLast()
     }
-    
+
     func backToRoot() {
         path.removeLast(path.count)
     }
-    
+
     func setRoot(route: Place) {
         root = route
         path = NavigationPath()

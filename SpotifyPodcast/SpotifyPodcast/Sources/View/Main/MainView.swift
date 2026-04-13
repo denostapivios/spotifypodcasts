@@ -12,14 +12,14 @@ struct MainView: View {
     @StateObject var viewModel: PodcastViewModel
     @StateObject var topListViewModel: TopListViewModel
     @State private var searchText: String = ""
-    
+
     private let debounceManager = DebounceManager()
-    
+
     init(viewModel: PodcastViewModel, topListViewModel: TopListViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
         _topListViewModel = StateObject(wrappedValue: topListViewModel)
     }
-    
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {

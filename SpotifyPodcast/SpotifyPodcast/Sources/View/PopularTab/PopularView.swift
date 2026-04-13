@@ -11,11 +11,11 @@ import SwiftData
 struct PopularView: View {
     @StateObject var viewModel: PopularViewModel
     private let debounceManager = DebounceManager()
-    
+
     init(viewModel: PopularViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
-    
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {

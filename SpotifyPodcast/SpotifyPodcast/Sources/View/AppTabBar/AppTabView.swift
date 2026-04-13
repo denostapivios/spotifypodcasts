@@ -13,7 +13,7 @@ import SwiftData
 
 struct AppTabView: View {
     @Environment(\.modelContext) private var context
-    
+
     var body: some View {
         TabView {
             Tab("Home", systemImage: "house") {
@@ -27,7 +27,7 @@ struct AppTabView: View {
                     }
                 }
             }
-            
+
             Tab("Popular", systemImage: "music.note.list") {
                 NavigationStack {
                     PopularView(viewModel: PopularViewModel(modelContext: context))
@@ -36,11 +36,11 @@ struct AppTabView: View {
                         }
                 }
             }
-            
+
             Tab("Favorite", systemImage: "star.fill") {
                 SearchView()
             }
-            
+
             Tab("Account", systemImage: "person.crop.circle") {
                 AccountView()
             }
