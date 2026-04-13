@@ -15,46 +15,9 @@ struct SpotifyPodcastApp: App {
     
     var body: some Scene {
         WindowGroup {
-            AppContent()
+            CoordinatorView()
                 .preferredColorScheme(isDarkMode ? .dark : .light)
         }
         .modelContainer(for: CachedPodcast.self)
-    }
-}
-
-struct AppContent: View {
-    @Environment(\.modelContext) private var context
-    
-    var body: some View {
-        TabView {
-            Tab("Home", systemImage: "house") {
-                NavigationStack {
-                    MainView(
-                        viewModel: PodcastViewModel(modelContext: context),
-                        topListViewModel: TopListViewModel(modelContext: context)
-                    )
-                    .navigationDestination(for: PodcastEpisode.self) { podcast in
-                        InfoPodcastView(context: context, podcast: podcast)
-                    }
-                }
-            }
-            
-            Tab("Popular", systemImage: "music.note.list") {
-                NavigationStack {
-                    PopularView(viewModel: PopularViewModel(modelContext: context))
-                        .navigationDestination(for: PodcastEpisode.self) { podcast in
-                            InfoPodcastView(context: context, podcast: podcast)
-                        }
-                }
-            }
-            
-            Tab("Favorite", systemImage: "star.fill") {
-                SearchView()
-            }
-            
-            Tab("Account", systemImage: "person.crop.circle") {
-                AccountView()
-            }
-        }
     }
 }
