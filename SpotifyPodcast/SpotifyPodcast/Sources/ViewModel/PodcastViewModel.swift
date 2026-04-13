@@ -7,7 +7,7 @@
 
 import Foundation
 import AVKit
-import SwiftData
+//import SwiftData
 
 @MainActor
 final class PodcastViewModel: BasePodcastViewModel {
