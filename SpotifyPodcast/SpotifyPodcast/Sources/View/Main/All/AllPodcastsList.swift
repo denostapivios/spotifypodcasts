@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct AllPodcastsList: View {
-    @ObservedObject var viewModel: PodcastViewModel
+    var viewModel: PodcastViewModel
     
     var body: some View {
         VStack(alignment: .leading) {

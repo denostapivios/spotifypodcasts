@@ -9,11 +9,11 @@ import SwiftUI
 import SwiftData
 
 struct PopularView: View {
-    @StateObject var viewModel: PopularViewModel
+    @State var viewModel: PopularViewModel
     private let debounceManager = DebounceManager()
 
     init(viewModel: PopularViewModel) {
-        _viewModel = StateObject(wrappedValue: viewModel)
+        self.viewModel = viewModel
     }
 
     var body: some View {

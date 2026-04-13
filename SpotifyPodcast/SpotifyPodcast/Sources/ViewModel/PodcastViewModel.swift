@@ -7,11 +7,10 @@
 
 import Foundation
 import AVKit
-//import SwiftData
 
 @MainActor
 final class PodcastViewModel: BasePodcastViewModel {
-    @Published var isPlayerPresented = false
+    var isPlayerPresented = false
     var player: AVPlayer?
 
     func playAudio(from urlString: String) {

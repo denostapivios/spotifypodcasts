@@ -11,11 +11,11 @@ import AVKit
 import SwiftData
 
 struct InfoPodcastView: View {
-    @StateObject var viewModel: PodcastViewModel
+    @State var viewModel: PodcastViewModel
     let podcast: PodcastEpisode
 
     init(context: ModelContext, podcast: PodcastEpisode) {
-        _viewModel = StateObject(wrappedValue: PodcastViewModel(modelContext: context))
+        self.viewModel = PodcastViewModel(modelContext: context)
         self.podcast = podcast
     }
 

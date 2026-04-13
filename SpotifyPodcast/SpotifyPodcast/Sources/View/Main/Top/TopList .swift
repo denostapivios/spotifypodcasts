@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct TopList: View {
-    @ObservedObject var viewModel: TopListViewModel
+    var viewModel: TopListViewModel
     
     var body: some View {
         VStack(alignment: .leading) {

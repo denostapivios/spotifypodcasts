@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct PopularList: View {
-    @ObservedObject var viewModel: PopularViewModel
+    var viewModel: PopularViewModel
     
     let columns = [
         GridItem(.flexible(), spacing: 16),

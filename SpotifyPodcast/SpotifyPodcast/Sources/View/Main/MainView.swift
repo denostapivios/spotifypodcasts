@@ -9,15 +9,15 @@ import SwiftUI
 import SwiftData
 
 struct MainView: View {
-    @StateObject var viewModel: PodcastViewModel
-    @StateObject var topListViewModel: TopListViewModel
+    @State var viewModel: PodcastViewModel
+    @State var topListViewModel: TopListViewModel
     @State private var searchText: String = ""
 
-    private let debounceManager = DebounceManager()
+    @State private var debounceManager = DebounceManager()
 
     init(viewModel: PodcastViewModel, topListViewModel: TopListViewModel) {
-        _viewModel = StateObject(wrappedValue: viewModel)
-        _topListViewModel = StateObject(wrappedValue: topListViewModel)
+        self.viewModel = viewModel
+        self.topListViewModel = topListViewModel
     }
 
     var body: some View {

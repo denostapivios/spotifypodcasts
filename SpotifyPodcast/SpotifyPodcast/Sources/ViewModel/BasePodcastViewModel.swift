@@ -8,14 +8,15 @@
 import Foundation
 import SwiftData
 
+@Observable
 @MainActor
-class BasePodcastViewModel: ObservableObject {
-    @Published var searchText: String = ""
-    @Published var errorMessage: String?
-    @Published var episodes: [PodcastEpisode] = []
-    @Published var filteredEpisodes: [PodcastEpisode] = []
-    @Published var isLoading: Bool = false
-    @Published private(set) var canLoadMore = true
+class BasePodcastViewModel{
+    var searchText: String = ""
+    var errorMessage: String?
+    var episodes: [PodcastEpisode] = []
+    var filteredEpisodes: [PodcastEpisode] = []
+    var isLoading: Bool = false
+    private(set) var canLoadMore = true
 
     let cacheManager: CacheManager
     let service: PodcastServiceProtocol

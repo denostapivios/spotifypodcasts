@@ -6,7 +6,6 @@
 //
 
 import Foundation
-//import SwiftData
 
 @MainActor
 final class PopularViewModel: BasePodcastViewModel {

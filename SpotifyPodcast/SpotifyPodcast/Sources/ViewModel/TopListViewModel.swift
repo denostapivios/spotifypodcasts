@@ -8,11 +8,12 @@
 import Foundation
 import SwiftData
 
+@Observable
 @MainActor
-class TopListViewModel: ObservableObject {
-    @Published var errorMessage: String?
-    @Published var episodes: [PodcastEpisode] = []
-    @Published var isLoading: Bool = false
+class TopListViewModel{
+    var errorMessage: String?
+    var episodes: [PodcastEpisode] = []
+    var isLoading: Bool = false
 
     private let cacheManager: CacheManager
     private let service: PodcastServiceProtocol
