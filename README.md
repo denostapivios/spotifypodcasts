@@ -1,6 +1,6 @@
 # 🎧 Spotify Podcast App
 
-An iOS application for browsing, listening to, and saving podcasts using the Spotify API. Built with SwiftUI and structured using MVVM-C (Model-View-ViewModel-Coordinator) architecture. The project implements Dependency Injection (DI) to ensure a modular, testable, and scalable codebase, featuring caching, pagination, and audio playback.
+An iOS application for browsing, listening to, and saving podcasts using the Spotify API. Built with **SwiftUI** and structured using **MVVM-C** (Model-View-ViewModel-Coordinator) architecture. The project implements Dependency Injection (DI) to ensure a modular, testable, and scalable codebase, featuring caching, pagination, and audio playback.
 
 <br/>
 
