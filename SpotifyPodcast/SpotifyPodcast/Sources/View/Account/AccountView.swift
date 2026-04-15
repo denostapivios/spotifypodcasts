@@ -7,13 +7,6 @@
 
 import SwiftUI
 
-enum SectionRow: String, CaseIterable {
-    case downloaded = "Downloaded"
-    case favorite = "Favorite"
-    case settings = "Settings"
-    case info = "Info"
-}
-
 struct AccountView: View {
     
     var body: some View {
@@ -37,10 +30,12 @@ struct AccountView: View {
                 }
                 
                 Section {
-                    ForEach(SectionRow.allCases, id: \.self) { row in
-                        NavigationLink(destination: Text(row.rawValue)) {
-                            Text(row.rawValue)
-                        }
+                    LabeledContent {
+               
+                    } label: {
+                        Text("Info")
+                        Text("An iOS application for browsing, listening to, and saving podcasts using the Spotify API. Built with SwiftUI and structured using MVVM-C (Model-View-ViewModel-Coordinator) architecture. The project implements Dependency Injection (DI) to ensure a modular, testable, and scalable codebase, featuring caching, pagination, and audio playback.")
+                            .font(.caption)
                     }
                 }
                 
@@ -50,4 +45,8 @@ struct AccountView: View {
             .navigationTitle("Account")
         }
     }
+}
+
+#Preview {
+    AccountView()
 }

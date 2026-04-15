@@ -22,7 +22,6 @@ struct PodcastRow: View {
             
             HStack(spacing:12) {
                 favoriteIcon
-                shareIcon
                 Spacer()
                 duration
             }
@@ -81,15 +80,12 @@ private extension PodcastRow {
             .frame(width: .iconMedium, height: .iconMedium)
     }
     
-    var shareIcon: some View {
-        Image(systemName: "square.and.arrow.up")
-            .resizable()
-            .scaledToFit()
-            .frame(width: .iconMedium, height: .iconMedium)
-    }
-    
     var duration: some View {
         Text(podcast.duration)
             .font(.system(size: 14))
     }
+}
+
+#Preview {
+    PodcastRow(podcast: .mock())
 }

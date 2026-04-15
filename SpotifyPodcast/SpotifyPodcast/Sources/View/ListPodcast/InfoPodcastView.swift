@@ -39,9 +39,6 @@ struct InfoPodcastView: View {
             VStack {
                 HStack(spacing: 12) {
                     favoriteIcon
-                    downloadedIcon
-                    shareIcon
-                    moreIcon
 
                     Spacer()
 
@@ -104,29 +101,6 @@ private extension InfoPodcastView {
 
     var favoriteIcon: some View {
         Image(systemName: "star")
-            .resizable()
-            .scaledToFit()
-            .frame(width: .iconMedium, height: .iconMedium)
-    }
-
-    var downloadedIcon: some View {
-        Image(systemName: "square.and.arrow.down")
-            .resizable()
-            .scaledToFit()
-            .frame(width: .iconMedium, height: .iconMedium)
-    }
-
-    var shareIcon: some View {
-        ShareLink(item: podcast.sharingInfo ?? Constants.String.defaultShareURL) {
-            Image(systemName: Constants.Icons.share)
-                .resizable()
-                .scaledToFit()
-                .frame(width: .iconMedium, height: .iconMedium)
-        }
-    }
-
-    var moreIcon: some View {
-        Image(systemName: "ellipsis")
             .resizable()
             .scaledToFit()
             .frame(width: .iconMedium, height: .iconMedium)
