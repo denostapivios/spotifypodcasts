@@ -24,7 +24,7 @@ struct MainSplashScreen: View {
                 .task {
                     scale = 1.0
                     try? await Task.sleep(for: .seconds(Constants.splashDuration))
-                    coordinator.setRoot(route: .tabBar)
+                    coordinator.setRoot(.tabBar)
                 }
         }
     }

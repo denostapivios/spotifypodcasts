@@ -7,6 +7,7 @@
 
 import Foundation
 import AVKit
+import AVFoundation
 
 @MainActor
 final class PodcastViewModel: BasePodcastViewModel {
@@ -17,6 +18,12 @@ final class PodcastViewModel: BasePodcastViewModel {
         guard let url = URL(string: urlString), urlString != "-" else {
             print("Invalid audio URL")
             return
+        }
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("AVAudioSession error: \(error)")
         }
         player = AVPlayer(url: url)
         player?.play()
