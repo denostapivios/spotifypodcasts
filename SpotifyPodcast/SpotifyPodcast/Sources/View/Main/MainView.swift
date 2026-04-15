@@ -31,18 +31,14 @@ struct MainView: View {
             }
             .scrollIndicators(.hidden)
             .padding(.spacingMedium)
-            .onAppear {
-                viewModel.refreshData()
+            .task {
+                await viewModel.loadIfNeeded()
             }
-            .onChange(of: viewModel.searchText) { _, _ in
-                Task {
-                    await debounceManager.debounce {
-                        await MainActor.run { viewModel.applySearch() }
-                    }
-                }
+            .task(id: viewModel.searchText) {
+                await viewModel.applySearchWithDebounce()
             }
             .refreshable {
-                viewModel.refreshData()
+                await viewModel.forceRefresh()
             }
             .navigationDestination(for: Place.self) { place in
                 coordinator.view(for: place)

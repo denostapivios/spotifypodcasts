@@ -32,8 +32,8 @@ struct TopList: View {
                 }
             }
         }
-        .onAppear {
-            viewModel.refreshData()
+        .task {
+            await viewModel.loadIfNeeded()
         }
     }
 }

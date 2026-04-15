@@ -29,17 +29,13 @@ struct PopularView: View {
             .scrollIndicators(.hidden)
             .padding(.spacingMedium)
             .task {
-                viewModel.loadData()
+                await viewModel.loadIfNeeded()
+            }
+            .task(id: viewModel.searchText) {
+                await viewModel.applySearchWithDebounce()
             }
             .refreshable {
-                viewModel.refreshData()
-            }
-            .onChange(of: viewModel.searchText) { _, _ in
-                Task {
-                    await debounceManager.debounce {
-                        await MainActor.run { viewModel.applySearch() }
-                    }
-                }
+                await viewModel.forceRefresh()
             }
             .navigationDestination(for: Place.self) { place in
                 coordinator.view(for: place)

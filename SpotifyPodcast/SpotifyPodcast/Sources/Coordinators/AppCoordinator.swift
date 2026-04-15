@@ -13,7 +13,6 @@ import SwiftData
 final class AppCoordinator {
 
     // MARK: - Navigation State
-    var path = NavigationPath()
     var root: Place = .mainSplash
     var homePath = NavigationPath()
     var popularPath = NavigationPath()
@@ -59,7 +58,7 @@ final class AppCoordinator {
     func navigateTo(place: Place) {
         switch place {
         case .mainSplash, .tabBar:
-            path.append(place)
+            break
         case .homeDetail:
             homePath.append(place)
         case .popularDetail:
@@ -69,7 +68,8 @@ final class AppCoordinator {
 
     func setRoot(_ place: Place) {
         root = place
-        path = NavigationPath()
+        homePath = NavigationPath()
+        popularPath = NavigationPath()
     }
 }
 

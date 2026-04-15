@@ -10,7 +10,7 @@ import SwiftData
 
 @Observable
 @MainActor
-class BasePodcastViewModel{
+class BasePodcastViewModel {
     var searchText: String = ""
     var errorMessage: String?
     var episodes: [PodcastEpisode] = []
@@ -47,13 +47,69 @@ class BasePodcastViewModel{
         return items.compactMap { PodcastEpisode(from: $0) }
     }
 
+    func loadIfNeeded() async {
+        guard !isLoading, episodes.isEmpty else { return }
+        isLoading = true
+        
+        defer { isLoading = false }
+        await performInitialLoad()
+    }
+
+    func forceRefresh() async {
+        guard !isLoading else { return }
+        reset()
+        isLoading = true
+        defer { isLoading = false }
+        await fetchPodcastsFromAPI()
+    }
+
     func loadData() {
         guard !isLoading, canLoadMore else { return }
         isLoading = true
-
         Task {
             defer { isLoading = false }
-            await performLoad()
+            await fetchPodcastsFromAPI()
+        }
+    }
+
+    func applySearch() {
+        filteredEpisodes = searchService.filter(episodes, by: searchText)
+    }
+    
+    func applySearchWithDebounce() async {
+        do {
+            try await Task.sleep(nanoseconds: 300_000_000)
+            applySearch()
+        } catch {
+            
+        }
+    }
+}
+
+
+private extension BasePodcastViewModel {
+
+    func reset() {
+        offset = 0
+        canLoadMore = true
+        episodes = []
+        filteredEpisodes = []
+    }
+
+    func performInitialLoad() async {
+        do {
+            let isExpired = await cacheManager.isCacheExpired()
+            if !isExpired, let cachedData = try await cacheManager.loadCachedData() {
+                let cachedEpisodes = extractEpisodes(from: cachedData)
+                updateUI(with: cachedEpisodes)
+                print("Cache is fresh — showing from cache, skipping API")
+            } else {
+                print("Cache expired or missing — fetching from API")
+                await fetchPodcastsFromAPI()
+            }
+        } catch {
+            print("Cache error: \(error.localizedDescription) — fetching from API")
+            await fetchPodcastsFromAPI()
         }
     }
 
@@ -72,95 +128,41 @@ class BasePodcastViewModel{
                 !episodes.contains(where: { $0.id == new.id })
             }
 
-            await MainActor.run {
-                episodes.append(contentsOf: unique)
-                episodes = sortEpisodes(episodes)
-                applySearch()
-                offset += limit
-                canLoadMore = fetched.count == limit
-            }
+            episodes.append(contentsOf: unique)
+            episodes = sortEpisodes(episodes)
+            applySearch()
+            offset += limit
+            canLoadMore = fetched.count == limit
 
-            if initialOffset == limit {
+            if initialOffset == 0 {
                 try await cacheManager.saveToCache(data: result)
-                print("Data loaded from API and cached.")
+                print("First page cached.")
             }
         } catch {
             print("API error: \(error.localizedDescription)")
-
-            if let fallback = service.loadFallbackFromFile() {
-                let all = processResult(dataObject: fallback)
-                let start = min(offset, all.count)
-                let end = min(start + limit, all.count)
-                let sliced = Array(all[start..<end])
-
-                await MainActor.run {
-                    episodes.append(contentsOf: sliced)
-                    episodes = sortEpisodes(episodes)
-                    applySearch()
-                    offset += sliced.count
-                    canLoadMore = sliced.count == limit
-                    errorMessage = "Show fallback (offset \(start), limit \(limit))"
-                }
-                print("Loaded fallback.json (offset: \(start), limit: \(limit))")
-            } else {
-                await MainActor.run {
-                    errorMessage = "Error: Failed to load API or fallback.json"
-                }
-                print("No fallback available")
-            }
+            loadFallback()
         }
     }
 
-    func applySearch() {
-        filteredEpisodes = searchService.filter(episodes, by: searchText)
-    }
-
-    func refreshData() {
-        offset = 0
-        canLoadMore = true
-        episodes = []
-        loadData()
-    }
-}
-
-private extension BasePodcastViewModel {
-    func performLoad() async {
-        do {
-            if offset == 0,
-               let cachedData = try await cacheManager.loadCachedData() {
-                try await handleInitialLoadWithCache(cachedData: cachedData)
-            } else {
-                print("No cache available or this is not the first load — fetchPodcastsFromAPI()")
-                await fetchPodcastsFromAPI()
-            }
-        } catch {
-            print("Error loading from cache: \(error.localizedDescription)")
-            await fetchPodcastsFromAPI()
+    func loadFallback() {
+        guard let fallback = service.loadFallbackFromFile() else {
+            errorMessage = "Error: Failed to load API or fallback.json"
+            print("No fallback available")
+            return
         }
-    }
 
-    func handleInitialLoadWithCache(cachedData: PodcastResponse) async throws {
-        let apiResponse = try await service.fetchData(
-            from: Constants.API.baseURL,
-            podcastID: Constants.API.podcastID,
-            offset: offset,
-            limit: limit
-        )
-        let cachedEpisodes = extractEpisodes(from: cachedData)
-        let apiEpisodes = extractEpisodes(from: apiResponse)
+        let all = processResult(dataObject: fallback)
+        let start = min(offset, all.count)
+        let end = min(start + limit, all.count)
+        let sliced = Array(all[start..<end])
 
-        if cachedEpisodes == apiEpisodes {
-            await MainActor.run {
-                updateUI(with: cachedEpisodes)
-            }
-            print("Using cache — data hasn't changed")
-        } else {
-            await MainActor.run {
-                applyEpisodes(from: apiResponse)
-            }
-            try await cacheManager.saveToCache(data: apiResponse)
-            print("Cache updated with new data from API")
-        }
+        episodes.append(contentsOf: sliced)
+        episodes = sortEpisodes(episodes)
+        applySearch()
+        offset += sliced.count
+        canLoadMore = sliced.count == limit
+        errorMessage = "Show fallback (offset \(start), limit \(limit))"
+        print("Loaded fallback.json (offset: \(start), limit: \(limit))")
     }
 
     func extractEpisodes(from response: PodcastResponse) -> [PodcastEpisode] {

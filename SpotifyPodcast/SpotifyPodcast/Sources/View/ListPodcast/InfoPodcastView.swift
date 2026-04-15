@@ -67,9 +67,6 @@ struct InfoPodcastView: View {
             Spacer()
         }
         .padding()
-        .onAppear {
-            viewModel.refreshData()
-        }
         .sheet(isPresented: $viewModel.isPlayerPresented) {
             if let player = viewModel.player {
                 AudioPlayerView(player: player)

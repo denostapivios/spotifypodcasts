@@ -30,7 +30,7 @@ struct AppTabView: View {
                 AccountView()
             }
         }
-        .onAppear {
+        .task {
             coordinator.configure(modelContext: context)
         }
     }
