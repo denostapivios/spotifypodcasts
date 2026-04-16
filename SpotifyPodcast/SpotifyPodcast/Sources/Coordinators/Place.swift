@@ -10,6 +10,5 @@ import SwiftUI
 enum Place: Hashable {
     case mainSplash
     case tabBar
-    case homeDetail(PodcastEpisode)
-    case popularDetail(PodcastEpisode)
+    case detail(PodcastEpisode)
 }

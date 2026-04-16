@@ -20,7 +20,7 @@ struct AllPodcastsList: View {
             LazyVStack {
                 ForEach(viewModel.filteredEpisodes, id: \.id) { podcast in
                     Button {
-                        coordinator.navigateTo(place: .homeDetail(podcast))
+                        coordinator.navigateTo(place: .detail(podcast))
                     } label: {
                         PodcastRow(podcast: podcast)
                             .redacted(reason: viewModel.isLoading ? .placeholder : [])

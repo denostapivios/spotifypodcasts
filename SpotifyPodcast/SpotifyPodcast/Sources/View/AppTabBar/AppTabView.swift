@@ -13,20 +13,32 @@ struct AppTabView: View {
     @Environment(AppCoordinator.self) private var coordinator
 
     var body: some View {
-        TabView {
-            Tab("Home", systemImage: "house") {
-                coordinator.buildHomeView()
+        @Bindable var coordinator = coordinator
+
+        TabView(selection: $coordinator.activeTab) {
+            Tab("Home", systemImage: "house", value: .home) {
+                NavigationStack(path: $coordinator.homePath) {
+                    coordinator.buildHomeView()
+                        .navigationDestination(for: Place.self) { place in
+                            coordinator.view(for: place)
+                        }
+                }
             }
 
-            Tab("Popular", systemImage: "music.note.list") {
-                coordinator.buildPopularView()
+            Tab("Popular", systemImage: "music.note.list", value: .popular) {
+                NavigationStack(path: $coordinator.popularPath) {
+                    coordinator.buildPopularView()
+                        .navigationDestination(for: Place.self) { place in
+                            coordinator.view(for: place)
+                        }
+                }
             }
 
-            Tab("Favorite", systemImage: "star.fill") {
+            Tab("Favorite", systemImage: "star.fill", value: .favorite) {
                 SearchView()
             }
 
-            Tab("Account", systemImage: "person.crop.circle") {
+            Tab("Account", systemImage: "person.crop.circle", value: .account) {
                 AccountView()
             }
         }

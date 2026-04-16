@@ -14,8 +14,14 @@ final class AppCoordinator {
 
     // MARK: - Navigation State
     var root: Place = .mainSplash
+    var activeTab: Tab = .home
     var homePath = NavigationPath()
     var popularPath = NavigationPath()
+   
+    // MARK: - Tab
+    enum Tab {
+        case home, popular, favorite, account
+    }
 
     // MARK: - DI
     private let service: PodcastServiceProtocol
@@ -59,10 +65,12 @@ final class AppCoordinator {
         switch place {
         case .mainSplash, .tabBar:
             break
-        case .homeDetail:
-            homePath.append(place)
-        case .popularDetail:
-            popularPath.append(place)
+        case .detail:
+            switch activeTab {
+            case .home:     homePath.append(place)
+            case .popular:  popularPath.append(place)
+            default:        break
+            }
         }
     }
 
@@ -83,9 +91,7 @@ extension AppCoordinator {
             MainSplashScreen()
         case .tabBar:
             AppTabView()
-        case .homeDetail(let podcast):
-            buildInfoPodcastView(podcast: podcast)
-        case .popularDetail(let podcast):
+        case .detail(let podcast):
             buildInfoPodcastView(podcast: podcast)
         }
     }
