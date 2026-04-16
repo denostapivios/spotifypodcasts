@@ -67,6 +67,7 @@ struct InfoPodcastView: View {
             Spacer()
         }
         .padding()
+        .toolbarVisibility(.hidden, for: .tabBar)
         .sheet(isPresented: $viewModel.isPlayerPresented) {
             if let player = viewModel.player {
                 AudioPlayerView(player: player)
