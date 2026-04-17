@@ -6,34 +6,9 @@
 //
 
 import Foundation
-import AVKit
-import AVFoundation
 
 @MainActor
 final class PodcastViewModel: BasePodcastViewModel {
-    var isPlayerPresented = false
-    var player: AVPlayer?
-
-    func playAudio(from urlString: String) {
-        guard let url = URL(string: urlString), urlString != "-" else {
-            print("Invalid audio URL")
-            return
-        }
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch {
-            print("AVAudioSession error: \(error)")
-        }
-        player = AVPlayer(url: url)
-        player?.play()
-        isPlayerPresented = true
-    }
-
-    deinit {
-        player?.pause()
-        player = nil
-    }
 
     override func sortEpisodes(_ episodes: [PodcastEpisode]) -> [PodcastEpisode] {
         episodes.sorted {

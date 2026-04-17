@@ -7,15 +7,11 @@
 
 import SwiftUI
 import Kingfisher
-import AVKit
 
 struct PlayerView: View {
-    let podcast: PodcastEpisode
+    @State var viewModel: PlayerViewModel
 
     @Environment(AppCoordinator.self) private var coordinator
-    @State private var isPlaying = false
-    @State private var currentTime: Double = 255
-    @State private var totalTime: Double = 910
 
     var body: some View {
         VStack(spacing: 0) {
@@ -38,6 +34,12 @@ struct PlayerView: View {
         }
         .padding(.horizontal, .spacingLarge)
         .background(Color(.systemGray6).ignoresSafeArea())
+        .task {
+            viewModel.start()
+        }
+        .onDisappear {
+            viewModel.stop()
+        }
     }
 }
 
@@ -56,7 +58,7 @@ private extension PlayerView {
 
     var image: some View {
         Group {
-            switch podcast.image {
+            switch viewModel.episode.image {
             case .remote(let url):
                 KFImage(url)
                     .resizable()
@@ -70,11 +72,11 @@ private extension PlayerView {
         }
         .frame(maxWidth: .infinity)
         .aspectRatio(1, contentMode: .fit)
-        .cornerRadius(.artworkCornerRadius)
+        .cornerRadius(.radiusSmall)
     }
 
     var titleLabel: some View {
-        Text(podcast.title)
+        Text(viewModel.episode.title)
             .font(.system(size: .titleFontSize, weight: .bold))
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity, alignment: .center)
@@ -90,21 +92,29 @@ private extension PlayerView {
                     Capsule()
                         .fill(Color.primary)
                         .frame(
-                            width: totalTime > 0
-                                ? geo.size.width * CGFloat(currentTime / totalTime)
+                            width: viewModel.totalTime > 0
+                                ? geo.size.width * CGFloat(viewModel.currentTime / viewModel.totalTime)
                                 : 0,
                             height: .progressBarHeight
                         )
                 }
+                .gesture(
+                    DragGesture(minimumDistance: 0)
+                        .onChanged { value in
+                            let ratio = value.location.x / geo.size.width
+                            let time = viewModel.totalTime * Double(max(0, min(ratio, 1)))
+                            viewModel.seekTo(time: time)
+                        }
+                )
             }
             .frame(height: .progressBarHeight)
 
             HStack {
-                Text(formatTime(currentTime))
+                Text(formatTime(viewModel.currentTime))
                     .font(.caption)
                     .foregroundColor(.secondary)
                 Spacer()
-                Text(formatTime(totalTime))
+                Text(formatTime(viewModel.totalTime))
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -113,14 +123,18 @@ private extension PlayerView {
 
     var controls: some View {
         HStack(spacing: 0) {
-            Button { } label: {
+            Button {
+                viewModel.skipToPrevious()
+            } label: {
                 Image(systemName: "backward.end.fill")
                     .font(.system(size: .controlIconSize))
                     .foregroundColor(.primary)
             }
             .frame(maxWidth: .infinity)
 
-            Button { } label: {
+            Button {
+                viewModel.seekBackward()
+            } label: {
                 Image(systemName: "gobackward.30")
                     .font(.system(size: .seekIconSize))
                     .foregroundColor(.primary)
@@ -129,9 +143,9 @@ private extension PlayerView {
 
             if #available(iOS 26.0, *) {
                 Button {
-                    isPlaying.toggle()
+                    viewModel.togglePlay()
                 } label: {
-                    Image(systemName: isPlaying ? "pause.fill" : "play.fill")
+                    Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
                         .font(.system(size: .playIconSize))
                         .frame(width: .playButtonSize, height: .playButtonSize)
                 }
@@ -139,14 +153,14 @@ private extension PlayerView {
                 .frame(maxWidth: .infinity)
             } else {
                 Button {
-                    isPlaying.toggle()
+                    viewModel.togglePlay()
                 } label: {
                     ZStack {
                         Circle()
                             .fill(Color.white)
                             .frame(width: .playButtonSize, height: .playButtonSize)
                             .shadow(color: .black.opacity(0.12), radius: .shadowRadius, x: 0, y: .shadowY)
-                        Image(systemName: isPlaying ? "pause.fill" : "play.fill")
+                        Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
                             .font(.system(size: .playIconSize))
                             .foregroundColor(.primary)
                     }
@@ -154,14 +168,18 @@ private extension PlayerView {
                 .frame(maxWidth: .infinity)
             }
 
-            Button { } label: {
+            Button {
+                viewModel.seekForward()
+            } label: {
                 Image(systemName: "goforward.30")
                     .font(.system(size: .seekIconSize))
                     .foregroundColor(.primary)
             }
             .frame(maxWidth: .infinity)
 
-            Button { } label: {
+            Button {
+                viewModel.skipToNext()
+            } label: {
                 Image(systemName: "forward.end.fill")
                     .font(.system(size: .controlIconSize))
                     .foregroundColor(.primary)
@@ -178,7 +196,6 @@ private extension PlayerView {
 }
 
 private extension CGFloat {
-    static let artworkCornerRadius: CGFloat = 20
     static let titleFontSize: CGFloat = 24
     static let controlIconSize: CGFloat = 22
     static let seekIconSize: CGFloat = 26
@@ -189,8 +206,10 @@ private extension CGFloat {
     static let shadowY: CGFloat = 4
 }
 
-
 #Preview {
-    PlayerView(podcast: .mock())
+    let audioService = AudioPlayerService()
+    let episode = PodcastEpisode.mock()
+    let viewModel = PlayerViewModel(episode: episode, playlist: [episode], audioService: audioService)
+    PlayerView(viewModel: viewModel)
         .environment(AppCoordinator())
 }

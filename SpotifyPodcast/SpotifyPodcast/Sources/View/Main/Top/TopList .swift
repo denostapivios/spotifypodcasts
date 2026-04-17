@@ -21,7 +21,7 @@ struct TopList: View {
                 LazyHStack {
                     ForEach(viewModel.isLoading ? PodcastEpisode.placeholder() : viewModel.episodes) { podcast in
                         Button {
-                            coordinator.navigateTo(place: .detail(podcast))
+                            coordinator.navigateTo(place: .detail(podcast, viewModel.episodes))
                         } label: {
                             TopItem(podcast: podcast)
                                 .redacted(reason: viewModel.isLoading ? .placeholder : [])

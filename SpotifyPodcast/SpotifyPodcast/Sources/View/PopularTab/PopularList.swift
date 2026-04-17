@@ -25,7 +25,7 @@ struct PopularList: View {
                 LazyVGrid(columns: columns, spacing: .spacingMedium) {
                     ForEach(viewModel.filteredEpisodes, id: \.id) { podcast in
                         Button {
-                            coordinator.navigateTo(place: .detail(podcast))
+                            coordinator.navigateTo(place: .detail(podcast, viewModel.filteredEpisodes))
                         } label: {
                             PopularItem(podcast: podcast)
                                 .redacted(reason: viewModel.isLoading ? .placeholder : [])

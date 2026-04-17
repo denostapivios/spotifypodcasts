@@ -46,7 +46,7 @@ struct AppTabView: View {
             coordinator.configure(modelContext: context)
         }
         .sheet(item: $coordinator.playerEpisode) { episode in
-            PlayerView(podcast: episode)
+            coordinator.buildPlayerView(episode: episode)
                 .presentationDetents([.large])
         }
     }

@@ -7,21 +7,21 @@
 
 import SwiftUI
 import Kingfisher
-import AVKit
 import SwiftData
 
 struct InfoPodcastView: View {
     @Environment(AppCoordinator.self) private var coordinator
     @State var viewModel: PodcastViewModel
     let podcast: PodcastEpisode
+    let episodes: [PodcastEpisode]
 
-    init(podcast: PodcastEpisode, viewModel: PodcastViewModel) {
+    init(podcast: PodcastEpisode, episodes: [PodcastEpisode], viewModel: PodcastViewModel) {
         self.podcast = podcast
+        self.episodes = episodes
         self.viewModel = viewModel
     }
 
     var body: some View {
-        @Bindable var viewModel = viewModel
         ScrollView {
             VStack {
                 image
@@ -44,10 +44,7 @@ struct InfoPodcastView: View {
                     Spacer()
 
                     Button {
-                        if let url = podcast.audioPreview {
-                            viewModel.playAudio(from: url)
-                            coordinator.navigateTo(place: .player(podcast))
-                        }
+                        coordinator.navigateTo(place: .player(podcast, episodes))
                     } label: {
                         HStack {
                             buttonImage

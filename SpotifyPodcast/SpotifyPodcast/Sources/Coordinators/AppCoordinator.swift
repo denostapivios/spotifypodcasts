@@ -14,6 +14,7 @@ final class AppCoordinator {
 
     // MARK: - Navigation State
     var playerEpisode: PodcastEpisode? = nil
+    var playerPlaylist: [PodcastEpisode] = []
     var root: Place = .mainSplash
     var activeTab: Tab = .home
     var homePath = NavigationPath()
@@ -27,6 +28,7 @@ final class AppCoordinator {
     // MARK: - DI
     private let service: PodcastServiceProtocol
     private let searchService: SearchService
+    private let audioService: any AudioPlayerServiceProtocol
 
     // MARK: - Tab ViewModels
     private(set) var podcastViewModel: PodcastViewModel?
@@ -36,10 +38,12 @@ final class AppCoordinator {
 
     init(
         service: PodcastServiceProtocol = PodcastService(),
-        searchService: SearchService = SearchService()
+        searchService: SearchService = SearchService(),
+        audioService: (any AudioPlayerServiceProtocol)? = nil
     ) {
         self.service = service
         self.searchService = searchService
+        self.audioService = audioService ?? AudioPlayerService()
     }
 
     func configure(modelContext: ModelContext) {
@@ -66,14 +70,15 @@ final class AppCoordinator {
         switch place {
         case .mainSplash, .tabBar:
             break
-        case .detail:
+        case .detail(_, _):
             switch activeTab {
             case .home:     homePath.append(place)
             case .popular:  popularPath.append(place)
             default:        break
             }
-        case .player(let episode):
+        case .player(let episode, let playlist):
             playerEpisode = episode
+            playerPlaylist = playlist
         }
     }
 
@@ -84,7 +89,9 @@ final class AppCoordinator {
     }
     
     func dismissPlayer() {
+        audioService.stop()
         playerEpisode = nil
+        playerPlaylist = []
     }
 }
 
@@ -98,9 +105,9 @@ extension AppCoordinator {
             MainSplashScreen()
         case .tabBar:
             AppTabView()
-        case .detail(let podcast):
-            buildInfoPodcastView(podcast: podcast)
-        case .player:
+        case .detail(let podcast, let episodes):
+            buildInfoPodcastView(podcast: podcast, episodes: episodes)
+        case .player(_, _):
             EmptyView()
         }
     }
@@ -120,14 +127,20 @@ extension AppCoordinator {
     }
 
     @ViewBuilder
-    func buildInfoPodcastView(podcast: PodcastEpisode) -> some View {
+    func buildPlayerView(episode: PodcastEpisode) -> some View {
+        let viewModel = PlayerViewModel(episode: episode, playlist: playerPlaylist, audioService: audioService)
+        PlayerView(viewModel: viewModel)
+    }
+
+    @ViewBuilder
+    func buildInfoPodcastView(podcast: PodcastEpisode, episodes: [PodcastEpisode]) -> some View {
         if let modelContext {
             let viewModel = PodcastViewModel(
                 modelContext: modelContext,
                 service: service,
                 searchService: searchService
             )
-            InfoPodcastView(podcast: podcast, viewModel: viewModel)
+            InfoPodcastView(podcast: podcast, episodes: episodes, viewModel: viewModel)
         }
     }
 }
