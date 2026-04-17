@@ -13,6 +13,7 @@ import SwiftData
 final class AppCoordinator {
 
     // MARK: - Navigation State
+    var playerEpisode: PodcastEpisode? = nil
     var root: Place = .mainSplash
     var activeTab: Tab = .home
     var homePath = NavigationPath()
@@ -71,6 +72,8 @@ final class AppCoordinator {
             case .popular:  popularPath.append(place)
             default:        break
             }
+        case .player(let episode):
+            playerEpisode = episode
         }
     }
 
@@ -78,6 +81,10 @@ final class AppCoordinator {
         root = place
         homePath = NavigationPath()
         popularPath = NavigationPath()
+    }
+    
+    func dismissPlayer() {
+        playerEpisode = nil
     }
 }
 
@@ -93,6 +100,8 @@ extension AppCoordinator {
             AppTabView()
         case .detail(let podcast):
             buildInfoPodcastView(podcast: podcast)
+        case .player:
+            EmptyView()
         }
     }
 

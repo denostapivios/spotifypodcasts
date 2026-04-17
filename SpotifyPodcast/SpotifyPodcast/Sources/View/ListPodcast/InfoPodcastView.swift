@@ -11,6 +11,7 @@ import AVKit
 import SwiftData
 
 struct InfoPodcastView: View {
+    @Environment(AppCoordinator.self) private var coordinator
     @State var viewModel: PodcastViewModel
     let podcast: PodcastEpisode
 
@@ -29,15 +30,15 @@ struct InfoPodcastView: View {
 
             title
 
-            HStack(spacing: 10) {
+            HStack(spacing: .itemSpacing) {
                 duration
                 Spacer()
                 releaseDate
             }
-            .padding(.bottom, 10)
+            .padding(.bottom, .itemSpacing)
 
             VStack {
-                HStack(spacing: 12) {
+                HStack(spacing: .actionRowSpacing) {
                     favoriteIcon
 
                     Spacer()
@@ -45,6 +46,7 @@ struct InfoPodcastView: View {
                     Button {
                         if let url = podcast.audioPreview {
                             viewModel.playAudio(from: url)
+                            coordinator.navigateTo(place: .player(podcast))
                         }
                     } label: {
                         HStack {
@@ -52,27 +54,22 @@ struct InfoPodcastView: View {
                             buttonText
                         }
                         .padding()
-                        .frame(width: 120, height: 48)
+                        .frame(width: .playButtonWidth, height: .playButtonHeight)
                         .background(Color.green)
                         .cornerRadius(.radiusSmall)
                     }
                 }
             }
-            .padding(.bottom, 10)
+            .padding(.bottom, .itemSpacing)
 
             description
-                .padding(.bottom, 10)
+                .padding(.bottom, .itemSpacing)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             Spacer()
         }
         .padding()
         .toolbarVisibility(.hidden, for: .tabBar)
-        .sheet(isPresented: $viewModel.isPlayerPresented) {
-            if let player = viewModel.player {
-                AudioPlayerView(player: player)
-            }
-        }
     }
 }
 
@@ -80,21 +77,21 @@ private extension InfoPodcastView {
 
     var title: some View {
         Text(podcast.title)
-            .font(.system(size: 24))
+            .font(.system(size: .titleFontSize))
             .fontWeight(.bold)
             .multilineTextAlignment(.leading)
-            .padding(.bottom, 10)
+            .padding(.bottom, .itemSpacing)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     var duration: some View {
         Text(podcast.duration)
-            .font(.system(size: 14))
+            .font(.system(size: .secondaryFontSize))
     }
 
     var releaseDate: some View {
         Text(podcast.releaseDate)
-            .font(.system(size: 14))
+            .font(.system(size: .secondaryFontSize))
     }
 
     var favoriteIcon: some View {
@@ -116,7 +113,7 @@ private extension InfoPodcastView {
 
     var buttonText: some View {
         Text("Play")
-            .font(.system(size: 18))
+            .font(.system(size: .buttonFontSize))
             .fontWeight(.bold)
             .foregroundColor(.white)
     }
@@ -129,7 +126,7 @@ private extension InfoPodcastView {
                     .resizable()
                     .placeholder { ProgressView() }
                     .scaledToFit()
-                    .frame(width: 300, height: 300)
+                    .frame(width: .artworkSize, height: .artworkSize)
                     .cornerRadius(.radiusSmall)
             )
         case .placeholder(let imageName):
@@ -137,9 +134,20 @@ private extension InfoPodcastView {
                 Image(imageName)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 300, height: 300)
+                    .frame(width: .artworkSize, height: .artworkSize)
                     .cornerRadius(.radiusSmall)
             )
         }
     }
+}
+
+private extension CGFloat {
+    static let itemSpacing: CGFloat = 10
+    static let actionRowSpacing: CGFloat = 12
+    static let playButtonWidth: CGFloat = 120
+    static let playButtonHeight: CGFloat = 48
+    static let titleFontSize: CGFloat = 24
+    static let secondaryFontSize: CGFloat = 14
+    static let buttonFontSize: CGFloat = 18
+    static let artworkSize: CGFloat = 300
 }

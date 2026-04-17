@@ -12,12 +12,16 @@ import AVKit
 struct PlayerView: View {
     let podcast: PodcastEpisode
 
+    @Environment(AppCoordinator.self) private var coordinator
     @State private var isPlaying = false
     @State private var currentTime: Double = 255
     @State private var totalTime: Double = 910
 
     var body: some View {
         VStack(spacing: 0) {
+            closeButton
+                .padding(.top, .spacingMedium)
+
             image
                 .padding(.top, .spacingLarge)
 
@@ -38,6 +42,17 @@ struct PlayerView: View {
 }
 
 private extension PlayerView {
+
+    var closeButton: some View {
+        Button {
+            coordinator.dismissPlayer()
+        } label: {
+            Image(systemName: "chevron.down")
+                .font(.system(size: .controlIconSize, weight: .semibold))
+                .foregroundColor(.primary)
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
+    }
 
     var image: some View {
         Group {
@@ -177,4 +192,5 @@ private extension CGFloat {
 
 #Preview {
     PlayerView(podcast: .mock())
+        .environment(AppCoordinator())
 }

@@ -11,4 +11,5 @@ enum Place: Hashable {
     case mainSplash
     case tabBar
     case detail(PodcastEpisode)
+    case player(PodcastEpisode)
 }
