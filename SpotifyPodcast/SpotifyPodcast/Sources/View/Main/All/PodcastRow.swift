@@ -112,4 +112,5 @@ private extension Color {
 
 #Preview {
     PodcastRow(podcast: .mock())
+        .environment(AppCoordinator())
 }
