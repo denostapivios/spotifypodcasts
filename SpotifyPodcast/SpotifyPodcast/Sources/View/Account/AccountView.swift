@@ -11,39 +11,63 @@ struct AccountView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                NavigationLink(destination: Text("Log in to your account")) {
-                    HStack {
-                        Image(systemName: "person.crop.circle")
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                            .foregroundColor(.gray)
-                        VStack(alignment: .leading) {
-                            Text("Log in")
-                                .font(.headline)
-                        }
-                    }
+            ScrollView {
+                VStack(spacing: .spacingMedium) {
+                    profileCard
+                    settingsCard
+                    infoCard
+                    versionText
                 }
-                
-                Section {
-                    AccountBar()
-                }
-                
-                Section {
-                    LabeledContent {
-               
-                    } label: {
-                        Text("Info")
-                        Text("An iOS application for browsing, listening to, and saving podcasts using the Spotify API. Built with SwiftUI and structured using MVVM-C (Model-View-ViewModel-Coordinator) architecture. The project implements Dependency Injection (DI) to ensure a modular, testable, and scalable codebase, featuring caching, pagination, and audio playback.")
-                            .font(.caption)
-                    }
-                }
-                
-                Text("Version 0.0.1")
-                    .foregroundStyle(.gray)
+                .padding(.spacingMedium)
             }
+            .background(Color(.systemGroupedBackground))
             .navigationTitle("Account")
         }
+    }
+}
+
+private extension AccountView {
+    var profileCard: some View {
+        HStack(spacing: .spacingMedium) {
+            Image(.account)
+                .resizable()
+                .frame(width: .imageSmall, height: .imageSmall)
+                .foregroundColor(.gray)
+                .clipShape(Circle())
+            Text("Denis Ostapiv (iOS Developer)")
+                .font(.headline)
+            Spacer()
+        }
+        .padding(.spacingMedium)
+        .background(Color(.secondarySystemGroupedBackground))
+        .cornerRadius(.radiusMedium)
+    }
+
+    var settingsCard: some View {
+        AccountBar()
+            .padding(.spacingMedium)
+            .background(Color(.secondarySystemGroupedBackground))
+            .cornerRadius(.radiusMedium)
+    }
+
+    var infoCard: some View {
+        VStack(alignment: .leading, spacing: .spacingSmall) {
+            Text("Info")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            Text("An iOS application for browsing, listening to, and saving podcasts using the Spotify API. Built with SwiftUI and structured using MVVM-C (Model-View-ViewModel-Coordinator) architecture. The project implements Dependency Injection (DI) to ensure a modular, testable, and scalable codebase, featuring caching, pagination, and audio playback.")
+                .font(.caption)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.spacingMedium)
+        .background(Color(.secondarySystemGroupedBackground))
+        .cornerRadius(.radiusMedium)
+    }
+
+    var versionText: some View {
+        Text("Version 0.0.1")
+            .foregroundStyle(.gray)
+            .frame(maxWidth: .infinity)
     }
 }
 
