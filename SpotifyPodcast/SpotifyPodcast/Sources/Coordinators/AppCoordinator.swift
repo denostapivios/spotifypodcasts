@@ -19,6 +19,7 @@ final class AppCoordinator {
     var activeTab: Tab = .home
     var homePath = NavigationPath()
     var popularPath = NavigationPath()
+    var favoritePath = NavigationPath()
    
     // MARK: - Tab
     enum Tab {
@@ -34,6 +35,7 @@ final class AppCoordinator {
     private(set) var podcastViewModel: PodcastViewModel?
     private(set) var topListViewModel: TopListViewModel?
     private(set) var popularViewModel: PopularViewModel?
+    private(set) var favoriteViewModel: FavoriteViewModel?
     private var modelContext: ModelContext?
 
     init(
@@ -63,6 +65,9 @@ final class AppCoordinator {
             service: service,
             searchService: searchService
         )
+        favoriteViewModel = FavoriteViewModel(
+            modelContext: modelContext
+        )
     }
 
     // MARK: - Navigation
@@ -72,9 +77,10 @@ final class AppCoordinator {
             break
         case .detail(_, _):
             switch activeTab {
-            case .home:     homePath.append(place)
-            case .popular:  popularPath.append(place)
-            default:        break
+            case .home:      homePath.append(place)
+            case .popular:   popularPath.append(place)
+            case .favorite:  favoritePath.append(place)
+            default:         break
             }
         case .player(let episode, let playlist):
             playerEpisode = episode
@@ -86,6 +92,7 @@ final class AppCoordinator {
         root = place
         homePath = NavigationPath()
         popularPath = NavigationPath()
+        favoritePath = NavigationPath()
     }
     
     func dismissPlayer() {
@@ -123,6 +130,13 @@ extension AppCoordinator {
     func buildPopularView() -> some View {
         if let popularViewModel {
             PopularView(viewModel: popularViewModel)
+        }
+    }
+
+    @ViewBuilder
+    func buildFavoriteView() -> some View {
+        if let favoriteViewModel {
+            FavoriteView(viewModel: favoriteViewModel)
         }
     }
 

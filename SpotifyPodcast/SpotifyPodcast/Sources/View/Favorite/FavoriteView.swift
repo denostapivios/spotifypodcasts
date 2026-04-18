@@ -8,34 +8,46 @@
 import SwiftUI
 
 struct FavoriteView: View {
-    @State private var searchText = ""
-    
+    var viewModel: FavoriteViewModel
+
     var body: some View {
-        NavigationView {
-            VStack {
-                TextField("Search", text: $searchText)
-                    .padding(10)
-                    .background(RoundedRectangle(cornerRadius: 10).strokeBorder(Color.secondary, lineWidth: 1))
-                    .padding(.horizontal)
-                    .overlay(
-                        HStack {
-                            Spacer()
-                            if !searchText.isEmpty {
-                                Button(action: {
-                                    searchText = ""
-                                }) {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .foregroundColor(.gray)
-                                        .padding(5)
-                                }
-                            }
-                        }
-                    )
-                
-                Spacer()
-                
+        ScrollView {
+            VStack(alignment: .leading, spacing: .spacingMedium) {
+                if viewModel.favorites.isEmpty {
+                    emptyState
+                } else {
+                    FavoritePodcastsList(viewModel: viewModel)
+                }
             }
-            .navigationTitle("Search")
+            .padding(.horizontal, .spacingMedium)
+            .padding(.top, .spacingMedium)
         }
+        .navigationTitle("Favorite")
+        .onAppear {
+            viewModel.loadFavorites()
+        }
+    }
+}
+
+private extension FavoriteView {
+    var emptyState: some View {
+        VStack(spacing: .spacingMedium) {
+            Image(systemName: "star")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 64, height: 64)
+                .foregroundColor(.gray.opacity(0.4))
+
+            Text("No favorites yet")
+                .font(.title3)
+                .fontWeight(.semibold)
+
+            Text("Tap the star icon on any podcast to save it here.")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.top, 80)
     }
 }

@@ -18,6 +18,6 @@ struct SpotifyPodcastApp: App {
             CoordinatorView()
                 .preferredColorScheme(isDarkMode ? .dark : .light)
         }
-        .modelContainer(for: CachedPodcast.self)
+        .modelContainer(for: [CachedPodcast.self, FavoritePodcast.self])
     }
 }

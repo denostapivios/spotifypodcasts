@@ -92,10 +92,19 @@ private extension InfoPodcastView {
     }
 
     var favoriteIcon: some View {
-        Image(systemName: "star")
-            .resizable()
-            .scaledToFit()
-            .frame(width: .iconMedium, height: .iconMedium)
+        let isFav = coordinator.favoriteViewModel?.isFavorite(podcast) ?? false
+        return Button {
+            coordinator.favoriteViewModel?.toggleFavorite(podcast)
+        } label: {
+            Image(systemName: isFav ? "star.fill" : "star")
+                .resizable()
+                .scaledToFit()
+                .frame(width: .iconMedium, height: .iconMedium)
+                .foregroundColor(isFav ? .orange : .primary)
+                .symbolEffect(.bounce, value: isFav)
+                .animation(.easeInOut(duration: 0.2), value: isFav)
+        }
+        .buttonStyle(.plain)
     }
 
     var description: some View {

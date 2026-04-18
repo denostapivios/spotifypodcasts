@@ -9,8 +9,9 @@ import SwiftUI
 import Kingfisher
 
 struct PodcastRow: View {
+    @Environment(AppCoordinator.self) private var coordinator
     var podcast: PodcastEpisode
-    
+
     var body: some View {
         VStack(spacing:10) {
             HStack(spacing:12) {
@@ -74,10 +75,19 @@ private extension PodcastRow {
     }
     
     var favoriteIcon: some View {
-        Image(systemName: "star")
-            .resizable()
-            .scaledToFit()
-            .frame(width: .iconMedium, height: .iconMedium)
+        let isFav = coordinator.favoriteViewModel?.isFavorite(podcast) ?? false
+        return Button {
+            coordinator.favoriteViewModel?.toggleFavorite(podcast)
+        } label: {
+            Image(systemName: isFav ? "star.fill" : "star")
+                .resizable()
+                .scaledToFit()
+                .frame(width: .iconMedium, height: .iconMedium)
+                .foregroundColor(isFav ? .orange : .primary)
+                .symbolEffect(.bounce, value: isFav)
+                .animation(.easeInOut(duration: 0.2), value: isFav)
+        }
+        .buttonStyle(.plain)
     }
     
     var duration: some View {

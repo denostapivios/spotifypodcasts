@@ -35,7 +35,12 @@ struct AppTabView: View {
             }
 
             Tab("Favorite", systemImage: "star.fill", value: .favorite) {
-                FavoriteView()
+                NavigationStack(path: $coordinator.favoritePath) {
+                    coordinator.buildFavoriteView()
+                        .navigationDestination(for: Place.self) { place in
+                            coordinator.view(for: place)
+                        }
+                }
             }
 
             Tab("Account", systemImage: "person.crop.circle", value: .account) {
