@@ -24,7 +24,7 @@ struct SearchBar: View {
     
     public var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 10)
+            RoundedRectangle(cornerRadius: .searchBarRadius)
                 .fill(Color(.systemGray6))
             
             HStack {
@@ -43,10 +43,15 @@ struct SearchBar: View {
                 }
             }
             .padding(.horizontal, .spacingSmall)
-            .padding(.vertical, 6)
+            .padding(.vertical, .spacingSmall)
         }
-        .frame(height: 36)
+        .frame(height: .searchBarHeight)
         .padding(.trailing, .spacingTiny)
         .transition(.move(edge: .top).combined(with: .opacity))
     }
+}
+
+private extension CGFloat {
+    static let searchBarRadius: CGFloat = 10
+    static let searchBarHeight: CGFloat = 36
 }

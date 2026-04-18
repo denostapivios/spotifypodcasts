@@ -35,8 +35,8 @@ private extension FavoriteView {
             Image(systemName: "star")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 64, height: 64)
-                .foregroundColor(.gray.opacity(0.4))
+                .frame(width: .spacingHuge, height: .spacingHuge)
+                .foregroundColor(.gray.opacity(.emptyStateIconOpacity))
 
             Text("No favorites yet")
                 .font(.title3)
@@ -48,6 +48,14 @@ private extension FavoriteView {
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
-        .padding(.top, 80)
+        .padding(.top, .emptyStateTopPadding)
     }
+}
+
+private extension CGFloat {
+    static let emptyStateTopPadding: CGFloat = 80
+}
+
+private extension Double {
+    static let emptyStateIconOpacity: Double = 0.4
 }

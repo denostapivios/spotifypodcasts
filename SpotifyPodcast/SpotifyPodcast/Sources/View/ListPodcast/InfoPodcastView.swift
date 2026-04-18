@@ -30,15 +30,15 @@ struct InfoPodcastView: View {
 
             title
 
-            HStack(spacing: .itemSpacing) {
+            HStack(spacing: .spacingBase) {
                 duration
                 Spacer()
                 releaseDate
             }
-            .padding(.bottom, .itemSpacing)
+            .padding(.bottom, .spacingBase)
 
             VStack {
-                HStack(spacing: .actionRowSpacing) {
+                HStack(spacing: .spacingItem) {
                     favoriteIcon
 
                     Spacer()
@@ -57,10 +57,10 @@ struct InfoPodcastView: View {
                     }
                 }
             }
-            .padding(.bottom, .itemSpacing)
+            .padding(.bottom, .spacingBase)
 
             description
-                .padding(.bottom, .itemSpacing)
+                .padding(.bottom, .spacingBase)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             Spacer()
@@ -77,18 +77,18 @@ private extension InfoPodcastView {
             .font(.system(size: .titleFontSize))
             .fontWeight(.bold)
             .multilineTextAlignment(.leading)
-            .padding(.bottom, .itemSpacing)
+            .padding(.bottom, .spacingBase)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     var duration: some View {
         Text(podcast.duration)
-            .font(.system(size: .secondaryFontSize))
+            .font(.system(size: .fontSizeSecondary))
     }
 
     var releaseDate: some View {
         Text(podcast.releaseDate)
-            .font(.system(size: .secondaryFontSize))
+            .font(.system(size: .fontSizeSecondary))
     }
 
     var favoriteIcon: some View {
@@ -119,7 +119,7 @@ private extension InfoPodcastView {
 
     var buttonText: some View {
         Text("Play")
-            .font(.system(size: .buttonFontSize))
+            .font(.system(size: .fontSizeBody))
             .fontWeight(.bold)
             .foregroundColor(.white)
     }
@@ -148,12 +148,8 @@ private extension InfoPodcastView {
 }
 
 private extension CGFloat {
-    static let itemSpacing: CGFloat = 10
-    static let actionRowSpacing: CGFloat = 12
     static let playButtonWidth: CGFloat = 120
     static let playButtonHeight: CGFloat = 48
     static let titleFontSize: CGFloat = 24
-    static let secondaryFontSize: CGFloat = 14
-    static let buttonFontSize: CGFloat = 18
     static let artworkSize: CGFloat = 300
 }

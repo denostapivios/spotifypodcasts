@@ -37,4 +37,16 @@ extension CGFloat {
     static let imageMedium: CGFloat = 80
     static let imageLarge: CGFloat = 120
     static let imageXLarge: CGFloat = 200
+
+    // Spacing (component-level)
+    static let spacingBase: CGFloat = 10
+    static let spacingItem: CGFloat = 12
+
+    // Font sizes
+    static let fontSizeCaption: CGFloat = 12
+    static let fontSizeSecondary: CGFloat = 14
+    static let fontSizeBody: CGFloat = 18
+
+    // Component sizes
+    static let podcastThumbnail: CGFloat = 50
 }

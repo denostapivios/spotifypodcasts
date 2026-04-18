@@ -13,24 +13,24 @@ struct PodcastRow: View {
     var podcast: PodcastEpisode
 
     var body: some View {
-        VStack(spacing:10) {
-            HStack(spacing:12) {
+        VStack(spacing: .spacingBase) {
+            HStack(spacing: .spacingItem) {
                 image
                 title
                 Spacer()
             }
             description
-            
-            HStack(spacing:12) {
+
+            HStack(spacing: .spacingItem) {
                 favoriteIcon
                 Spacer()
                 duration
             }
             Divider()
-                .background(Color.gray.opacity(0.3))
-                .padding(.top, 6)
+                .background(Color.gray.opacity(.dividerOpacity))
+                .padding(.top, .dividerTopPadding)
         }
-        .padding(.vertical, 3)
+        .padding(.vertical, .rowVerticalPadding)
     }
 }
 
@@ -46,7 +46,7 @@ private extension PodcastRow {
                         ProgressView()
                     }
                     .scaledToFit()
-                    .frame(width: 50, height: 50)
+                    .frame(width: .podcastThumbnail, height: .podcastThumbnail)
                     .cornerRadius(.radiusSmall)
             )
         case .placeholder(let imageName):
@@ -54,7 +54,7 @@ private extension PodcastRow {
                 Image(imageName)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 50, height: 50)
+                    .frame(width: .podcastThumbnail, height: .podcastThumbnail)
                     .cornerRadius(.radiusSmall)
             )
         }
@@ -62,16 +62,16 @@ private extension PodcastRow {
     
     var title: some View {
         Text(podcast.title)
-            .font(.system(size: 18))
+            .font(.system(size: .fontSizeBody))
             .multilineTextAlignment(.leading)
     }
-    
+
     var description: some View {
         Text(podcast.description)
-            .font(.system(size: 12))
+            .font(.system(size: .fontSizeCaption))
             .multilineTextAlignment(.leading)
             .lineLimit(2)
-            .foregroundColor(Color(red: 98/255.0, green: 98/255.0, blue: 98/255.0))
+            .foregroundColor(.descriptionGray)
     }
     
     var favoriteIcon: some View {
@@ -85,15 +85,29 @@ private extension PodcastRow {
                 .frame(width: .iconMedium, height: .iconMedium)
                 .foregroundColor(isFav ? .orange : .primary)
                 .symbolEffect(.bounce, value: isFav)
-                .animation(.easeInOut(duration: 0.2), value: isFav)
+                .animation(.easeInOut(duration: .starAnimationDuration), value: isFav)
         }
         .buttonStyle(.plain)
     }
     
     var duration: some View {
         Text(podcast.duration)
-            .font(.system(size: 14))
+            .font(.system(size: .fontSizeSecondary))
     }
+}
+
+private extension CGFloat {
+    static let dividerTopPadding: CGFloat = 6
+    static let rowVerticalPadding: CGFloat = 3
+}
+
+private extension Double {
+    static let dividerOpacity: Double = 0.3
+    static let starAnimationDuration: Double = 0.2
+}
+
+private extension Color {
+    static let descriptionGray = Color(red: 98/255.0, green: 98/255.0, blue: 98/255.0)
 }
 
 #Preview {
