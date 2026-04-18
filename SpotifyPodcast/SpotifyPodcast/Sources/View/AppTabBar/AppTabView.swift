@@ -35,7 +35,7 @@ struct AppTabView: View {
             }
 
             Tab("Favorite", systemImage: "star.fill", value: .favorite) {
-                SearchView()
+                FavoriteView()
             }
 
             Tab("Account", systemImage: "person.crop.circle", value: .account) {

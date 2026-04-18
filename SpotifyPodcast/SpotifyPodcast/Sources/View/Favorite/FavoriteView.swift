@@ -1,5 +1,5 @@
 //
-//  SearchView.swift
+//  FavoriteView.swift
 //  SpotifyListPodcast
 //
 //  Created by Denis Ostapiv on 18.03.2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SearchView: View {
+struct FavoriteView: View {
     @State private var searchText = ""
     
     var body: some View {
