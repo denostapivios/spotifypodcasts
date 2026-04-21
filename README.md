@@ -15,6 +15,7 @@ An iOS application for browsing, listening to, and saving podcasts using the Spo
 - **MVVM + Coordinator** – clean architecture pattern
 - **Dependency Injection** - to ensure a modular, testable, and scalable codebase
 - **Pagination & Caching** – efficient data loading and storage
+- **Unit Tests** – unit testing for SearchService and PodcastEpisode properties
 
 <br/>
 
@@ -27,12 +28,5 @@ An iOS application for browsing, listening to, and saving podcasts using the Spo
 - 🔁 Pagination support 
 - 🌙 Dark mode support via `@AppStorage`
 - 🧮 Sorting
-
-<br/>
-
-### 📌 Things to improve
-
-- [ ] Develop a custom audio player with extended UI and playback controls   
-- [ ] Favorites list with pagination and pull-to-refresh support  
-- [ ] Implement login screen using Firebase Authentication  
-
+- 🎛️ Custom audio player with extended UI and playback controls
+- ❤️ Favorites list with pagination and pull-to-refresh support
