@@ -21,6 +21,7 @@ struct MainView: View {
     var body: some View {
         @Bindable var coordinator = coordinator
         @Bindable var viewModel = viewModel
+        @Bindable var topListViewModel = topListViewModel
         NavigationStack(path: $coordinator.homePath) {
             ScrollView {
                 VStack(alignment: .leading, spacing: .spacingLarge) {
@@ -39,9 +40,26 @@ struct MainView: View {
             }
             .refreshable {
                 await viewModel.forceRefresh()
+                await topListViewModel.forceRefresh()
             }
             .navigationDestination(for: Place.self) { place in
                 coordinator.view(for: place)
+            }
+            .alert("Something went wrong", isPresented: Binding(
+                get: { viewModel.errorMessage != nil },
+                set: { if !$0 { viewModel.errorMessage = nil } }
+            )) {
+                Button("OK") { viewModel.errorMessage = nil }
+            } message: {
+                Text(viewModel.errorMessage ?? "")
+            }
+            .alert("Something went wrong", isPresented: Binding(
+                get: { topListViewModel.errorMessage != nil },
+                set: { if !$0 { topListViewModel.errorMessage = nil } }
+            )) {
+                Button("OK") { topListViewModel.errorMessage = nil }
+            } message: {
+                Text(topListViewModel.errorMessage ?? "")
             }
         }
     }

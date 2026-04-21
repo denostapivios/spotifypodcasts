@@ -12,6 +12,7 @@ import SwiftData
 @MainActor
 final class FavoriteViewModel {
     private(set) var favorites: [PodcastEpisode] = []
+    var errorMessage: String?
     private let service: FavoritesService
 
     init(modelContext: ModelContext) {
@@ -20,12 +21,17 @@ final class FavoriteViewModel {
     }
 
     func toggleFavorite(_ episode: PodcastEpisode) {
-        if isFavorite(episode) {
-            try? service.remove(id: episode.id)
-        } else {
-            try? service.add(episode)
+        do {
+            if isFavorite(episode) {
+                try service.remove(id: episode.id)
+            } else {
+                try service.add(episode)
+            }
+            loadFavorites()
+        } catch {
+            errorMessage = "Failed to update favorites. Please try again."
+            print("FavoriteViewModel error: \(error.localizedDescription)")
         }
-        loadFavorites()
     }
 
     func isFavorite(_ episode: PodcastEpisode) -> Bool {
@@ -33,6 +39,11 @@ final class FavoriteViewModel {
     }
 
     func loadFavorites() {
-        favorites = (try? service.fetchAll()) ?? []
+        do {
+            favorites = try service.fetchAll()
+        } catch {
+            errorMessage = "Failed to load favorites. Please try again."
+            print("FavoriteViewModel load error: \(error.localizedDescription)")
+        }
     }
 }

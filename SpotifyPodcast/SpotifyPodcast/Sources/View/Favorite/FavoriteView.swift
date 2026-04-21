@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FavoriteView: View {
-    var viewModel: FavoriteViewModel
+    @Bindable var viewModel: FavoriteViewModel
 
     var body: some View {
         ScrollView {
@@ -25,6 +25,14 @@ struct FavoriteView: View {
         .navigationTitle("Favorite")
         .onAppear {
             viewModel.loadFavorites()
+        }
+        .alert("Something went wrong", isPresented: Binding(
+            get: { viewModel.errorMessage != nil },
+            set: { if !$0 { viewModel.errorMessage = nil } }
+        )) {
+            Button("OK") { viewModel.errorMessage = nil }
+        } message: {
+            Text(viewModel.errorMessage ?? "")
         }
     }
 }

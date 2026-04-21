@@ -40,6 +40,14 @@ struct PopularView: View {
             .navigationDestination(for: Place.self) { place in
                 coordinator.view(for: place)
             }
+            .alert("Something went wrong", isPresented: Binding(
+                get: { viewModel.errorMessage != nil },
+                set: { if !$0 { viewModel.errorMessage = nil } }
+            )) {
+                Button("OK") { viewModel.errorMessage = nil }
+            } message: {
+                Text(viewModel.errorMessage ?? "")
+            }
         }
     }
 }

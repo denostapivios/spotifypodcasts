@@ -161,7 +161,7 @@ private extension BasePodcastViewModel {
         applySearch()
         offset += sliced.count
         canLoadMore = sliced.count == limit
-        errorMessage = "Show fallback (offset \(start), limit \(limit))"
+        errorMessage = "Couldn't connect to the server. Showing cached data."
         print("Loaded fallback.json (offset: \(start), limit: \(limit))")
     }
 
